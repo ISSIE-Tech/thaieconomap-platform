@@ -1,0 +1,59 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Build outputs
+dist
+build
+.next
+out
+*.tsbuildinfo
+
+# Turbo
+.turbo
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Testing
+coverage
+.nyc_output
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea
+.vscode
+*.sublime-workspace
+*.launch
+.settings
+.project
+.classpath
+.c9
+
+# Debug
+*.pem
+
+# Vercel
+.vercel
+
+# Next.js
+next-env.d.ts
+
+# Misc
+temp

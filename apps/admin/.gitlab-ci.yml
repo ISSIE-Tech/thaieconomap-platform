@@ -1,0 +1,102 @@
+stages:
+  - build-dev
+  - deploy-dev
+  - build-prod
+  - deploy-prod
+
+variables:
+  REGISTRY: registry.issie.dev
+
+build-push-dev:
+  stage: build-dev
+  tags:
+    - k8s-dev
+  image:
+    name: moby/buildkit:rootless
+    entrypoint: ['']
+  variables:
+    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
+  before_script:
+    - rm -rf .env
+    - cp .env.dev .env
+    - mkdir -p ~/.docker
+    - echo "{\"auths\":{\"$REGISTRY\":{\"username\":\"$CI_DEPLOY_USER\",\"password\":\"$CI_DEPLOY_PASSWORD\"}}}" > ~/.docker/config.json
+    - cat ~/.docker/config.json
+  script:
+    - |
+      buildctl-daemonless.sh build \
+        --frontend=dockerfile.v0 \
+        --local context=. \
+        --local dockerfile=. \
+        --opt filename=Dockerfile \
+        --output type=image,\"name=$REGISTRY/$CI_PROJECT_PATH/dev:$CI_COMMIT_SHORT_SHA\",push=true
+  only:
+    - merge_requests
+
+deploy-dev:
+  stage: deploy-dev
+  image: alpine:latest
+  script:
+    - apk add --no-cache git yq
+    # Clone the Manifest Repo
+    - git clone https://gitlab-ci-token:${CI_DEPLOY_TOKEN}@gitlab.issie.dev/thaieconomap/thaieconomap-k8s-deployment.git
+    - cd thaieconomap-k8s-deployment
+    # Update the image tag using sed
+    - yq eval ".spec.template.spec.containers[0].image = \"$CI_REGISTRY/$CI_PROJECT_PATH/dev:$CI_COMMIT_SHORT_SHA\"" -i ./dev/thaieconomap-admin/deployment.yaml
+    - git config user.name "GitLab CI"
+    - git config user.email "ci@gitlab.com"
+    - git add .
+    - git commit -m "Deploy $IMAGE_TAG to DEV"
+    - git push origin main
+  dependencies:
+    - build-push-dev
+  only:
+    - merge_requests
+
+build-push-prod:
+  stage: build-prod
+  tags:
+    - k8s-dev
+  image:
+    name: moby/buildkit:rootless
+    entrypoint: ['']
+  variables:
+    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
+  before_script:
+    - rm -rf .env
+    - rm -rf .env.example
+    - cp .env.prod .env
+    - rm -rf .env.prod
+    - mkdir -p ~/.docker
+    - echo "{\"auths\":{\"$REGISTRY\":{\"username\":\"$CI_DEPLOY_USER\",\"password\":\"$CI_DEPLOY_PASSWORD\"}}}" > ~/.docker/config.json
+    - cat ~/.docker/config.json
+  script:
+    - |
+      buildctl-daemonless.sh build \
+        --frontend=dockerfile.v0 \
+        --local context=. \
+        --local dockerfile=. \
+        --opt filename=Dockerfile \
+        --output type=image,\"name=$REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA,$REGISTRY/$CI_PROJECT_PATH:latest\",push=true
+  only:
+    - main
+  when: manual
+
+deploy-prod:
+  stage: deploy-prod
+  image: alpine:latest
+  script:
+    - apk add --no-cache git yq
+    - git clone https://gitlab-ci-token:${CI_DEPLOY_TOKEN}@gitlab.issie.dev/thaieconomap/thaieconomap-k8s-deployment.git
+    - cd thaieconomap-k8s-deployment
+    - yq eval ".spec.template.spec.containers[0].image = \"$CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA\"" -i ./prod/thaieconomap-admin/deployment.yaml
+    - git config user.name "GitLab CI"
+    - git config user.email "ci@gitlab.com"
+    - git add .
+    - git commit -m "Deploy $CI_COMMIT_SHORT_SHA to PROD"
+    - git push origin main
+  dependencies:
+    - build-push-prod
+  only:
+    - main
+  when: manual

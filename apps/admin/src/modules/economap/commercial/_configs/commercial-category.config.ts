@@ -1,0 +1,14 @@
+export enum COMMERCIAL_CATEGORY {
+  RESTAURANT = 'RESTAURANT',
+  BUSINESS = 'BUSINESS',
+}
+
+export const COMMERCIAL_CATEGORY_TRANSLATIONS: Record<COMMERCIAL_CATEGORY, string> = {
+  [COMMERCIAL_CATEGORY.RESTAURANT]: 'ร้านอาหาร',
+  [COMMERCIAL_CATEGORY.BUSINESS]: 'ธุรกิจ',
+};
+
+export const COMMERCIAL_CATEGORIES = Object.values(COMMERCIAL_CATEGORY).map((category) => ({
+  value: category,
+  label: COMMERCIAL_CATEGORY_TRANSLATIONS[category],
+}));

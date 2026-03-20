@@ -1,0 +1,76 @@
+import type { SubmitHandler } from 'react-hook-form';
+import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { Form } from 'src/shared/components/hook-form';
+import { toast } from 'src/shared/components/snackbar';
+
+import FormButton from './form-button';
+import { reformatFormData } from '../reformat-data';
+import { formSchema, defaultValue } from './form-validators';
+import useCreatePendingShares from '../_hooks/use-create-pending-shares';
+import useCreateAdditionalImage from '../_hooks/use-create-additional-image';
+
+import type { FormValues } from './form-validators';
+import type { FormSteps } from '../_types/create-social-sharing.type';
+
+type Props = {
+  handleNextFormProgress: () => void;
+  progressStep: number;
+  loading: UseBooleanReturn;
+  formSteps: FormSteps[];
+};
+
+const CreateSocialSharingForm = ({
+  handleNextFormProgress,
+  progressStep,
+  loading,
+  formSteps,
+}: Props) => {
+  const methods = useForm({
+    defaultValues: defaultValue,
+    resolver: zodResolver(formSchema),
+    mode: 'onChange',
+  });
+
+  const { trigger } = methods;
+
+  const createAdditionalImage = useCreateAdditionalImage();
+
+  const createPendingShares = useCreatePendingShares();
+
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    loading.onTrue();
+    const formatteddata = await reformatFormData(data, createAdditionalImage.mutateAsync, loading);
+
+    await createPendingShares.mutateAsync(formatteddata, {
+      onSuccess: handleNextFormProgress,
+      onError: (error) => {
+        toast.error(error.display);
+        loading.onFalse();
+      },
+    });
+  };
+
+  const handleFormValidation = async () => {
+    const validateState = await trigger(formSteps[progressStep].validate);
+    if (validateState) {
+      handleNextFormProgress();
+    }
+  };
+
+  const FormComponent = formSteps[progressStep].component;
+  const buttonOnClick = progressStep === 3 ? methods.handleSubmit(onSubmit) : handleFormValidation;
+  const buttonLabel = progressStep === 3 ? 'ยืนยันการลงทะเบียน' : 'ถัดไป';
+
+  return (
+    <Form methods={methods}>
+      <FormComponent />
+      <FormButton onClick={buttonOnClick} label={buttonLabel} loading={loading.value} />
+    </Form>
+  );
+};
+
+export default CreateSocialSharingForm;
