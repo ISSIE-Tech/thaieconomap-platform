@@ -1,6 +1,6 @@
-import { paths } from 'src/routes/paths';
-
 import { CONFIG } from 'src/config-global';
+
+import { paths } from 'src/routes/paths';
 
 import { SvgColor } from 'src/components/svg-color';
 
@@ -46,7 +46,7 @@ const ICONS = {
 type NavItem = {
   title: string;
   path: string;
-  icon?: JSX.Element;
+  icon?: React.ReactElement;
   children?: NavItem[];
   disabled?: boolean;
 };

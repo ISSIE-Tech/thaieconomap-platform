@@ -28,7 +28,7 @@ export class ResponseCacheInterceptor extends CacheInterceptor {
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<unknown>> {
     try {
       return await super.intercept(context, next);
-    } catch (error) {
+    } catch (_error) {
       // log here
 
       return next.handle();

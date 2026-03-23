@@ -1,11 +1,11 @@
+import type { CommercialSmallDetail } from '../_types/commercials.type';
+
+import { Iconify } from 'src/shared/components/iconify';
+
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-
-import { Iconify } from 'src/shared/components/iconify';
-
-import type { CommercialSmallDetail } from '../_types/commercials.type';
 
 type CommercialProps = {
   commercial?: CommercialSmallDetail | null;
@@ -25,12 +25,12 @@ export function CommercialDetail({ commercial, title }: CommercialProps) {
         <Stack spacing={0.5} flexGrow={1}>
           {commercial?.displayOpening?.map((openingTime, index) => (
             <Grid key={index} container>
-              <Grid xs={4}>
+              <Grid size={4}>
                 <Typography variant="body2" fontWeight="bold">
                   {openingTime.days}
                 </Typography>
               </Grid>
-              <Grid xs={8}>
+              <Grid size={8}>
                 <Typography variant="body2">
                   {openingTime.time.map((hour) => `${hour.open} - ${hour.close}`).join(', ')}
                 </Typography>

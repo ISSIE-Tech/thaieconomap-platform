@@ -1,7 +1,7 @@
-import { paths } from 'src/routes/paths';
-
 import { DashboardContent } from 'src/layouts/dashboard';
 import PumpuangList from 'src/modules/economap/pumpuang/pumpuang-list/pumpuang-list';
+
+import { paths } from 'src/routes/paths';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 

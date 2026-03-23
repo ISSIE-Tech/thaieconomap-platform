@@ -1,6 +1,6 @@
 'use client';
 
-import type { ButtonBaseProps } from '@mui/material/ButtonBase';
+import type { Workspace } from '../config-nav-workspace';
 
 import { useCallback } from 'react';
 
@@ -9,12 +9,11 @@ import Avatar from '@mui/material/Avatar';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import ButtonBase from '@mui/material/ButtonBase';
+import type { ButtonBaseProps } from '@mui/material/ButtonBase';
 
 import { Iconify } from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
-
-import type { Workspace } from '../config-nav-workspace';
 
 // ----------------------------------------------------------------------
 

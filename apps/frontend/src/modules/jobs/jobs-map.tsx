@@ -2,9 +2,6 @@
 
 import { useState } from 'react';
 import { Marker } from 'react-leaflet';
-
-import Stack from '@mui/material/Stack';
-
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import { STORAGE_KEY } from 'src/shared/components/constants';
 import { jobMarker, userMarker, activeJobMarker } from 'src/shared/components/leaflet-map/map';
@@ -14,6 +11,8 @@ import {
   DialogCluster,
   LocationMarkers,
 } from 'src/shared/components/leaflet-map';
+
+import Stack from '@mui/material/Stack';
 
 import useGetJob from './_hooks/use-get-job';
 import { useJobsStore } from './_store/jobs.store';

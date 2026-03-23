@@ -1,17 +1,15 @@
-import type { Breakpoint } from '@mui/material/styles';
-import type { NavSectionProps } from 'src/components/nav-section';
-
 import Image from 'next/image';
+import { varAlpha, hideScrollY } from 'src/theme/styles';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-
-import { varAlpha, hideScrollY } from 'src/theme/styles';
+import type { Breakpoint } from '@mui/material/styles';
 
 import { Logo } from 'src/components/logo';
 import { Scrollbar } from 'src/components/scrollbar';
+import type { NavSectionProps } from 'src/components/nav-section';
 import { NavSectionMini, NavSectionVertical } from 'src/components/nav-section';
 
 import { NavToggleButton } from '../components/nav-toggle-button';

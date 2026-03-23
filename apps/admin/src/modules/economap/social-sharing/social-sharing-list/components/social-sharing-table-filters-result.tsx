@@ -1,18 +1,17 @@
-import type { Theme, SxProps } from '@mui/material/styles';
-import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+import type { SocialSharingTableFilters } from '../types';
 
 import { useCallback } from 'react';
-
-import Chip from '@mui/material/Chip';
-
 import {
   ECONOMAP_STATUS,
   ECONOMAP_STATUS_TRANSLATIONS,
 } from 'src/modules/economap/_config/economap-status.config';
 
-import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
+import Chip from '@mui/material/Chip';
+import type { Theme, SxProps } from '@mui/material/styles';
 
-import type { SocialSharingTableFilters } from '../types';
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
+import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
 
 // ----------------------------------------------------------------------
 

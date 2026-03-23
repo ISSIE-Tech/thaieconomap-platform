@@ -1,13 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import { Typography } from '@mui/material';
-
 import { LineLoginBtn } from 'src/modules/auth';
 import { BackBtn } from 'src/shared/components/custom-buttons';
+
+import Stack from '@mui/material/Stack';
+import { Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
 

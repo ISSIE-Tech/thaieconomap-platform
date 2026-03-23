@@ -1,9 +1,8 @@
+import type { JobPost, JobTiny, JobType } from '../_types/jobs.type';
 import type { ApiResponse, ChialShareApiResponse } from 'src/shared/types/api.type';
 
 import axios from 'src/shared/utils/axios';
 import { endpoints } from 'src/shared/configs/endpoints.config';
-
-import type { JobPost, JobTiny, JobType } from '../_types/jobs.type';
 
 type Params = {
   queryKey: string[];

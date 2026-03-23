@@ -1,11 +1,11 @@
+import type { Sharing } from '../_types/sharing.type';
+
+import { Image } from 'src/shared/components/image';
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-
-import { Image } from 'src/shared/components/image';
-
-import type { Sharing } from '../_types/sharing.type';
 
 type SharingProps = {
   sharing?: Sharing | null;
@@ -88,7 +88,7 @@ export function SharingDetail({ sharing }: SharingProps) {
 
         <Stack>
           <Typography>{sharing?.contact.name}</Typography>
-          <Typography variant="caption" color={(theme) => theme.palette.grey[500]}>
+          <Typography variant="caption" sx={{ color: (theme) => theme.palette.grey[500] }}>
             เจ้าของ
           </Typography>
         </Stack>

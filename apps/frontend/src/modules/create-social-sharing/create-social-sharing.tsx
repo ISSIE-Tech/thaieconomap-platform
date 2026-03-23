@@ -1,13 +1,14 @@
 'use client';
 
+import type { FormSteps } from './_types/create-social-sharing.type';
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { paths } from 'src/shared/routes/paths.config';
+import { useBoolean } from 'src/shared/hooks/use-boolean';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-
-import { paths } from 'src/shared/routes/paths.config';
-import { useBoolean } from 'src/shared/hooks/use-boolean';
 
 import RegisterSuccessful from './register-successful';
 import SocialSharingHeader from './social-sharing-header';
@@ -20,8 +21,6 @@ import LocationForm from './create-social-sharing-form/location-form';
 import InformationForm from './create-social-sharing-form/information-form';
 import { ownerForm, informationForm } from './create-social-sharing-form/form-validators';
 import CreateSocialSharingForm from './create-social-sharing-form/create-social-sharing-form';
-
-import type { FormSteps } from './_types/create-social-sharing.type';
 
 const CreateSocialShaing = () => {
   const router = useRouter();

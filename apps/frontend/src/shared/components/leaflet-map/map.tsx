@@ -1,4 +1,4 @@
-/* eslint-disable import/no-absolute-path */
+ 
 import type { MarkerCluster } from 'leaflet';
 
 import L from 'leaflet';
@@ -27,7 +27,7 @@ export const areChildrenMarkersClose = (cluster: MarkerCluster) => {
 };
 
 // NOTE: iconCreateFunction is running by leaflet, which is not support ES6 arrow func syntax
-// eslint-disable-next-line
+ 
 export const groupCluster = function (cluster: MarkerCluster) {
   const childCount = cluster.getChildCount();
 
@@ -43,7 +43,7 @@ export const groupCluster = function (cluster: MarkerCluster) {
 
 // How to give the Icon tooltips?
 // NOTE: iconCreateFunction is running by leaflet, which is not support ES6 arrow func syntax
-// eslint-disable-next-line
+ 
 export const createCommercialOverlappingClusterIcon = function (cluster: MarkerCluster) {
   const childCount = cluster.getChildCount();
 
@@ -61,7 +61,7 @@ export const createCommercialOverlappingClusterIcon = function (cluster: MarkerC
   return createClusterIcon(size, childCount);
 };
 
-// eslint-disable-next-line
+ 
 export const activeCluster = function (cluster: MarkerCluster) {
   const childCount = cluster.getChildCount();
   const size =
@@ -98,6 +98,7 @@ export const userMarker = new L.DivIcon({
   html: '<div class="user-marker-inner" />',
   className: 'user-marker-icon',
   iconSize: new L.Point(CLUSTER_CONSTANTS.USER_MARKER_WIDTH, CLUSTER_CONSTANTS.USER_MARKER_HEIGHT),
+  iconAnchor: new L.Point(CLUSTER_CONSTANTS.USER_MARKER_WIDTH / 2, CLUSTER_CONSTANTS.USER_MARKER_HEIGHT / 2),
 });
 
 export const commercialMarker = new L.Icon({

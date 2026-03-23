@@ -1,9 +1,8 @@
 import type { ApiResponse } from 'src/shared/types/api.type';
+import type { ShareOptions } from '../_types/create-social-sharing.type';
 
 import axios from 'src/shared/utils/axios';
 import { endpoints } from 'src/shared/configs/endpoints.config';
-
-import type { ShareOptions } from '../_types/create-social-sharing.type';
 
 export const getShareTypes = async () => {
   const { data } = await axios.get<ApiResponse<ShareOptions[]>>(endpoints.shares.types);

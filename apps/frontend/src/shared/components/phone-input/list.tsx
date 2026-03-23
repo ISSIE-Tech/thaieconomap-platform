@@ -1,6 +1,10 @@
+import type { CountryListProps } from './types';
 import type { Country } from 'react-phone-number-input/input';
 
 import { useState, useCallback } from 'react';
+import { countries } from 'src/shared/assets/data/countries';
+import { Iconify, FlagIcon } from 'src/shared/components/iconify';
+import { SearchNotFound } from 'src/shared/components/search-not-found';
 
 import Box from '@mui/material/Box';
 import Popover from '@mui/material/Popover';
@@ -12,14 +16,8 @@ import ButtonBase from '@mui/material/ButtonBase';
 import ListItemText from '@mui/material/ListItemText';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { countries } from 'src/shared/assets/data/countries';
-import { Iconify, FlagIcon } from 'src/shared/components/iconify';
-import { SearchNotFound } from 'src/shared/components/search-not-found';
-
 import { usePopover } from '../custom-popover';
 import { getCountry, applyFilter } from './utils';
-
-import type { CountryListProps } from './types';
 
 // ----------------------------------------------------------------------
 

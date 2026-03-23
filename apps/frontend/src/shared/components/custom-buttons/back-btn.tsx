@@ -1,11 +1,11 @@
 'use client';
 
+import type { BaseBtnProps } from './base-btn';
+
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import BaseBtn from './base-btn';
-
-import type { BaseBtnProps } from './base-btn';
 
 // -------------------------------------------------------------
 

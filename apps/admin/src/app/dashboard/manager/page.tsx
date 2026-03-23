@@ -1,15 +1,14 @@
 'use client';
 
 import React from 'react';
+import { USER_ROLE } from 'src/modules/manager/types';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { ManagerList } from 'src/modules/manager/manager-list';
 
 import Button from '@mui/material/Button';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
-
-import { USER_ROLE } from 'src/modules/manager/types';
-import { DashboardContent } from 'src/layouts/dashboard';
-import { ManagerList } from 'src/modules/manager/manager-list';
 
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';

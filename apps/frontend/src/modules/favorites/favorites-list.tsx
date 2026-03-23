@@ -1,10 +1,7 @@
 'use client';
 
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
-import Skeleton from '@mui/material/Skeleton';
-import Typography from '@mui/material/Typography';
+import type { FavoriteTiny } from './_types/favorites.type';
+import type { TabValue } from './_constants/favourites-tabs';
 
 import { maxLine } from 'src/theme/styles/mixins';
 import { Image } from 'src/shared/components/image';
@@ -12,8 +9,11 @@ import { paths } from 'src/shared/routes/paths.config';
 import { formatCreateDate } from 'src/shared/components/constants/date';
 import { ImageDetailArrowRow } from 'src/shared/components/custom-list/image-detail-arrow-row';
 
-import type { FavoriteTiny } from './_types/favorites.type';
-import type { TabValue } from './_constants/favourites-tabs';
+import Link from '@mui/material/Link';
+import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
+import Skeleton from '@mui/material/Skeleton';
+import Typography from '@mui/material/Typography';
 
 type Title = {
   en: string;

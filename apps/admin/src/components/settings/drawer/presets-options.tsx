@@ -1,13 +1,13 @@
+import type { SettingsState } from '../types';
+
+import { CONFIG } from 'src/config-global';
+
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
 import { alpha as hexAlpha } from '@mui/material/styles';
 
-import { CONFIG } from 'src/config-global';
-
 import { Block } from './styles';
 import { SvgColor } from '../../svg-color';
-
-import type { SettingsState } from '../types';
 
 // ----------------------------------------------------------------------
 

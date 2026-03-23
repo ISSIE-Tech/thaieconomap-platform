@@ -1,5 +1,7 @@
 'use client';
 
+import type { ManagerItem } from '../../types';
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
@@ -13,8 +15,6 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { Label } from 'src/components/label';
 
 import ManagerTableRowDrawer from './manager-table-row-drawer';
-
-import type { ManagerItem } from '../../types';
 
 // ----------------------------------------------------------------------
 

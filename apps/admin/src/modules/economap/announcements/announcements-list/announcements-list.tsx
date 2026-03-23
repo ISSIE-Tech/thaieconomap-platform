@@ -1,12 +1,11 @@
 'use client';
 
 import React from 'react';
+import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Box, Card, Table, TableBody } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
-
-import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { useTable, TableHeadCustom, TablePaginationCustom } from 'src/components/table';

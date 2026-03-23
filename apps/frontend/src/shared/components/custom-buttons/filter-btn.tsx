@@ -2,12 +2,12 @@
 
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
+import { Iconify } from 'src/shared/components/iconify';
+
 import Fab from '@mui/material/Fab';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
-
-import { Iconify } from 'src/shared/components/iconify';
 
 type Props = {
   filterController: UseBooleanReturn;

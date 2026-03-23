@@ -3,9 +3,6 @@
 import { useState } from 'react';
 import { Marker } from 'react-leaflet';
 import { useSearchParams } from 'next/navigation';
-
-import Stack from '@mui/material/Stack';
-
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import { STORAGE_KEY } from 'src/shared/components/constants';
 import { SearchInput } from 'src/shared/components/custom-inputs';
@@ -21,6 +18,8 @@ import {
   DialogCluster,
   LocationMarkers,
 } from 'src/shared/components/leaflet-map';
+
+import Stack from '@mui/material/Stack';
 
 import useGetSharing from './_hooks/use-get-sharing';
 import { SharingFilterDrawer } from './filter-drawer';

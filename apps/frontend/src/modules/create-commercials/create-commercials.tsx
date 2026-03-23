@@ -1,14 +1,15 @@
 'use client';
 
+import type { FormSteps } from './_types/create-commercials.type';
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-
 import { paths } from 'src/shared/routes/paths.config';
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import useGetDistricts from 'src/shared/hooks/use-get-districts';
+
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 import RegisterSuccessful from './register-successful';
 import CommercialFormHeader from './commercial-form-header';
@@ -22,8 +23,6 @@ import { informationForm } from './create-commercials-form/form-validators';
 import useGetBusinessTypes from '../commercials/_hooks/use-get-business-types';
 import useGetRestaurantTypes from '../commercials/_hooks/use-get-restaurant-types';
 import CreateCommercialForm from './create-commercials-form/create-commercial-form';
-
-import type { FormSteps } from './_types/create-commercials.type';
 
 type Props = {
   commercialType: CommercialType;

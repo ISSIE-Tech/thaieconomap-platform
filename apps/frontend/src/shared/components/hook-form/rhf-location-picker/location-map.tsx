@@ -4,10 +4,9 @@ import type { Dispatch, SetStateAction } from 'react';
 
 import Image from 'next/image';
 import { useMapEvents } from 'react-leaflet';
+import { MapContainer } from 'src/shared/components/leaflet-map';
 
 import Box from '@mui/material/Box';
-
-import { MapContainer } from 'src/shared/components/leaflet-map';
 
 type Props = {
   setLocation: Dispatch<SetStateAction<{ latitude: number; longitude: number }>>;

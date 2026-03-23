@@ -47,7 +47,7 @@ export class ThaiBulkSmsService {
       );
 
       return response.data;
-    } catch (err) {
+    } catch (_err) {
       throw new ErrorException(CODES.TEC_075);
     }
   }
@@ -67,7 +67,7 @@ export class ThaiBulkSmsService {
       );
 
       return response.data;
-    } catch (err) {
+    } catch (_err) {
       throw new ErrorException(CODES.TEC_075);
     }
   }

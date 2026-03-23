@@ -1,9 +1,8 @@
 import type { ApiResponse } from 'src/shared/types/api.type';
+import type { Announcement, AnnouncementTiny } from '../_types/announcements.type';
 
 import axios from 'src/shared/utils/axios';
 import { endpoints } from 'src/shared/configs/endpoints.config';
-
-import type { Announcement, AnnouncementTiny } from '../_types/announcements.type';
 
 type Params = {
   queryKey: string[];

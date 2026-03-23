@@ -1,8 +1,7 @@
 'use client';
 
-import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
-
 import Alert from '@mui/material/Alert';
+import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 

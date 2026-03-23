@@ -1,6 +1,7 @@
 'use client';
 
 import type { ListChildComponentProps } from 'react-window';
+import type { DistrictOption } from '../_types/announcements.type';
 
 import * as React from 'react';
 import { VariableSizeList } from 'react-window';
@@ -13,8 +14,6 @@ import ListSubheader from '@mui/material/ListSubheader';
 import { ANNOUNCEMENTS_FILTER_TYPES } from '../_constants/location';
 import { useAnnouncementsStore } from '../_stores/announcements.store';
 import { useAnnouncementsFilter } from '../_hooks/use-announcements-filter';
-
-import type { DistrictOption } from '../_types/announcements.type';
 
 const LISTBOX_PADDING = 8; // px
 

@@ -1,6 +1,11 @@
 'use client';
 
+import type { SocialSharingItem } from '../types';
+import type { SocialSharingTableFilters } from './types';
+
 import React, { useCallback } from 'react';
+import { varAlpha } from 'src/theme/styles';
+import { DashboardContent } from 'src/layouts/dashboard';
 
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -12,9 +17,6 @@ import TableBody from '@mui/material/TableBody';
 import { paths } from 'src/routes/paths';
 
 import { useSetState } from 'src/hooks/use-set-state';
-
-import { varAlpha } from 'src/theme/styles';
-import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/label';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -32,9 +34,6 @@ import SocialSharingTableRow from './components/social-sharing-table-row';
 import SocialSharingTableToolbar from './components/social-sharing-table-toolbar';
 import SocialSharingTableFiltersResult from './components/social-sharing-table-filters-result';
 import { ECONOMAP_STATUS, ECONOMAP_STATUS_OPTIONS } from '../../_config/economap-status.config';
-
-import type { SocialSharingItem } from '../types';
-import type { SocialSharingTableFilters } from './types';
 
 // ----------------------------------------------------------------------
 

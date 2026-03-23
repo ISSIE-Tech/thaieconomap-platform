@@ -1,5 +1,7 @@
 'use client';
 
+import type { IconifyProps } from './types';
+
 import { forwardRef } from 'react';
 import { Icon, disableCache } from '@iconify/react';
 
@@ -7,8 +9,6 @@ import Box from '@mui/material/Box';
 import NoSsr from '@mui/material/NoSsr';
 
 import { iconifyClasses } from './classes';
-
-import type { IconifyProps } from './types';
 
 // ----------------------------------------------------------------------
 

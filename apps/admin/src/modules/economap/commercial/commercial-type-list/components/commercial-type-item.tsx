@@ -1,5 +1,6 @@
 'use client';
 
+import type { CommercialType } from '../../types';
 import type { UseMutateAsyncFunction } from '@tanstack/react-query';
 
 import { toast } from 'sonner';
@@ -14,8 +15,6 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
-
-import type { CommercialType } from '../../types';
 
 // ----------------------------------------------------------------------
 

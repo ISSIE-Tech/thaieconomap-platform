@@ -1,11 +1,18 @@
 'use client';
 
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
+import type { PumpuangWorkingHourFilter } from '../_types/pumpuangs.type';
 import type { LocationFilter } from 'src/modules/commercials/_types/commercials.type';
 
 import Image from 'next/image';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { commercialFilterDefault } from 'src/modules/commercials/_types/commercials.type';
+import {
+  TypeTags,
+  LocationTags,
+  WorkingHourTags,
+} from 'src/modules/commercials/filter-drawer/filter-tags';
 
 import Fab from '@mui/material/Fab';
 import Grid from '@mui/material/Grid';
@@ -15,16 +22,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
-import { commercialFilterDefault } from 'src/modules/commercials/_types/commercials.type';
-import {
-  TypeTags,
-  LocationTags,
-  WorkingHourTags,
-} from 'src/modules/commercials/filter-drawer/filter-tags';
-
 import useGetProductTypes from '../_hooks/use-get-product-types';
-
-import type { PumpuangWorkingHourFilter } from '../_types/pumpuangs.type';
 
 type Props = {
   controller: UseBooleanReturn;
@@ -121,15 +119,15 @@ export function PumpuangFilterDrawer({ controller }: Props) {
       }}
     >
       <Grid container py={2} px={3}>
-        <Grid xs={4} />
+        <Grid size={4} />
 
-        <Grid container xs={4} alignContent="center" justifyContent="center">
+        <Grid container size={4} alignContent="center" justifyContent="center">
           <Typography variant="body1" fontWeight="bold">
             ฟิลเตอร์
           </Typography>
         </Grid>
 
-        <Grid container xs={4} alignContent="center" justifyContent="end">
+        <Grid container size={4} alignContent="center" justifyContent="end">
           <Fab color="default" size="small" sx={{ bgcolor: 'white' }} onClick={controller.onFalse}>
             <Image src="/assets/icons/cross.svg" alt="cross icon" width="24" height="24" />
           </Fab>

@@ -1,10 +1,10 @@
 'use client';
 
+import { Iconify } from 'src/shared/components/iconify';
+
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-
-import { Iconify } from 'src/shared/components/iconify';
 
 type Props = {
   text: string;

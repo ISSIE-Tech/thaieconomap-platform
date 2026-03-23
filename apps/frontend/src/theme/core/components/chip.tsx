@@ -1,9 +1,8 @@
+import SvgIcon from '@mui/material/SvgIcon';
+import { chipClasses } from '@mui/material/Chip';
 import type { ChipProps } from '@mui/material/Chip';
 import type { SvgIconProps } from '@mui/material/SvgIcon';
 import type { Theme, CSSObject, Components, ComponentsVariants } from '@mui/material/styles';
-
-import SvgIcon from '@mui/material/SvgIcon';
-import { chipClasses } from '@mui/material/Chip';
 
 import { varAlpha, stylesMode } from '../../styles';
 
@@ -130,7 +129,7 @@ const MuiChip: Components<Theme>['MuiChip'] = {
       color: 'currentColor',
       '&:hover': { opacity: 1, color: 'currentColor' },
     },
-    sizeMedium: ({ theme }) => ({ borderRadius: theme.shape.borderRadius * 1.25 }),
+    sizeMedium: ({ theme }) => ({ borderRadius: Number(theme.shape.borderRadius) * 1.25 }),
     sizeSmall: ({ theme }) => ({ borderRadius: theme.shape.borderRadius }),
     /**
      * @variant filled

@@ -5,6 +5,7 @@ import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
 import Image from 'next/image';
 import React, { useCallback } from 'react';
+import { groupCluster } from 'src/shared/components/leaflet-map/map';
 
 import Stack from '@mui/material/Stack';
 import Dialog from '@mui/material/Dialog';
@@ -12,8 +13,6 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-
-import { groupCluster } from 'src/shared/components/leaflet-map/map';
 
 type Props = {
   type: string;

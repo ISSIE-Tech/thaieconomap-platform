@@ -1,5 +1,4 @@
-import type { SelectChangeEvent } from '@mui/material/Select';
-import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+import type { CommercialTableFilters } from '../types';
 
 import React, { useCallback } from 'react';
 
@@ -12,10 +11,11 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
+import type { SelectChangeEvent } from '@mui/material/Select';
+
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
 import { Iconify } from 'src/components/iconify';
-
-import type { CommercialTableFilters } from '../types';
 
 type Props = {
   onResetPage: () => void;

@@ -1,21 +1,18 @@
 'use client';
 
+import type { District } from '../_types/commercials.type';
 import type { ListChildComponentProps } from 'react-window';
 
 import Image from 'next/image';
 import { useMemo } from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { FixedSizeList } from 'react-window';
+import { Iconify } from 'src/shared/components/iconify';
 
 import Stack from '@mui/material/Stack';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
 
-import { Iconify } from 'src/shared/components/iconify';
-
 import useGetDistricts from '../../../shared/hooks/use-get-districts';
-
-import type { District } from '../_types/commercials.type';
 
 type Props = {
   searchedInput: string;

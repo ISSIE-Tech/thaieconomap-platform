@@ -1,17 +1,16 @@
 import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { paths } from 'src/shared/routes/paths.config';
+import { Iconify } from 'src/shared/components/iconify';
+import { type UseBooleanReturn } from 'src/shared/hooks/use-boolean';
+import { useAuthContext } from 'src/modules/auth/_hooks/use-auth-context';
 
 import Fab from '@mui/material/Fab';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-
-import { paths } from 'src/shared/routes/paths.config';
-import { Iconify } from 'src/shared/components/iconify';
-import { type UseBooleanReturn } from 'src/shared/hooks/use-boolean';
-import { useAuthContext } from 'src/modules/auth/_hooks/use-auth-context';
 
 import NavigateLink from './navigate-link';
 
@@ -57,7 +56,7 @@ export function MenuDrawer({ menuController }: Props) {
     <Drawer
       open={menuController.value}
       onClose={menuController.onFalse}
-      slotProps={{ backdrop: { sx: { display: { md: 'none' } } } }}
+      slotProps={{ backdrop: { sx: { backgroundColor: 'transparent' } } }}
       PaperProps={{
         sx: { width: { xs: '100vw', md: 360 }, overflowX: 'hidden', px: 3, py: 2 },
       }}

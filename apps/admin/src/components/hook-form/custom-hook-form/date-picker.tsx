@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-
 import { primary } from 'src/theme/core';
 
 import { RHFDatePickerCustom } from './rhf-date-picker-custom';

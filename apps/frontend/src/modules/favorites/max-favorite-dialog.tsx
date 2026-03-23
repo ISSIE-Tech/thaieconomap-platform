@@ -1,12 +1,12 @@
 'use client';
 
+import { primary } from 'src/theme/core';
+import { type UseBooleanReturn } from 'src/shared/hooks/use-boolean';
+
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
-
-import { primary } from 'src/theme/core';
-import { type UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
 type MaxFavoriteDialogProps = {
   controller: UseBooleanReturn;

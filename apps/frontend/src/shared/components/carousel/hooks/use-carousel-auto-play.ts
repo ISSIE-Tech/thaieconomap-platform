@@ -1,9 +1,8 @@
 import type { EmblaCarouselType } from 'embla-carousel';
+import type { UseCarouselAutoPlayReturn } from '../types';
 import type { AutoplayType } from 'embla-carousel-autoplay';
 
 import { useState, useEffect, useCallback } from 'react';
-
-import type { UseCarouselAutoPlayReturn } from '../types';
 
 // ----------------------------------------------------------------------
 

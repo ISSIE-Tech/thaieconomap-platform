@@ -2,7 +2,6 @@ import type { Map as LeafletMap } from 'leaflet';
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-
 import { paths } from 'src/shared/routes/paths.config';
 
 import { commercialFilterDefault } from '../_types/commercials.type';

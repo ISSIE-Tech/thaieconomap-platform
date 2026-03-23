@@ -1,7 +1,6 @@
 import 'src/global.css';
 
 // ----------------------------------------------------------------------
-
 import type { Metadata, Viewport } from 'next';
 
 import { CONFIG } from 'src/config-global';

@@ -5,13 +5,12 @@ import React, { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useGetDistricts } from 'src/modules/economap/commercial/_hooks/use-get-districts';
 
 import Stack from '@mui/material/Stack';
-import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
-
-import { useGetDistricts } from 'src/modules/economap/commercial/_hooks/use-get-districts';
 
 import { Form, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
@@ -87,7 +86,7 @@ const RegisterForm = () => {
           label="เขต / อำเภอที่รับผิดชอบ"
           options={districts || []}
           getOptionLabel={(option) =>
-            `${option.districtType}${option.districtName} จังหวัด${option.provinceName}` || ''
+            `${option.districtType}${option.districtName} จังหวัด${option.provinceName}`
           }
           renderOption={(props, option) => (
             <li {...props} key={option._id}>

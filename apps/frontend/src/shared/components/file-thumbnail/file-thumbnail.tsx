@@ -1,3 +1,5 @@
+import type { FileThumbnailProps } from './types';
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
@@ -5,8 +7,6 @@ import Tooltip from '@mui/material/Tooltip';
 import { fileData, fileFormat } from './utils';
 import { fileThumbnailClasses } from './classes';
 import { RemoveButton, DownloadButton } from './action-buttons';
-
-import type { FileThumbnailProps } from './types';
 
 // ----------------------------------------------------------------------
 

@@ -8,15 +8,13 @@ import type { Map, LatLngBounds } from 'leaflet';
 import type { ClusterFeature } from 'supercluster';
 
 import * as L from 'leaflet'; // Assuming you have a `map` instance of type `Map`
-
 import { useEffect } from 'react';
 import Supercluster from 'supercluster';
 import { Marker, useMap } from 'react-leaflet';
-
-import Stack from '@mui/material/Stack';
-
 import { MapContainer } from 'src/shared/components/leaflet-map';
 import { userMarker } from 'src/shared/components/leaflet-map/map';
+
+import Stack from '@mui/material/Stack';
 
 import { DEFAULT_COORDINATE } from '../commercials/_config';
 import { useGeolocationStore } from '../geolocation/_store/geolocation.store';

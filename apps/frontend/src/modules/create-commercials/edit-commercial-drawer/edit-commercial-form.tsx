@@ -1,11 +1,12 @@
+import type { FormValues } from './form-validators';
 import type { SubmitHandler } from 'react-hook-form';
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 import type { Commercial } from 'src/modules/commercials/_types/commercials.type';
+import type { FormSteps, CommercialType } from '../_types/create-commercials.type';
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-
 import { toast } from 'src/shared/components/snackbar';
 import { Form } from 'src/shared/components/hook-form/form-provider';
 import FormButton from 'src/shared/components/custom-buttons/form-button';
@@ -14,9 +15,6 @@ import { reformatFormData } from '../reformat-data';
 import useUpdateCommercial from '../_hooks/use-update-commercial';
 import { formSchema } from '../create-commercials-form/form-validators';
 import useCreateAdditionalImage from '../_hooks/use-create-additional-images';
-
-import type { FormValues } from './form-validators';
-import type { FormSteps, CommercialType } from '../_types/create-commercials.type';
 
 type Props = {
   commercial: Commercial;

@@ -2,19 +2,18 @@
 
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
-import { useMemo, useState, useEffect, useCallback } from 'react';
-
-import Stack from '@mui/material/Stack';
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-
 import { createTypeNameMap } from 'src/shared/utils/url-filter';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { FilterHeader } from 'src/modules/commercials/filter-drawer';
 import {
   filterStyle,
   selectedFilterStyle,
 } from 'src/modules/commercials/filter-drawer/filter-tags';
+
+import Stack from '@mui/material/Stack';
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 import { useJobsStore } from '../_store/jobs.store';
 import { jobsFilterDefault } from '../_constants/jobs-filter';

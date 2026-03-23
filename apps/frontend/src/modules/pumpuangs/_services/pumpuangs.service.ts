@@ -1,14 +1,13 @@
 import type { ApiResponse } from 'src/shared/types/api.type';
-
-import axios from 'src/shared/utils/axios';
-import { endpoints } from 'src/shared/configs/endpoints.config';
-
 import type {
   Pumpuang,
   ProductTypes,
   PumpuangTiny,
   PumpuangDayHistory,
 } from '../_types/pumpuangs.type';
+
+import axios from 'src/shared/utils/axios';
+import { endpoints } from 'src/shared/configs/endpoints.config';
 
 type Params = {
   queryKey: string[];

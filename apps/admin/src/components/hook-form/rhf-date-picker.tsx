@@ -1,19 +1,17 @@
-import type { Dayjs } from 'dayjs';
-import type { TextFieldProps } from '@mui/material/TextField';
-import type { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
-import type { MobileDateTimePickerProps } from '@mui/x-date-pickers/MobileDateTimePicker';
-
 import dayjs from 'dayjs';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import type { TextFieldProps } from '@mui/material/TextField';
+import type { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import type { MobileDateTimePickerProps } from '@mui/x-date-pickers/MobileDateTimePicker';
 
 import { formatStr } from 'src/utils/format-time';
 
 // ----------------------------------------------------------------------
 
-type RHFDatePickerProps = DatePickerProps<Dayjs> & {
+type RHFDatePickerProps = DatePickerProps & {
   name: string;
 };
 
@@ -48,7 +46,7 @@ export function RHFDatePicker({ name, slotProps, ...other }: RHFDatePickerProps)
 
 // ----------------------------------------------------------------------
 
-type RHFMobileDateTimePickerProps = MobileDateTimePickerProps<Dayjs> & {
+type RHFMobileDateTimePickerProps = MobileDateTimePickerProps & {
   name: string;
 };
 

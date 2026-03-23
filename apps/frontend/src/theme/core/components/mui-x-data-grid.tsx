@@ -1,12 +1,11 @@
-import type { SvgIconProps } from '@mui/material/SvgIcon';
-import type { Theme, Components } from '@mui/material/styles';
-
 import { listClasses } from '@mui/material/List';
 import { paperClasses } from '@mui/material/Paper';
+import type { SvgIconProps } from '@mui/material/SvgIcon';
 import { textFieldClasses } from '@mui/material/TextField';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { inputLabelClasses } from '@mui/material/InputLabel';
 import { iconButtonClasses } from '@mui/material/IconButton';
+import type { Theme, Components } from '@mui/material/styles';
 import SvgIcon, { svgIconClasses } from '@mui/material/SvgIcon';
 import { listItemIconClasses } from '@mui/material/ListItemIcon';
 import { circularProgressClasses } from '@mui/material/CircularProgress';
@@ -22,6 +21,7 @@ const MuiDataGrid: Components<Theme>['MuiDataGrid'] = {
    *************************************** */
   defaultProps: {
     slots: {
+       
       /* Column */
       columnSortedAscendingIcon: (props: SvgIconProps) => (
         <DataGridArrowUpIcon sx={{ color: 'text.primary' }} {...props} />
@@ -62,15 +62,13 @@ const MuiDataGrid: Components<Theme>['MuiDataGrid'] = {
         <DataGridSearchIcon sx={{ width: 24, height: 24, color: 'text.secondary' }} {...props} />
       ),
       quickFilterClearIcon: (props: SvgIconProps) => <DataGridCloseIcon {...props} />,
-    },
+    } as any,
     slotProps: {
       basePopper: { placement: 'bottom-end' },
       baseChip: { size: 'small' },
       baseSwitch: { size: 'small' },
-      baseCheckbox: { size: 'small', disableRipple: true },
-      baseInputLabel: { shrink: true },
-      baseTextField: { variant: 'outlined' },
-      baseSelect: { native: true, variant: 'outlined' },
+      baseCheckbox: { size: 'small' },
+      baseTextField: {},
     },
   },
 

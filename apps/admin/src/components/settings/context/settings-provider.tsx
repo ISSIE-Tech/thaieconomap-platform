@@ -1,13 +1,13 @@
 'use client';
 
+import type { SettingsState, SettingsContextValue, SettingsProviderProps } from '../types';
+
 import { useMemo, useState, useCallback, createContext } from 'react';
 
 import { useCookies } from 'src/hooks/use-cookies';
 import { useLocalStorage } from 'src/hooks/use-local-storage';
 
 import { STORAGE_KEY, defaultSettings } from '../config-settings';
-
-import type { SettingsState, SettingsContextValue, SettingsProviderProps } from '../types';
 
 // ----------------------------------------------------------------------
 

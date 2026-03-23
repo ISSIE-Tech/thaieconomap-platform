@@ -1,14 +1,13 @@
 'use client';
 
+import type { CommercialType } from './_types/create-commercials.type';
+
 import React from 'react';
+import { common, primary } from 'src/theme/core';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-
-import { common, primary } from 'src/theme/core';
-
-import type { CommercialType } from './_types/create-commercials.type';
 
 type Props = {
   progressPercentage: number;

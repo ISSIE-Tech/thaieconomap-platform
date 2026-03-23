@@ -1,4 +1,4 @@
-import type { UseBooleanReturn } from 'src/hooks/use-boolean';
+import type { AnnouncementItem } from '../../types';
 
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useCallback } from 'react';
@@ -9,6 +9,7 @@ import { Grid, Stack, Button, Drawer, Divider, Typography } from '@mui/material'
 import { paths } from 'src/routes/paths';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import type { UseBooleanReturn } from 'src/hooks/use-boolean';
 
 import { createFileFormUrl } from 'src/utils/get-file-form-url';
 
@@ -17,8 +18,6 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
 import { ANNOUNCEMENT_STATUS, ANNOUNCEMENT_STATUS_TRANSLATIONS } from '../../types';
-
-import type { AnnouncementItem } from '../../types';
 
 type Props = {
   drawerController: UseBooleanReturn;
@@ -85,10 +84,10 @@ export function AnnouncementsTableRowDrawer({ drawerController, row }: Props) {
         <Stack px={3} pt={3} pb={1.5} spacing={4}>
           <Stack spacing={1}>
             <Grid container alignItems="center">
-              <Grid xs={9}>
+              <Grid size={9}>
                 <Typography variant="h3">{row.name}</Typography>
               </Grid>
-              <Grid xs={3}>
+              <Grid size={3}>
                 <Label variant="soft" color={statusStyle()}>
                   {ANNOUNCEMENT_STATUS_TRANSLATIONS[row.status]}
                 </Label>
@@ -125,10 +124,10 @@ export function AnnouncementsTableRowDrawer({ drawerController, row }: Props) {
           <Divider />
 
           <Grid container alignItems="center">
-            <Grid xs={1}>
+            <Grid size={1}>
               <Iconify icon="solar:info-circle-linear" width={16} />
             </Grid>
-            <Grid xs={11}>
+            <Grid size={11}>
               <Typography
                 sx={{
                   wordWrap: 'break-word',

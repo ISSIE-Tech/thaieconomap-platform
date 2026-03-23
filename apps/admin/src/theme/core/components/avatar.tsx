@@ -1,6 +1,5 @@
-import type { Theme, Components, ComponentsVariants } from '@mui/material/styles';
-
 import { avatarGroupClasses } from '@mui/material/AvatarGroup';
+import type { Theme, Components, ComponentsVariants } from '@mui/material/styles';
 
 import { varAlpha } from '../../styles';
 
@@ -58,7 +57,7 @@ const MuiAvatar: Components<Theme>['MuiAvatar'] = {
    * STYLE
    *************************************** */
   styleOverrides: {
-    rounded: ({ theme }) => ({ borderRadius: theme.shape.borderRadius * 1.5 }),
+    rounded: ({ theme }) => ({ borderRadius: Number(theme.shape.borderRadius) * 1.5 }),
     colorDefault: ({ ownerState, theme }) => {
       const color = colorByName(`${ownerState.alt}`);
 

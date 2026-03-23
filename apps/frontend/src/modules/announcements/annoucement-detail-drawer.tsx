@@ -1,27 +1,25 @@
 'use client';
 
+import type { Announcement } from './_types/announcements.type';
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
 import { useMemo } from 'react';
-
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-import useTheme from '@mui/material/styles/useTheme';
-
 import { maxLine } from 'src/theme/styles/mixins';
 import { Iconify } from 'src/shared/components/iconify';
 import { BackBtn } from 'src/shared/components/custom-buttons';
 import { replaceShortMonthToThai } from 'src/shared/components/constants/date';
 import { fIsBetween, fDateRangeShortLabel } from 'src/shared/utils/format-time';
 
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Drawer from '@mui/material/Drawer';
+import Divider from '@mui/material/Divider';
+import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+
 import AnnouncementFullDetail from './announcement-detail';
 import useGetAnnouncement from './_hooks/use-get-announcement';
-
-import type { Announcement } from './_types/announcements.type';
 
 type Props = {
   controller: UseBooleanReturn;
@@ -37,7 +35,7 @@ export default function AnnouncementDetailDrawer({ controller, id }: Props) {
       open={controller.value}
       onClose={controller.setValue}
       anchor="right"
-      slotProps={{ backdrop: { sx: { display: { md: 'none' } } } }}
+      slotProps={{ backdrop: { sx: { backgroundColor: 'transparent' } } }}
       PaperProps={{
         sx: { width: { xs: '100vw', md: 480 }, overflowX: 'hidden', overflowY: 'scroll', pb: 8 },
       }}
@@ -48,7 +46,7 @@ export default function AnnouncementDetailDrawer({ controller, id }: Props) {
         px={3}
         sx={{ bgcolor: theme.palette.primary.dark, borderBottomRightRadius: '3rem' }}
       >
-        <Grid container xs={4} alignContent="center">
+        <Grid container size={4} alignContent="center">
           <BackBtn onClick={controller.onFalse} />
         </Grid>
       </Grid>

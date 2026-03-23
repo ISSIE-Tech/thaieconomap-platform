@@ -1,9 +1,7 @@
 'use client';
 
-import type {
-  UploadProps} from 'src/components/upload';
-
 import { useDropzone } from 'react-dropzone';
+import { varAlpha } from 'src/theme/styles/utils';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -11,9 +9,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { IconButton, FormHelperText } from '@mui/material';
 
-import { varAlpha } from 'src/theme/styles/utils';
-
 import { Iconify } from 'src/components/iconify';
+import type {
+  UploadProps} from 'src/components/upload';
 import { UploadPlaceholder } from 'src/components/upload/components/placeholder';
 
 export function FileUpload({

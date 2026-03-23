@@ -3,14 +3,6 @@
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
 import { useCallback } from 'react';
-
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import { useTheme } from '@mui/material';
-import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-
 import { maxLine } from 'src/theme/styles/mixins';
 import { Image } from 'src/shared/components/image';
 import { BlueRoundedHeader } from 'src/modules/economap-headers';
@@ -23,6 +15,13 @@ import {
   FavoriteButton,
   DirectionButton,
 } from 'src/shared/components/custom-buttons/action-btn';
+
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material';
+import Drawer from '@mui/material/Drawer';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 
 import EditSharing from './edit-sharing';
 import { SharingDetail } from './sharing-detail';
@@ -44,7 +43,7 @@ export function SharingDrawer({ controller, sharing, submissionStatus, submissio
       open={controller.value}
       onClose={controller.onFalse}
       anchor="right"
-      slotProps={{ backdrop: { sx: { display: { md: 'none' } } } }}
+      slotProps={{ backdrop: { sx: { backgroundColor: 'transparent' } } }}
       PaperProps={{
         sx: { width: { xs: '100vw', md: 480 }, overflowX: 'hidden', overflowY: 'scroll', pb: 8 },
       }}

@@ -6,7 +6,7 @@ export const reformatFormData = async (
   const formData = new FormData();
   const pdfFile = data.pdf?.[0];
 
-  // eslint-disable-next-line no-restricted-syntax
+   
   for (const [key, value] of Object.entries(data)) {
     switch (key) {
       case 'pdf':

@@ -1,3 +1,6 @@
+import type { SocialSharingItem } from '../types';
+import type { FormSchema } from '../social-sharing-create/form-schema';
+
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -23,9 +26,6 @@ import useCreatePendingAdditionalImage from '../_hooks/use-create-pending-additi
 import { SocialSharingInfoForm } from '../social-sharing-create/components/social-sharing-info-form';
 import SocialSharingLocationForm from '../social-sharing-create/components/social-sharing-location-form';
 import { SocialSharingContactForm } from '../social-sharing-create/components/social-sharing-contact-form';
-
-import type { SocialSharingItem } from '../types';
-import type { FormSchema } from '../social-sharing-create/form-schema';
 
 type Props = {
   defaultValue: FormSchema;

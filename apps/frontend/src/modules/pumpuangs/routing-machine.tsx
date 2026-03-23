@@ -6,9 +6,8 @@ import L from 'leaflet';
 import 'leaflet-rotatedmarker';
 import 'leaflet-routing-machine';
 import { useMap } from 'react-leaflet';
-import { useState, useEffect, useCallback } from 'react';
-
 import { CONFIG } from 'src/config-global';
+import { useState, useEffect, useCallback } from 'react';
 import { pumpuangLeftMarker } from 'src/shared/components/leaflet-map/map';
 
 type Props = {

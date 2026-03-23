@@ -1,7 +1,7 @@
-import { createFileFormUrl } from 'src/utils/get-file-form-url';
-
 import type { SocialSharingItem } from '../types';
 import type { FormSchema } from '../social-sharing-create/form-schema';
+
+import { createFileFormUrl } from 'src/utils/get-file-form-url';
 
 export const reformatDefaultValues = async (
   sharing?: SocialSharingItem | null

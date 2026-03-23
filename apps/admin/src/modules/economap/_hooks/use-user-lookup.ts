@@ -1,7 +1,6 @@
 import type { ManagerItem } from 'src/modules/manager/types';
 
 import { useMemo } from 'react';
-
 import { useGetManagers } from 'src/modules/manager/_hooks/use-get-manager';
 
 // ----------------------------------------------------------------------

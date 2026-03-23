@@ -1,8 +1,11 @@
+import type { CommercialType } from '../../types';
 import type { UseMutateAsyncFunction } from '@tanstack/react-query';
+
+import { DashboardContent } from 'src/layouts/dashboard';
 
 import Card from '@mui/material/Card';
 import List from '@mui/material/List';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -11,15 +14,11 @@ import ListSubheader from '@mui/material/ListSubheader';
 
 import { paths } from 'src/routes/paths';
 
-import { DashboardContent } from 'src/layouts/dashboard';
-
 import { ComponentBlock } from 'src/components/custom-blocks';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import CommercialTypeItem from './commercial-type-item';
 import CommercialTypeCreateForm from './commercial-type-create-form';
-
-import type { CommercialType } from '../../types';
 
 // -----–------------------–------------------–------------------–---------------
 
@@ -91,8 +90,8 @@ export default function BaseTypeList({ data }: Props) {
       />
 
       <Grid container>
-        <Grid xs={6}>{renderRestaurantTypesList}</Grid>
-        <Grid xs={6}>{renderDemo}</Grid>
+        <Grid size={6}>{renderRestaurantTypesList}</Grid>
+        <Grid size={6}>{renderDemo}</Grid>
       </Grid>
     </DashboardContent>
   );

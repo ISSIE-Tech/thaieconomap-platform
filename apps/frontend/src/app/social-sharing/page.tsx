@@ -3,7 +3,6 @@
 import { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
-
 import { CommercialLoading } from 'src/modules/commercials/commercial-loading';
 import useGetTinySharings from 'src/modules/sharings/_hooks/use-get-tiny-sharings';
 import { useGeolocationStore } from 'src/modules/geolocation/_store/geolocation.store';

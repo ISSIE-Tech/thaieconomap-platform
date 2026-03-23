@@ -7,14 +7,12 @@ import 'src/global.css';
 import type { Metadata } from 'next';
 
 import { Suspense, type PropsWithChildren } from 'react';
-
 import { ThemeProvider } from 'src/theme/theme-provider';
 import { Snackbar } from 'src/shared/components/snackbar';
 import { LocalizationProvider } from 'src/shared/locales';
 import { ReactQueryProvider } from 'src/shared/react-query';
 import { GeolocationProvider } from 'src/modules/geolocation';
 import AuthProvider from 'src/modules/auth/_contexts/auth-provider';
-import { getInitColorSchemeScript } from 'src/theme/color-scheme-script';
 
 export const metadata: Metadata = {
   title: 'Thai Economap',
@@ -26,8 +24,6 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        {getInitColorSchemeScript}
-
         <Suspense>
           <ReactQueryProvider>
             <LocalizationProvider>

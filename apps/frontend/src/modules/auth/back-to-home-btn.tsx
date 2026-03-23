@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-
 import { paths } from 'src/shared/routes/paths.config';
 import { BackBtn } from 'src/shared/components/custom-buttons';
 

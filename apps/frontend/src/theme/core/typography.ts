@@ -1,4 +1,4 @@
-import type { TypographyOptions } from '@mui/material/styles/createTypography';
+import type { TypographyVariantsOptions } from '@mui/material/styles/createTypography';
 
 import { sukhumvit } from '../fonts/fonts';
 import { setFont, pxToRem, responsiveFontSizes } from '../styles/utils';
@@ -27,7 +27,7 @@ export const secondaryFont = setFont('Poppins');
 
 // ----------------------------------------------------------------------
 
-export const typography: TypographyOptions = {
+export const typography: TypographyVariantsOptions = {
   fontFamily: primaryFont,
   fontSecondaryFamily: secondaryFont,
   fontWeightLight: '300',

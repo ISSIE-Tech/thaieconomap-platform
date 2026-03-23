@@ -1,13 +1,12 @@
 'use client';
 
-import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
-
-import Alert from '@mui/material/Alert';
-
-import { useBoolean } from 'src/hooks/use-boolean';
-
 import { CONFIG } from 'src/config-global';
 import { stylesMode } from 'src/theme/styles';
+
+import Alert from '@mui/material/Alert';
+import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
+
+import { useBoolean } from 'src/hooks/use-boolean';
 
 import { Main } from './main';
 import { HeaderBase } from '../core/header-base';

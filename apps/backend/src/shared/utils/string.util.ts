@@ -3,14 +3,14 @@ import { context, trace } from '@opentelemetry/api';
 import { ErrorException } from '../../common/exceptions';
 import { CODES } from '../constants';
 
-export const prettyObjectString = (obj: Object): string => {
+export const prettyObjectString = (obj: object): string => {
   return `${JSON.stringify(obj, null, 2)}`;
 };
 
 export const getSpanName = (): string => {
   try {
     return trace.getSpan(context.active())['name'];
-  } catch (error) {
+  } catch (_error) {
     return '';
   }
 };

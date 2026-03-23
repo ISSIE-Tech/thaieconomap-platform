@@ -1,7 +1,7 @@
-import { createFileFormUrl } from 'src/utils/get-file-form-url';
-
 import type { AnnouncementItem } from '../types';
 import type { FormSchema } from '../announcements-create/form-schema';
+
+import { createFileFormUrl } from 'src/utils/get-file-form-url';
 
 export const reformatDefaultValues = async (
   announcement: AnnouncementItem

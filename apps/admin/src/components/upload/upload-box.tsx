@@ -1,12 +1,11 @@
+import type { UploadProps } from './types';
+
+import { varAlpha } from 'src/theme/styles';
 import { useDropzone } from 'react-dropzone';
 
 import Box from '@mui/material/Box';
 
-import { varAlpha } from 'src/theme/styles';
-
 import { Iconify } from '../iconify';
-
-import type { UploadProps } from './types';
 
 // ----------------------------------------------------------------------
 

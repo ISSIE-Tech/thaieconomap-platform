@@ -1,14 +1,12 @@
 'use client';
 
 import type { LeafletEventHandlerFnMap } from 'leaflet';
+import type { PumpuangTiny } from './_types/pumpuangs.type';
 
 import { Marker, useMap } from 'react-leaflet';
 import { useRef, useMemo, useEffect } from 'react';
-
 import useMapLoading from 'src/modules/commercials/_hooks/use-map-loading';
 import { pumpuangLeftMarker, pumpuangRightMarker } from 'src/shared/components/leaflet-map/map';
-
-import type { PumpuangTiny } from './_types/pumpuangs.type';
 
 type Props = {
   isLoading: boolean;

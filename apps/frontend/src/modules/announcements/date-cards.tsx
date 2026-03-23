@@ -1,13 +1,11 @@
 'use client';
 
-import type { Theme } from '@mui/material/styles';
-
 import { useState } from 'react';
+import { thaiMonths, dayOfWeekThai } from 'src/shared/components/constants/date';
 
 import Stack from '@mui/material/Stack';
 import { Typography } from '@mui/material';
-
-import { thaiMonths, dayOfWeekThai } from 'src/shared/components/constants/date';
+import type { Theme } from '@mui/material/styles';
 
 import useGetToday from './_hooks/use-get-today';
 import { useAnnouncementsFilter } from './_hooks/use-announcements-filter';
@@ -111,10 +109,10 @@ function DateCard({ datetime, date, dayOfWeek, timePeriod, onClick }: DateCardPr
         onClick();
       }}
     >
-      <Typography fontWeight="bold" color={dateColor[timePeriod]}>
+      <Typography fontWeight="bold" sx={{ color: dateColor[timePeriod] }}>
         {date}
       </Typography>
-      <Typography color={dayOfWeekColor[timePeriod]}>{dayOfWeek}</Typography>
+      <Typography sx={{ color: dayOfWeekColor[timePeriod] }}>{dayOfWeek}</Typography>
     </Stack>
   );
 }

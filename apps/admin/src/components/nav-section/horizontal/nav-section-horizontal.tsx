@@ -1,3 +1,5 @@
+import type { NavGroupProps, NavSectionProps } from '../types';
+
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 
@@ -6,8 +8,6 @@ import { NavUl, NavLi } from '../styles';
 import { Scrollbar } from '../../scrollbar';
 import { navSectionClasses } from '../classes';
 import { navSectionCssVars } from '../css-vars';
-
-import type { NavGroupProps, NavSectionProps } from '../types';
 
 // ----------------------------------------------------------------------
 

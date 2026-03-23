@@ -23,6 +23,6 @@ export const formatPhoneNumber = (phoneNumber: string): string => {
   return phoneNumber.replace(/\D/g, '');
 };
 
-export const prettyObjectString = (obj: Object): string => {
+export const prettyObjectString = (obj: object): string => {
   return `${JSON.stringify(obj, null, 2)}`;
 };

@@ -1,16 +1,15 @@
+import type { UploadProps } from './types';
+
 import { useState, useEffect } from 'react';
+import { varAlpha } from 'src/theme/styles';
 import { useDropzone } from 'react-dropzone';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { varAlpha } from 'src/theme/styles';
-
 import { Image } from '../image';
 import { Iconify } from '../iconify';
 import { RejectionFiles } from './components/rejection-files';
-
-import type { UploadProps } from './types';
 
 // ----------------------------------------------------------------------
 

@@ -1,9 +1,8 @@
 'use client';
 
-import type { IconButtonProps } from '@mui/material/IconButton';
-
 import IconButton from '@mui/material/IconButton';
 import { useColorScheme } from '@mui/material/styles';
+import type { IconButtonProps } from '@mui/material/IconButton';
 
 import { Iconify } from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings/context';

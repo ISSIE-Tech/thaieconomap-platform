@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-
 import { paths } from 'src/shared/routes/paths.config';
 
 const MAP_SETTINGS = {

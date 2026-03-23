@@ -1,6 +1,6 @@
-import type { UploadProps } from 'src/components/upload';
-
 import { Controller, useFormContext } from 'react-hook-form';
+
+import type { UploadProps } from 'src/components/upload';
 
 import { FileUpload } from './file-upload';
 

@@ -1,6 +1,13 @@
 'use client';
 
+import type { LocationFilter } from '../_types/sharing.type';
+
 import { useMemo } from 'react';
+import useGetDistricts from 'src/shared/hooks/use-get-districts';
+import {
+  filterStyle,
+  selectedFilterStyle,
+} from 'src/modules/commercials/filter-drawer/filter-tags';
 
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material';
@@ -10,15 +17,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Autocomplete from '@mui/material/Autocomplete';
 
-import useGetDistricts from 'src/shared/hooks/use-get-districts';
-import {
-  filterStyle,
-  selectedFilterStyle,
-} from 'src/modules/commercials/filter-drawer/filter-tags';
-
 import { sharingFilter } from '../_types/sharing.type';
-
-import type { LocationFilter } from '../_types/sharing.type';
 
 type Props = {
   location: LocationFilter | null;

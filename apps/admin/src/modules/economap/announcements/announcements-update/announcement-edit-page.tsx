@@ -1,12 +1,12 @@
 'use client';
 
+import type { FormSchema } from '../announcements-create/form-schema';
+
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { reformatDefaultValues } from './utils';
 import { AnnouncementsEditForm } from './announcements-edit-form';
 import { useGetAnnouncementsById } from '../_hooks/use-get-announcement-by-id';
-
-import type { FormSchema } from '../announcements-create/form-schema';
 
 type Props = {
   announcementId: string;

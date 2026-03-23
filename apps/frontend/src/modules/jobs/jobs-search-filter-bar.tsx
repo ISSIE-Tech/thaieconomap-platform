@@ -1,11 +1,10 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-
-import Stack from '@mui/material/Stack';
-
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import { SearchInput } from 'src/shared/components/custom-inputs';
+
+import Stack from '@mui/material/Stack';
 
 import { JobsFilterDrawer } from './filter-drawer';
 import { useJobsStore } from './_store/jobs.store';

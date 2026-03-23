@@ -1,4 +1,4 @@
-import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+import type { SocialSharingTableFilters } from '../types';
 
 import { useCallback } from 'react';
 
@@ -6,9 +6,9 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { Iconify } from 'src/components/iconify';
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
-import type { SocialSharingTableFilters } from '../types';
+import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 

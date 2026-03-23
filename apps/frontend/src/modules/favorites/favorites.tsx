@@ -4,9 +4,6 @@ import type { FavoriteTiny } from 'src/modules/favorites/_types/favorites.type';
 import type { TabValue } from 'src/modules/favorites/_constants/favourites-tabs';
 
 import { useMemo, useState } from 'react';
-
-import Stack from '@mui/material/Stack';
-
 import { FavoritesTabs } from 'src/modules/favorites';
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import { BlueRoundedHeader } from 'src/modules/economap-headers';
@@ -14,6 +11,8 @@ import FavoritesList from 'src/modules/favorites/favorites-list';
 import { COMMERCIAL_TABS } from 'src/shared/routes/paths.config';
 import { FAVORITE_TABS } from 'src/modules/favorites/_constants/favourites-tabs';
 import useGetTinyFavorites from 'src/modules/favorites/_hooks/use-get-tiny-favorites';
+
+import Stack from '@mui/material/Stack';
 
 import DrawersController from './drawers-controller';
 

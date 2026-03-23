@@ -2,12 +2,11 @@
 
 import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-
-import Button from '@mui/material/Button';
-
 import { paths } from 'src/shared/routes/paths.config';
 import { toast } from 'src/shared/components/snackbar';
 import { useAuthContext } from 'src/modules/auth/_hooks/use-auth-context';
+
+import Button from '@mui/material/Button';
 
 export const useAuthToast = () => {
   const router = useRouter();

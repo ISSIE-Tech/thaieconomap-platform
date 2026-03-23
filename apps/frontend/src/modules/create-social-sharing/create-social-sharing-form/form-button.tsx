@@ -1,7 +1,7 @@
+import { common, primary } from 'src/theme/core';
+
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
-
-import { common, primary } from 'src/theme/core';
 
 type Props = {
   onClick: () => void;

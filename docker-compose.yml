@@ -1,0 +1,27 @@
+volumes:
+  mongo-data:
+  redis-data:
+
+services:
+  mongodb:
+    image: mongo:7
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-thaieconomap}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-thaieconomap}
+      TZ: Asia/Bangkok
+
+  redis:
+    image: redis/redis-stack-server:latest
+    restart: always
+    ports:
+      - 6380:6379
+    volumes:
+      - redis-data:/data
+    environment:
+      REDIS_ARGS: --requirepass ${REDIS_PASSWORD:-thaieconomap}
+      TZ: Asia/Bangkok

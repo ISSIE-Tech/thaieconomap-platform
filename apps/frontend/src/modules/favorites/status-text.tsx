@@ -1,7 +1,6 @@
+import Box from '@mui/material/Box';
 import type { SxProps } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles/createTheme';
-
-import Box from '@mui/material/Box';
 
 type StatusTextProps = {
   sx?: SxProps<Theme>;

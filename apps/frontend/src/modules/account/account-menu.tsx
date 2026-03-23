@@ -1,12 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { paths } from 'src/shared/routes/paths.config';
 
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-
-import { paths } from 'src/shared/routes/paths.config';
 
 import NavigateLink from './navigate-link';
 

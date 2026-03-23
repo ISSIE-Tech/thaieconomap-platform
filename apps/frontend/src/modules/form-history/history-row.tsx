@@ -1,21 +1,20 @@
 'use client';
 
+import type { FormHistory } from './_types/history.type';
+import type { Commercial } from '../commercials/_types/commercials.type';
+
 import { useMemo } from 'react';
+import { maxLine } from 'src/theme/styles/mixins';
+import { Image } from 'src/shared/components/image';
+import { formatCreateDate } from 'src/shared/components/constants/date';
 
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-import { maxLine } from 'src/theme/styles/mixins';
-import { Image } from 'src/shared/components/image';
-import { formatCreateDate } from 'src/shared/components/constants/date';
-
 import { ENTITY_TYPE } from './_types/history.type';
 import { CommercialCategory } from '../commercials/_types/commercials.type';
-
-import type { FormHistory } from './_types/history.type';
-import type { Commercial } from '../commercials/_types/commercials.type';
 
 type Props = {
   history: FormHistory;

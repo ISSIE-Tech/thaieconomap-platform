@@ -1,9 +1,9 @@
 import type { MotionValue } from 'framer-motion';
-import type { BoxProps } from '@mui/material/Box';
 
 import { m, useSpring } from 'framer-motion';
 
 import Box from '@mui/material/Box';
+import type { BoxProps } from '@mui/material/Box';
 
 // ----------------------------------------------------------------------
 

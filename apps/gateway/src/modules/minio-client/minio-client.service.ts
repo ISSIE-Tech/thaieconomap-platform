@@ -71,7 +71,7 @@ export class MinioClientService {
   private async uploadFile(filename: string, buffer: Buffer, size: number): Promise<void> {
     try {
       await this.minioClient.putObject(this.bucketName, filename, buffer, size);
-    } catch (error) {
+    } catch (_error) {
       throw new ErrorException(CODES.AGW_009, undefined, 'Failed to upload file');
     }
   }
@@ -79,7 +79,7 @@ export class MinioClientService {
   async deleteFile(filename: string): Promise<void> {
     try {
       await this.minioClient.removeObject(this.bucketName, filename);
-    } catch (error) {
+    } catch (_error) {
       throw new ErrorException(CODES.AGW_009, undefined, 'Failed to delete file');
     }
   }

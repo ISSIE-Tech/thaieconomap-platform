@@ -1,10 +1,11 @@
-import type { UseBooleanReturn } from 'src/hooks/use-boolean';
+import type { FormSchema } from './form-schema';
 import type { UseMutateAsyncFunction } from '@tanstack/react-query';
-import type { EconomapError, AdditionalImageUpload } from 'src/types/economap.type';
+
+import type { UseBooleanReturn } from 'src/hooks/use-boolean';
 
 import { getNewUrlList, mapAdditionalImage } from 'src/utils/map-additionalImage';
 
-import type { FormSchema } from './form-schema';
+import type { EconomapError, AdditionalImageUpload } from 'src/types/economap.type';
 
 export const reformatFormData = async (
   data: FormSchema,
@@ -28,7 +29,7 @@ export const reformatFormData = async (
     .map((item: AdditionalImageUpload) => item.data)
     .flat();
 
-  // eslint-disable-next-line no-restricted-syntax
+   
   for (const [key, value] of Object.entries(data)) {
     switch (key) {
       case 'ownerName':

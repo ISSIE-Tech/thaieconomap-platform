@@ -5,16 +5,15 @@ import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
 import dynamic from 'next/dynamic';
 import { useMemo, useEffect } from 'react';
+import { DEFAULT_COORDINATE } from 'src/modules/commercials/_config';
+import FormButton from 'src/shared/components/custom-buttons/form-button';
+import { CommercialLoading } from 'src/modules/commercials/commercial-loading';
+import { useGeolocationStore } from 'src/modules/geolocation/_store/geolocation.store';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
-
-import { DEFAULT_COORDINATE } from 'src/modules/commercials/_config';
-import FormButton from 'src/shared/components/custom-buttons/form-button';
-import { CommercialLoading } from 'src/modules/commercials/commercial-loading';
-import { useGeolocationStore } from 'src/modules/geolocation/_store/geolocation.store';
 
 import { BackBtn } from '../../custom-buttons';
 

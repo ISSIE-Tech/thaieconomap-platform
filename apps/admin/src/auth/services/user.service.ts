@@ -1,9 +1,9 @@
-import type { User } from 'src/types/user.type';
-import type { ApiResponse } from 'src/types/api';
+import { endpoints } from 'src/configs/endpoints.config';
 
 import axios from 'src/utils/axios';
 
-import { endpoints } from 'src/configs/endpoints.config';
+import type { User } from 'src/types/user.type';
+import type { ApiResponse } from 'src/types/api';
 
 // ----------------------------------------------------------------------
 

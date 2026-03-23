@@ -1,23 +1,21 @@
 'use client';
 
 import type { Map as LeafletMap } from 'leaflet';
+import type { District } from '../_types/commercials.type';
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-
-import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import Drawer from '@mui/material/Drawer';
-import Typography from '@mui/material/Typography';
-import debounce from '@mui/material/utils/debounce';
-
 import { BackBtn } from 'src/shared/components/custom-buttons';
 import { SearchInput } from 'src/shared/components/custom-inputs';
 import { useBoolean, type UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
-import { SearchedDistrict } from './searched-districts';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Drawer from '@mui/material/Drawer';
+import { debounce } from '@mui/material/utils';
+import Typography from '@mui/material/Typography';
 
-import type { District } from '../_types/commercials.type';
+import { SearchedDistrict } from './searched-districts';
 
 type Props = {
   controller: UseBooleanReturn;
@@ -82,7 +80,7 @@ export function DistrictSearchDrawer({ controller, map, onClose }: Props) {
       open={controller.value}
       onClose={handleDrawerClose}
       anchor="right"
-      slotProps={{ backdrop: { sx: { display: { md: 'none' } } } }}
+      slotProps={{ backdrop: { sx: { backgroundColor: 'transparent' } } }}
       PaperProps={{
         sx: {
           width: { xs: '100vw', md: 480 },
@@ -92,11 +90,11 @@ export function DistrictSearchDrawer({ controller, map, onClose }: Props) {
       }}
     >
       <Grid container py={2} px={3}>
-        <Grid container xs={4} alignContent="center">
+        <Grid container size={4} alignContent="center">
           <BackBtn onClick={handleDrawerClose} />
         </Grid>
 
-        <Grid container xs={4} justifyContent="center">
+        <Grid container size={4} justifyContent="center">
           <Typography variant="body1" fontWeight="bold">
             ค้นหา
           </Typography>

@@ -2,11 +2,11 @@
 
 import type { ChangeEvent } from 'react';
 
+import { Iconify } from 'src/shared/components/iconify';
+
 import TextField from '@mui/material/TextField';
 import { useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
-
-import { Iconify } from 'src/shared/components/iconify';
 
 type Props = {
   placeholder: string;

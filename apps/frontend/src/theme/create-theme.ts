@@ -1,6 +1,5 @@
 import type { Theme } from '@mui/material/styles';
-
-import { experimental_extendTheme as extendTheme } from '@mui/material/styles';
+import { createTheme as muiCreateTheme } from '@mui/material/styles';
 
 import { shadows, typography, components, colorSchemes, customShadows } from './core';
 
@@ -9,16 +8,19 @@ import { shadows, typography, components, colorSchemes, customShadows } from './
 export function createTheme(): Theme {
   const initialTheme = {
     colorSchemes,
+    defaultColorScheme: 'light' as const,
     shadows: shadows('light'),
     customShadows: customShadows('light'),
     shape: { borderRadius: 8 },
     components,
     typography,
-    cssVarPrefix: '',
+    cssVariables: {
+      cssVarPrefix: '',
+    },
     shouldSkipGeneratingVar,
   };
 
-  const theme = extendTheme(initialTheme);
+  const theme = muiCreateTheme(initialTheme);
 
   return theme;
 }

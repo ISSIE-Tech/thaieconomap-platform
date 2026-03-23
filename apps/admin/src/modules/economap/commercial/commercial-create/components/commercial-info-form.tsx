@@ -1,5 +1,7 @@
 'use client';
 
+import type { CommercialType } from '../types';
+
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
@@ -9,8 +11,6 @@ import { Field, RHFTextField } from 'src/components/hook-form';
 import { DistrictsAutocomplete } from 'src/components/hook-form/custom-hook-form/districts-autocomplete';
 
 import RestaurantTypesAutocomplete from './restaurant-types-autocomplete';
-
-import type { CommercialType } from '../types';
 
 // ----------------------------------------------------------------------
 

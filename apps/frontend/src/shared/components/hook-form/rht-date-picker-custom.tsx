@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-
 import { primary } from 'src/theme/core';
 
 import { RHFMultiSelect } from './rhf-select';

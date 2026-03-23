@@ -1,4 +1,3 @@
-import type { TypographyProps } from '@mui/material/Typography';
 import type { Variants, UseInViewOptions } from 'framer-motion';
 
 import { useRef, useEffect } from 'react';
@@ -6,6 +5,7 @@ import { m, useInView, useAnimation } from 'framer-motion';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import type { TypographyProps } from '@mui/material/Typography';
 
 import { varFade, varContainer } from './variants';
 
@@ -129,16 +129,15 @@ export function AnimateText({
                   sx={{ display: 'inline-block' }}
                 >
                   {word.split('').map((char, charIndex) => (
-                    <Box
-                      component={m.span}
+                    <m.span
                       key={`${char}-${charIndex}`}
-                      variants={variants ?? varFade().in}
+                      variants={(variants ?? varFade().in) as Variants}
                       data-index={charIndex}
                       className={animateTextClasses.char}
-                      sx={{ display: 'inline-block' }}
+                      style={{ display: 'inline-block' }}
                     >
                       {char}
-                    </Box>
+                    </m.span>
                   ))}
 
                   {lastWordInline !== word && (

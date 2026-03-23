@@ -1,11 +1,9 @@
-import type { FabProps } from '@mui/material/Fab';
-
 import { useState } from 'react';
+import { Iconify } from 'src/shared/components/iconify';
 import { useScroll, useMotionValueEvent } from 'framer-motion';
 
 import Fab from '@mui/material/Fab';
-
-import { Iconify } from 'src/shared/components/iconify';
+import type { FabProps } from '@mui/material/Fab';
 
 // ----------------------------------------------------------------------
 

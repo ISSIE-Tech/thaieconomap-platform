@@ -1,12 +1,11 @@
-import type { SvgIconProps } from '@mui/material/SvgIcon';
-import type { Theme, Components } from '@mui/material/styles';
-
 import { listClasses } from '@mui/material/List';
 import { paperClasses } from '@mui/material/Paper';
+import type { SvgIconProps } from '@mui/material/SvgIcon';
 import { textFieldClasses } from '@mui/material/TextField';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { inputLabelClasses } from '@mui/material/InputLabel';
 import { iconButtonClasses } from '@mui/material/IconButton';
+import type { Theme, Components } from '@mui/material/styles';
 import SvgIcon, { svgIconClasses } from '@mui/material/SvgIcon';
 import { listItemIconClasses } from '@mui/material/ListItemIcon';
 import { circularProgressClasses } from '@mui/material/CircularProgress';
@@ -23,54 +22,52 @@ const MuiDataGrid: Components<Theme>['MuiDataGrid'] = {
   defaultProps: {
     slots: {
       /* Column */
-      columnSortedAscendingIcon: (props: SvgIconProps) => (
+      columnSortedAscendingIcon: (props: any) => (
         <DataGridArrowUpIcon sx={{ color: 'text.primary' }} {...props} />
       ),
-      columnSortedDescendingIcon: (props: SvgIconProps) => (
+      columnSortedDescendingIcon: (props: any) => (
         <DataGridArrowDownIcon sx={{ color: 'text.primary' }} {...props} />
       ),
-      columnUnsortedIcon: (props: SvgIconProps) => (
+      columnUnsortedIcon: (props: any) => (
         <DataGridArrowUpIcon
           fontSize={props.fontSize}
           className={props.className}
           sx={{ color: 'text.disabled' }}
         />
       ),
-      columnMenuIcon: (props: SvgIconProps) => <DataGridMoreIcon width={20} {...props} />,
-      columnMenuSortAscendingIcon: (props: SvgIconProps) => <DataGridArrowUpIcon {...props} />,
-      columnMenuSortDescendingIcon: (props: SvgIconProps) => <DataGridArrowDownIcon {...props} />,
-      columnMenuFilterIcon: (props: SvgIconProps) => <DataGridFilterIcon {...props} />,
-      columnMenuHideIcon: (props: SvgIconProps) => <DataGridEyeCloseIcon {...props} />,
-      columnMenuManageColumnsIcon: (props: SvgIconProps) => <DataGridEyeIcon {...props} />,
-      columnSelectorIcon: (props: SvgIconProps) => <DataGridEyeIcon {...props} />,
+      columnMenuIcon: (props: any) => <DataGridMoreIcon width={20} {...props} />,
+      columnMenuSortAscendingIcon: (props: any) => <DataGridArrowUpIcon {...props} />,
+      columnMenuSortDescendingIcon: (props: any) => <DataGridArrowDownIcon {...props} />,
+      columnMenuFilterIcon: (props: any) => <DataGridFilterIcon {...props} />,
+      columnMenuHideIcon: (props: any) => <DataGridEyeCloseIcon {...props} />,
+      columnMenuManageColumnsIcon: (props: any) => <DataGridEyeIcon {...props} />,
+      columnSelectorIcon: (props: any) => <DataGridEyeIcon {...props} />,
       /* Filter */
-      filterPanelDeleteIcon: (props: SvgIconProps) => <DataGridCloseIcon {...props} />,
-      openFilterButtonIcon: (props: SvgIconProps) => <DataGridFilterIcon {...props} />,
-      columnFilteredIcon: (props: SvgIconProps) => (
+      filterPanelDeleteIcon: (props: any) => <DataGridCloseIcon {...props} />,
+      openFilterButtonIcon: (props: any) => <DataGridFilterIcon {...props} />,
+      columnFilteredIcon: (props: any) => (
         <DataGridFilterIcon sx={{ width: 16, color: 'text.primary' }} {...props} />
       ),
       /* Density */
-      densityCompactIcon: (props: SvgIconProps) => <DataGridDensityCompactIcon {...props} />,
-      densityStandardIcon: (props: SvgIconProps) => <DataGridDensityStandardIcon {...props} />,
-      densityComfortableIcon: (props: SvgIconProps) => (
+      densityCompactIcon: (props: any) => <DataGridDensityCompactIcon {...props} />,
+      densityStandardIcon: (props: any) => <DataGridDensityStandardIcon {...props} />,
+      densityComfortableIcon: (props: any) => (
         <DataGridDensityComfortableIcon {...props} />
       ),
       /* Export */
-      exportIcon: (props: SvgIconProps) => <DataGridExportIcon {...props} />,
+      exportIcon: (props: any) => <DataGridExportIcon {...props} />,
       /*  Quick Filter */
-      quickFilterIcon: (props: SvgIconProps) => (
+      quickFilterIcon: (props: any) => (
         <DataGridSearchIcon sx={{ width: 24, height: 24, color: 'text.secondary' }} {...props} />
       ),
-      quickFilterClearIcon: (props: SvgIconProps) => <DataGridCloseIcon {...props} />,
+      quickFilterClearIcon: (props: any) => <DataGridCloseIcon {...props} />,
     },
     slotProps: {
       basePopper: { placement: 'bottom-end' },
       baseChip: { size: 'small' },
       baseSwitch: { size: 'small' },
-      baseCheckbox: { size: 'small', disableRipple: true },
-      baseInputLabel: { shrink: true },
-      baseTextField: { variant: 'outlined' },
-      baseSelect: { native: true, variant: 'outlined' },
+      baseCheckbox: { size: 'small' },
+      baseSelect: { native: true },
     },
   },
 

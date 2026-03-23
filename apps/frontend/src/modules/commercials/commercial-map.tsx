@@ -1,12 +1,10 @@
 'use client';
 
 import type { MarkerCluster } from 'leaflet';
+import type { CommercialTiny } from './_types/commercials.type';
 
 import { Marker } from 'react-leaflet';
 import { useState, useCallback } from 'react';
-
-import Stack from '@mui/material/Stack';
-
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import { STORAGE_KEY } from 'src/shared/components/constants';
 import {
@@ -21,6 +19,8 @@ import {
   OverlappingCluster,
 } from 'src/shared/components/leaflet-map';
 
+import Stack from '@mui/material/Stack';
+
 import { DEFAULT_COORDINATE } from './_config';
 import { OverlappingDrawer } from './overlapping-drawer';
 import useGetCommercial from './_hooks/use-get-commercial';
@@ -28,8 +28,6 @@ import { CommercialDrawer } from './commercial-detail-drawer';
 import { useCommercialStore } from './_store/commercials.store';
 import useCoordCommercialMap from './_hooks/use-coord-commercial-map';
 import { useGeolocationStore } from '../geolocation/_store/geolocation.store';
-
-import type { CommercialTiny } from './_types/commercials.type';
 
 type Props = {
   tinyCommercials: CommercialTiny[];

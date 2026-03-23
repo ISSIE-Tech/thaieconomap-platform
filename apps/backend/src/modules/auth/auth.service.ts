@@ -42,7 +42,7 @@ export class AuthService {
 
     return this.jwtService.sign(payload, {
       secret: this.configService.get<string>(GLOBAL_CONFIG.APP_JWT_ACCESS_TOKEN_SECRET),
-      expiresIn: this.configService.get<string>(GLOBAL_CONFIG.APP_JWT_ACCESS_TOKEN_EXPIRATION_TIME),
+      expiresIn: this.configService.get<string>(GLOBAL_CONFIG.APP_JWT_ACCESS_TOKEN_EXPIRATION_TIME) as any,
     });
   }
 
@@ -58,7 +58,7 @@ export class AuthService {
       secret: this.configService.get<string>(GLOBAL_CONFIG.APP_JWT_REFRESH_TOKEN_SECRET),
       expiresIn: this.configService.get<string>(
         GLOBAL_CONFIG.APP_JWT_REFRESH_TOKEN_EXPIRATION_TIME,
-      ),
+      ) as any,
     });
   }
 }

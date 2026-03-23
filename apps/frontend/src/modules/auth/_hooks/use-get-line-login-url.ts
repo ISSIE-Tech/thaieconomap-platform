@@ -1,5 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-
 import { toast } from 'src/shared/components/snackbar';
 
 import { getLineLoginUrl } from '../_services/line.service';

@@ -1,22 +1,20 @@
 'use client';
 
-import type { SettingsState } from 'src/components/settings';
-import type { NavSectionProps } from 'src/components/nav-section';
-import type { Theme, SxProps, CSSObject, Breakpoint } from '@mui/material/styles';
-
 import { useMemo } from 'react';
+import { _contacts, _notifications } from 'src/_mock';
+import { varAlpha, stylesMode } from 'src/theme/styles';
 
 import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 import { iconButtonClasses } from '@mui/material/IconButton';
+import type { Theme, SxProps, CSSObject, Breakpoint } from '@mui/material/styles';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { _contacts, _notifications } from 'src/_mock';
-import { varAlpha, stylesMode } from 'src/theme/styles';
-
 import { bulletColor } from 'src/components/nav-section';
+import type { SettingsState } from 'src/components/settings';
 import { useSettingsContext } from 'src/components/settings';
+import type { NavSectionProps } from 'src/components/nav-section';
 
 import { Main } from './main';
 import { NavMobile } from './nav-mobile';

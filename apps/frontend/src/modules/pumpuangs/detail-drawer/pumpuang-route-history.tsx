@@ -6,7 +6,6 @@ import L from 'leaflet';
 import 'leaflet-rotatedmarker';
 import { useMap, Polyline } from 'react-leaflet';
 import { useState, useEffect, useCallback } from 'react';
-
 import { pumpuangLeftMarker, pumpuangRightMarker } from 'src/shared/components/leaflet-map/map';
 
 // import RoutingMachine from '../routing-machine';

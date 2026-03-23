@@ -1,5 +1,4 @@
 import { useFormContext } from 'react-hook-form';
-
 import { useGetDistricts } from 'src/modules/economap/commercial/_hooks/use-get-districts';
 
 import { RHFAutocomplete } from 'src/components/hook-form';
@@ -21,7 +20,7 @@ export function DistrictsMultiAutocomplete() {
       label="เขตที่ประกาศ"
       options={districts || []}
       getOptionLabel={(option) =>
-        `${option.districtType}${option.districtName} จังหวัด${option.provinceName}` || ''
+        `${option.districtType}${option.districtName} จังหวัด${option.provinceName}`
       }
       renderOption={(props, option) => (
         <li {...props} key={option._id}>

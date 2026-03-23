@@ -7,14 +7,13 @@ import dynamic from 'next/dynamic';
 import 'leaflet-defaulticon-compatibility';
 import { useWatch } from 'react-hook-form';
 import { useMemo, useState, useEffect } from 'react';
+import { useGeolocationStore } from 'src/modules/geolocation/_store/geolocation.store';
+import { DEFAULT_COORDINATE } from 'src/modules/economap/_config/economap-default-location';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import CardHeader from '@mui/material/CardHeader';
-
-import { useGeolocationStore } from 'src/modules/geolocation/_store/geolocation.store';
-import { DEFAULT_COORDINATE } from 'src/modules/economap/_config/economap-default-location';
 
 // ----------------------------------------------------------------------
 

@@ -1,5 +1,7 @@
 'use client';
 
+import type { ManagerItem } from '../types';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
@@ -21,8 +23,6 @@ import {
 import { useGetManagers } from '../_hooks/use-get-manager';
 import ManagerTableRow from './components/manager-table-row';
 import ManagerTableToolbar from './components/manager-table-toolbar';
-
-import type { ManagerItem } from '../types';
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ export function ManagerList() {
 
   const canReset = !!filters.state.name || filters.state.role.length > 0;
 
-  const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
+  const notFound = !dataFiltered.length && canReset;
 
   return (
     <Card>

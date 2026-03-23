@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 
 // import { useGeolocationStore } from 'src/modules/geolocation/_store/geolocation.store';
-
 import { QUERY_KEY } from '../_config';
 import { getTinyPumpuangs } from '../_services/pumpuangs.service';
 

@@ -120,9 +120,9 @@ input[type='number']::-webkit-inner-spin-button {
 }
 
 .leaflet-tooltip {
-  background-color: rgba(0, 0, 0, 0);
-  border: 0px;
-  box-shadow: none;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   font-weight: 700;
   font-family: 'sukhumvit';
   text-shadow:
@@ -148,21 +148,18 @@ input[type='number']::-webkit-inner-spin-button {
   color: #adb5bd;
 }
 
-.user-marker-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  background-color: #b9e1ff; /* Updated background color */
-  border: 2px solid #60bcff; /* Updated border color */
+.user-marker-icon.leaflet-div-icon {
+  background: none !important;
+  border: none !important;
 }
 
 .user-marker-inner {
   border-radius: 50%;
-  height: 1rem; /* h-4 */
-  width: 1rem; /* w-4 */
+  width: 16px;
+  height: 16px;
   background-color: #0061a8;
-  border: 2px solid white;
+  border: 2.5px solid white;
+  box-shadow: 0 0 0 5px rgba(185, 225, 255, 0.6), 0 0 0 7px rgba(96, 188, 255, 0.4);
 }
 
 .animate-pulse {

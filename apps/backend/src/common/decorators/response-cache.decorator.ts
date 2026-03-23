@@ -16,9 +16,9 @@ export const CacheClearKeys = (...cacheClearKeys: string[]) =>
 export const ResponseCacheTTL = (ttl: number) => SetMetadata(REPONSE_CACHE_TTL, ttl);
 
 export function ResponseCacheNamespace(namespace: string): ClassDecorator {
-  return function (target: Function) {
-    for (const key of Object.getOwnPropertyNames(target.prototype)) {
-      const method = target.prototype[key];
+  return function (target: object) {
+    for (const key of Object.getOwnPropertyNames((target as any).prototype)) {
+      const method = (target as any).prototype[key];
 
       if (typeof method === 'function' && key !== 'constructor') {
         Reflect.defineMetadata(REPONSE_CACHE_NAMESPACE, namespace, method);
@@ -28,9 +28,9 @@ export function ResponseCacheNamespace(namespace: string): ClassDecorator {
 }
 
 export function GlobalResponseCacheTTL(ttl: number): ClassDecorator {
-  return function (target: Function) {
-    for (const key of Object.getOwnPropertyNames(target.prototype)) {
-      const method = target.prototype[key];
+  return function (target: object) {
+    for (const key of Object.getOwnPropertyNames((target as any).prototype)) {
+      const method = (target as any).prototype[key];
 
       if (typeof method === 'function' && key !== 'constructor') {
         Reflect.defineMetadata(REPONSE_CACHE_TTL, ttl, method);

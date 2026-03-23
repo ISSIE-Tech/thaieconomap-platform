@@ -2,12 +2,11 @@
 
 import { useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { paths, COMMERCIAL_TABS } from 'src/shared/routes/paths.config';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { useTheme } from '@mui/material/styles';
-
-import { paths, COMMERCIAL_TABS } from 'src/shared/routes/paths.config';
 
 export default function CommercialTabs() {
   const pathname = usePathname();

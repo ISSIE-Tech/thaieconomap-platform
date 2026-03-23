@@ -1,13 +1,13 @@
 'use client';
 
+import type { FormSchema } from '../commercial-create/form-schema';
+
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 
 import { reformatDefaultValues } from './utils';
 import CommercialEditForm from './commercial-edit-form';
 import { CommercialType } from '../commercial-create/types';
 import { useGetCommercials } from '../_hooks/use-get-commercials';
-
-import type { FormSchema } from '../commercial-create/form-schema';
 
 type Props = {
   commercialId: string;

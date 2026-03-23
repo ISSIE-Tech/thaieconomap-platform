@@ -1,10 +1,10 @@
-import type { ApiResponse } from 'src/types/api';
-
-import axios from 'src/utils/axios';
+import type { ManagerItem, registerParams, registerDistrictsParams } from '../types';
 
 import { endpoints } from 'src/configs/endpoints.config';
 
-import type { ManagerItem, registerParams, registerDistrictsParams } from '../types';
+import axios from 'src/utils/axios';
+
+import type { ApiResponse } from 'src/types/api';
 
 export const getManagerList = async () => {
   const { data } = await axios.get<ApiResponse<ManagerItem[]>>(endpoints.manager.list);

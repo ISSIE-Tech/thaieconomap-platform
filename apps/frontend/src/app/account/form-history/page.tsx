@@ -4,18 +4,9 @@ import type { Sharing } from 'src/modules/sharings/_types/sharing.type';
 import type { Commercial } from 'src/modules/commercials/_types/commercials.type';
 import type { FormHistory, SubmissionStatus } from 'src/modules/form-history/_types/history.type';
 
-import { useMemo, useState, useEffect } from 'react';
-
-import Tab from '@mui/material/Tab';
-import Link from '@mui/material/Link';
-import Tabs from '@mui/material/Tabs';
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
-import { useTheme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-
 import { useTabs } from 'src/shared/hooks/use-tabs';
 import { Image } from 'src/shared/components/image';
+import { useMemo, useState, useEffect } from 'react';
 import { paths } from 'src/shared/routes/paths.config';
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import { BlueRoundedHeader } from 'src/modules/economap-headers';
@@ -24,6 +15,14 @@ import { SharingDrawer } from 'src/modules/sharings/sharing-detail-drawer';
 import useGetHistory from 'src/modules/form-history/_hooks/use-get-history';
 import { CommercialDrawer } from 'src/modules/commercials/commercial-detail-drawer';
 import { ENTITY_TYPE, FORM_HISTORY_TABS } from 'src/modules/form-history/_types/history.type';
+
+import Tab from '@mui/material/Tab';
+import Link from '@mui/material/Link';
+import Tabs from '@mui/material/Tabs';
+import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
+import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 export default function Page() {
   const theme = useTheme();

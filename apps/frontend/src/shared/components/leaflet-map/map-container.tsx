@@ -13,7 +13,7 @@ interface Props extends MapContainerProps {
 }
 
 export const MapContainer = ({ ref, children, ...props }: Props) => {
-  const tileRef = useRef<any>();
+  const tileRef = useRef<any>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
   useEffect(() => {

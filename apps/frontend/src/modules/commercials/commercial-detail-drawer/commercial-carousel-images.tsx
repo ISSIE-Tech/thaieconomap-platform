@@ -1,10 +1,10 @@
 'use client';
 
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-
 import { Image } from 'src/shared/components/image';
 import { Carousel, useCarousel } from 'src/shared/components/carousel';
+
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 type Props = {
   title: string;

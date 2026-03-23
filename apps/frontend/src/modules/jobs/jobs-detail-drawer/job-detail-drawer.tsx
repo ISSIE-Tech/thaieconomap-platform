@@ -2,13 +2,6 @@
 
 import type { SubmissionStatus } from 'src/modules/form-history/_types/history.type';
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import { useTheme } from '@mui/material';
-import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-
 import { maxLine } from 'src/theme/styles/mixins';
 import { Image } from 'src/shared/components/image';
 import { Iconify } from 'src/shared/components/iconify';
@@ -19,6 +12,13 @@ import { useGeolocationStore } from 'src/modules/geolocation/_store/geolocation.
 import { CallButton, DirectionButton } from 'src/shared/components/custom-buttons/action-btn';
 import { StatusBox } from 'src/modules/commercials/commercial-detail-drawer/right-status-box';
 import CommercialCarouselImages from 'src/modules/commercials/commercial-detail-drawer/commercial-carousel-images';
+
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material';
+import Drawer from '@mui/material/Drawer';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 
 import { JobDetail } from './job-detail';
 import { RedirectChialShareDialog } from './redirect-chial-share-dialog';
@@ -41,7 +41,7 @@ export const JobsDetailDrawer = ({
     open={controller.value}
     onClose={controller.onFalse}
     anchor="right"
-    slotProps={{ backdrop: { sx: { display: { md: 'none' } } } }}
+    slotProps={{ backdrop: { sx: { backgroundColor: 'transparent' } } }}
     PaperProps={{
       sx: { width: { xs: '100vw', md: 480 }, overflowX: 'hidden', overflowY: 'scroll', pb: 8 },
     }}

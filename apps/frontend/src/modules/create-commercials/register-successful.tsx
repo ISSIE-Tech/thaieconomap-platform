@@ -1,3 +1,5 @@
+import type { CommercialType } from './_types/create-commercials.type';
+
 import React from 'react';
 import Image from 'next/image';
 
@@ -6,8 +8,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import FormButton from '../../shared/components/custom-buttons/form-button';
-
-import type { CommercialType } from './_types/create-commercials.type';
 
 type Props = {
   commercialType: CommercialType;

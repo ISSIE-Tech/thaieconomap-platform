@@ -2,13 +2,12 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { common, primary } from 'src/theme/core';
+import { paths } from 'src/shared/routes/paths.config';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-
-import { common, primary } from 'src/theme/core';
-import { paths } from 'src/shared/routes/paths.config';
 
 function NotFoundPage() {
   const router = useRouter();
