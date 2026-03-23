@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:24-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN npm install -g corepack@latest
@@ -27,12 +27,12 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/apps/frontend/public ./public
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+COPY --from=builder /app/apps/frontend/public ./apps/frontend/public
+RUN mkdir -p apps/frontend/.next
+RUN chown nextjs:nodejs apps/frontend/.next
 
 COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/.next/static ./apps/frontend/.next/static
 
 USER nextjs
 
@@ -41,4 +41,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["node", "apps/frontend/server.js"]

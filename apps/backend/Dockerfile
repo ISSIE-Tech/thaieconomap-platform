@@ -1,4 +1,4 @@
-FROM node:20-alpine AS deps
+FROM node:24-alpine AS deps
 RUN apk update && corepack enable
 WORKDIR /app
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
@@ -10,7 +10,7 @@ RUN pnpm install --frozen-lockfile
 # BUILD FOR PRODUCTION
 ###################
 
-FROM node:20-alpine AS build
+FROM node:24-alpine AS build
 RUN corepack enable
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -21,16 +21,17 @@ COPY packages/contracts ./packages/contracts
 COPY apps/backend ./apps/backend
 RUN pnpm --filter @thaieconomap/contracts build
 RUN pnpm --filter thaieconomap-backend build
+RUN pnpm --filter thaieconomap-backend deploy --legacy /app/deploy-output
 
 ###################
 # PRODUCTION
 ###################
 
-FROM node:20-alpine AS production
+FROM node:24-alpine AS production
 RUN apk update && \
     apk add --no-cache postgresql-client bash openssl libgcc libstdc++ ncurses-libs tzdata
 WORKDIR /app
+COPY --from=build /app/deploy-output/node_modules ./node_modules
 COPY --from=build /app/apps/backend/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
 
 CMD ["node", "dist/main.js"]

@@ -6,10 +6,11 @@ import { ConfigService } from '@nestjs/config';
 
 import { SubmissionStatus } from '@thaieconomap/contracts';
 import { Cache } from 'cache-manager';
-import { RedisStore } from 'cache-manager-redis-yet';
 import { Express } from 'express';
 import { FilterQuery, ProjectionType, QueryOptions } from 'mongoose';
 import { RedisClientType, SchemaFieldTypes } from 'redis';
+
+import { REDIS_CLIENT } from '../../../shared/redis';
 
 import { ErrorException } from '../../../common/exceptions';
 import { CONFIG } from '../../../config';
@@ -51,10 +52,10 @@ import { ProductTypesService } from './product-types.service';
 export class PendingPumpuangsService implements OnModuleInit {
   private basePopulation = ['types'];
   private readonly logger: Logger = new Logger(PendingPumpuangsService.name);
-  private redisClient: RedisClientType;
 
   constructor(
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    @Inject(REDIS_CLIENT) private readonly redisClient: RedisClientType,
 
     private readonly pendingPumpuangRepository: PendingPumpuangRepository,
     private readonly pumpuangRepository: PumpuangRepository,
@@ -64,9 +65,7 @@ export class PendingPumpuangsService implements OnModuleInit {
 
     @Inject(forwardRef(() => ProductTypesService))
     private readonly productTypesService: ProductTypesService,
-  ) {
-    this.redisClient = (this.cacheManager.store as RedisStore).client;
-  }
+  ) {}
 
   async onModuleInit() {
     await this.createPumpuangSessionIndex();

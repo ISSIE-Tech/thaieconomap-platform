@@ -5,10 +5,11 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 
 import { FavoriteType, PumpuangStatus, SubmissionStatus } from '@thaieconomap/contracts';
 import { Cache } from 'cache-manager';
-import { RedisStore } from 'cache-manager-redis-yet';
 import { Express } from 'express';
 import { FilterQuery, ProjectionType, QueryOptions } from 'mongoose';
 import { RedisClientType, SchemaFieldTypes } from 'redis';
+
+import { REDIS_CLIENT } from '../../../shared/redis';
 
 import { ErrorException } from '../../../common/exceptions';
 import { CONFIG } from '../../../config';
@@ -77,7 +78,6 @@ export class PumpuangsService implements OnModuleInit {
     { path: 'approvedBy', select: '_id authId' },
   ];
   private readonly logger: Logger = new Logger(PumpuangsService.name);
-  private redisClient: RedisClientType;
   private readonly bypassPumpuangPhoneNumber = this.configService.get<string>(
     GLOBAL_CONFIG.BYPASS_PUMPUANG_PHONE_NUMBER,
   );
@@ -87,6 +87,7 @@ export class PumpuangsService implements OnModuleInit {
 
   constructor(
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    @Inject(REDIS_CLIENT) private readonly redisClient: RedisClientType,
     private readonly pumpuangRepository: PumpuangRepository,
     private readonly additionalImageService: AdditionalImageService,
     private readonly minioClientService: MinioClientService,
@@ -98,9 +99,7 @@ export class PumpuangsService implements OnModuleInit {
     private readonly configService: ConfigService,
     private readonly locationAnalyticsService: LocationAnalyticsService,
     private readonly notificationService: NotificationService,
-  ) {
-    this.redisClient = (this.cacheManager.store as RedisStore).client;
-  }
+  ) {}
 
   async onModuleInit() {
     await this.createPumpuangLocationIndex();

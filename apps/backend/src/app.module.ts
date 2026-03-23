@@ -22,6 +22,7 @@ import {
 import { AdditionalImageModule } from './modules/additional-image';
 import { GLOBAL_CONFIG } from './shared/constants';
 import { RedisFactory } from './shared/database';
+import { RedisModule } from './shared/redis';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { RedisFactory } from './shared/database';
       useFactory: async (configService: ConfigService) => RedisFactory(configService),
       inject: [ConfigService],
     }),
+    RedisModule,
     ScheduleModule.forRoot(),
     MapModule,
     CachingModule,
