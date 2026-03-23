@@ -8,6 +8,7 @@ stages:
 
 variables:
   REGISTRY: registry.issie.dev
+  IMAGE_PATH: thaieconomap/thaieconomap-frontend
 
 build-push-dev:
   stage: build-dev
@@ -19,41 +20,40 @@ build-push-dev:
   variables:
     BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
   before_script:
-    - rm -rf .env
-    - cp .env.dev .env
+    - rm -rf apps/frontend/.env
+    - cp apps/frontend/.env.dev apps/frontend/.env
     - mkdir -p ~/.docker
     - echo "{\"auths\":{\"$REGISTRY\":{\"username\":\"$CI_DEPLOY_USER\",\"password\":\"$CI_DEPLOY_PASSWORD\"}}}" > ~/.docker/config.json
-    - cat ~/.docker/config.json
   script:
     - |
       buildctl-daemonless.sh build \
         --frontend=dockerfile.v0 \
         --local context=. \
-        --local dockerfile=. \
+        --local dockerfile=apps/frontend \
         --opt filename=Dockerfile \
-        --output type=image,\"name=$REGISTRY/$CI_PROJECT_PATH/dev:$CI_COMMIT_SHORT_SHA\",push=true
-  only:
-    - merge_requests
+        --output type=image,\"name=$REGISTRY/$IMAGE_PATH/dev:$CI_COMMIT_SHORT_SHA\",push=true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
 
 deploy-dev:
   stage: deploy-dev
   image: alpine:latest
   script:
     - apk add --no-cache git yq
-    # Clone the Manifest Repo
     - git clone https://gitlab-ci-token:${CI_DEPLOY_TOKEN}@gitlab.issie.dev/thaieconomap/thaieconomap-k8s-deployment.git
     - cd thaieconomap-k8s-deployment
-    # Update the image tag using yq
-    - yq eval ".spec.template.spec.containers[0].image = \"$CI_REGISTRY/$CI_PROJECT_PATH/dev:$CI_COMMIT_SHORT_SHA\"" -i ./dev/thaieconomap-frontend/deployment.yaml
+    - yq eval ".spec.template.spec.containers[0].image = \"$REGISTRY/$IMAGE_PATH/dev:$CI_COMMIT_SHORT_SHA\"" -i ./dev/thaieconomap-frontend/deployment.yaml
     - git config user.name "GitLab CI"
     - git config user.email "ci@gitlab.com"
     - git add .
-    - git commit -m "Deploy $IMAGE_TAG to DEV"
+    - git commit -m "Deploy $CI_COMMIT_SHORT_SHA to DEV"
     - git push origin main
-  dependencies:
+  needs:
     - build-push-dev
-  only:
-    - merge_requests
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
 
 build-push-stg:
   stage: build-stg
@@ -65,41 +65,38 @@ build-push-stg:
   variables:
     BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
   before_script:
-    - rm -rf .env
-    - cp .env.stg .env
+    - rm -rf apps/frontend/.env
+    - cp apps/frontend/.env.stg apps/frontend/.env
     - mkdir -p ~/.docker
     - echo "{\"auths\":{\"$REGISTRY\":{\"username\":\"$CI_DEPLOY_USER\",\"password\":\"$CI_DEPLOY_PASSWORD\"}}}" > ~/.docker/config.json
-    - cat ~/.docker/config.json
   script:
     - |
       buildctl-daemonless.sh build \
         --frontend=dockerfile.v0 \
         --local context=. \
-        --local dockerfile=. \
+        --local dockerfile=apps/frontend \
         --opt filename=Dockerfile \
-        --output type=image,\"name=$REGISTRY/$CI_PROJECT_PATH/stg:$CI_COMMIT_SHORT_SHA\",push=true
-  only:
-    - staging
+        --output type=image,\"name=$REGISTRY/$IMAGE_PATH/stg:$CI_COMMIT_SHORT_SHA\",push=true
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
 
 deploy-stg:
   stage: deploy-stg
   image: alpine:latest
   script:
     - apk add --no-cache git yq
-    # Clone the Manifest Repo
     - git clone https://gitlab-ci-token:${CI_DEPLOY_TOKEN}@gitlab.issie.dev/thaieconomap/thaieconomap-k8s-deployment.git
     - cd thaieconomap-k8s-deployment
-    # Update the image tag using yq
-    - yq eval ".spec.template.spec.containers[0].image = \"$CI_REGISTRY/$CI_PROJECT_PATH/stg:$CI_COMMIT_SHORT_SHA\"" -i ./stg/thaieconomap-frontend/deployment.yaml
+    - yq eval ".spec.template.spec.containers[0].image = \"$REGISTRY/$IMAGE_PATH/stg:$CI_COMMIT_SHORT_SHA\"" -i ./stg/thaieconomap-frontend/deployment.yaml
     - git config user.name "GitLab CI"
     - git config user.email "ci@gitlab.com"
     - git add .
-    - git commit -m "Deploy $IMAGE_TAG to STG"
+    - git commit -m "Deploy $CI_COMMIT_SHORT_SHA to STG"
     - git push origin main
-  dependencies:
+  needs:
     - build-push-stg
-  only:
-    - staging
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
 
 build-push-prod:
   stage: build-prod
@@ -111,24 +108,23 @@ build-push-prod:
   variables:
     BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
   before_script:
-    - rm -rf .env
-    - rm -rf .env.example
-    - cp .env.prod .env
-    - rm -rf .env.prod
+    - rm -rf apps/frontend/.env
+    - rm -rf apps/frontend/.env.example
+    - cp apps/frontend/.env.prod apps/frontend/.env
+    - rm -rf apps/frontend/.env.prod
     - mkdir -p ~/.docker
     - echo "{\"auths\":{\"$REGISTRY\":{\"username\":\"$CI_DEPLOY_USER\",\"password\":\"$CI_DEPLOY_PASSWORD\"}}}" > ~/.docker/config.json
-    - cat ~/.docker/config.json
   script:
     - |
       buildctl-daemonless.sh build \
         --frontend=dockerfile.v0 \
         --local context=. \
-        --local dockerfile=. \
+        --local dockerfile=apps/frontend \
         --opt filename=Dockerfile \
-        --output type=image,\"name=$REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA,$REGISTRY/$CI_PROJECT_PATH:latest\",push=true
-  only:
-    - main
-  when: manual
+        --output type=image,\"name=$REGISTRY/$IMAGE_PATH:$CI_COMMIT_SHORT_SHA,$REGISTRY/$IMAGE_PATH:latest\",push=true
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
 
 deploy-prod:
   stage: deploy-prod
@@ -137,14 +133,14 @@ deploy-prod:
     - apk add --no-cache git yq
     - git clone https://gitlab-ci-token:${CI_DEPLOY_TOKEN}@gitlab.issie.dev/thaieconomap/thaieconomap-k8s-deployment.git
     - cd thaieconomap-k8s-deployment
-    - yq eval ".spec.template.spec.containers[0].image = \"$CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA\"" -i ./prod/thaieconomap-frontend/deployment.yaml
+    - yq eval ".spec.template.spec.containers[0].image = \"$REGISTRY/$IMAGE_PATH:$CI_COMMIT_SHORT_SHA\"" -i ./prod/thaieconomap-frontend/deployment.yaml
     - git config user.name "GitLab CI"
     - git config user.email "ci@gitlab.com"
     - git add .
     - git commit -m "Deploy $CI_COMMIT_SHORT_SHA to PROD"
     - git push origin main
-  dependencies:
+  needs:
     - build-push-prod
-  only:
-    - main
-  when: manual
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual

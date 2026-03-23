@@ -15,19 +15,19 @@ export class ApiKeyStrategy extends PassportStrategy(HeaderAPIKeyStrategy, 'api-
   private apiKeySecret: string;
 
   constructor(private readonly configService: ConfigService) {
-    super({ header: 'api-key', prefix: '' }, true);
+    super({ header: 'api-key', prefix: '' }, false);
 
     this.apiKey = this.configService.get<string>(GLOBAL_CONFIG.API_KEY);
     this.apiKeySecret = this.configService.get<string>(GLOBAL_CONFIG.API_KEY_SECRET);
   }
 
   @Span('Validate API Key')
-  validate(apiKey: string, done: (err: Error | null, verified: boolean) => void): void {
+  validate(apiKey: string): boolean {
     if (!this.verifyApiKey(apiKey)) {
-      return done(new ErrorException(CODES.TEC_002), false);
+      throw new ErrorException(CODES.TEC_002);
     }
 
-    return done(null, true);
+    return true;
   }
 
   private verifyApiKey(apiKey: string): boolean {

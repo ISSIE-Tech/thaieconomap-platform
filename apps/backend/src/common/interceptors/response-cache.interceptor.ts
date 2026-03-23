@@ -5,7 +5,10 @@ import { Reflector } from '@nestjs/core';
 import { HttpMethod } from '@thaieconomap/contracts';
 import { RedisCache } from 'cache-manager-redis-yet';
 import { Request } from 'express';
+import { RedisClientType } from 'redis';
 import { Observable, tap } from 'rxjs';
+
+import { REDIS_CLIENT } from '../../shared/redis';
 
 
 export const REPONSE_CACHE_QUERY_KEY: string = 'REPONSE_CACHE_QUERY_KEY';
@@ -95,15 +98,12 @@ export class ResponseCacheInterceptor extends CacheInterceptor {
 
 @Injectable()
 export class CacheClearInterceptor implements NestInterceptor {
-  private readonly redisClient: RedisCache['store']['client'];
   constructor(
-    @Inject(CACHE_MANAGER)
-    private readonly cacheManager: RedisCache,
+    @Inject(REDIS_CLIENT)
+    private readonly redisClient: RedisClientType,
 
     private readonly reflector: Reflector,
-  ) {
-    this.redisClient = this.cacheManager.store.client;
-  }
+  ) {}
 
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<unknown>> {
     const cacheKeys = this.getCacheKey(context);

@@ -1,26 +1,20 @@
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { Cache } from 'cache-manager';
-import { RedisStore } from 'cache-manager-redis-yet';
 import { RedisClientType } from 'redis';
 
 import { CACHE_KEY, CODES, GLOBAL_CONFIG } from '../../shared/constants';
 import { IPendingPumpuangSessionCache } from '../../shared/interfaces';
+import { REDIS_CLIENT } from '../../shared/redis';
 import { verifyHmacSha256Hash } from '../../shared/utils';
 import { ErrorException } from '../exceptions';
 
 @Injectable()
 export class PendingPumpuangSessionGuard implements CanActivate {
-  private redisClient: RedisClientType;
-
   constructor(
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    @Inject(REDIS_CLIENT) private readonly redisClient: RedisClientType,
     private readonly configService: ConfigService,
-  ) {
-    this.redisClient = (this.cacheManager.store as RedisStore).client;
-  }
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();

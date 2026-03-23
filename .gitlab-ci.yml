@@ -1,0 +1,147 @@
+stages:
+  - trigger
+
+variables:
+  REGISTRY: registry.issie.dev
+
+# ──────────────────────────────────────────────
+# Backend
+# ──────────────────────────────────────────────
+trigger-backend-dev:
+  stage: trigger
+  trigger:
+    include:
+      - local: apps/backend/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - apps/backend/**
+        - packages/contracts/**
+        - pnpm-lock.yaml
+
+trigger-backend-prod:
+  stage: trigger
+  trigger:
+    include:
+      - local: apps/backend/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - apps/backend/**
+        - packages/contracts/**
+        - pnpm-lock.yaml
+
+# ──────────────────────────────────────────────
+# Gateway
+# ──────────────────────────────────────────────
+trigger-gateway-dev:
+  stage: trigger
+  trigger:
+    include:
+      - local: apps/gateway/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - apps/gateway/**
+        - packages/contracts/**
+        - pnpm-lock.yaml
+
+trigger-gateway-stg:
+  stage: trigger
+  trigger:
+    include:
+      - local: apps/gateway/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - apps/gateway/**
+        - packages/contracts/**
+        - pnpm-lock.yaml
+
+trigger-gateway-prod:
+  stage: trigger
+  trigger:
+    include:
+      - local: apps/gateway/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - apps/gateway/**
+        - packages/contracts/**
+        - pnpm-lock.yaml
+
+# ──────────────────────────────────────────────
+# Frontend
+# ──────────────────────────────────────────────
+trigger-frontend-dev:
+  stage: trigger
+  trigger:
+    include:
+      - local: apps/frontend/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - apps/frontend/**
+        - packages/contracts/**
+        - pnpm-lock.yaml
+
+trigger-frontend-stg:
+  stage: trigger
+  trigger:
+    include:
+      - local: apps/frontend/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - apps/frontend/**
+        - packages/contracts/**
+        - pnpm-lock.yaml
+
+trigger-frontend-prod:
+  stage: trigger
+  trigger:
+    include:
+      - local: apps/frontend/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - apps/frontend/**
+        - packages/contracts/**
+        - pnpm-lock.yaml
+
+# ──────────────────────────────────────────────
+# Admin
+# ──────────────────────────────────────────────
+trigger-admin-dev:
+  stage: trigger
+  trigger:
+    include:
+      - local: apps/admin/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - apps/admin/**
+        - packages/contracts/**
+        - pnpm-lock.yaml
+
+trigger-admin-prod:
+  stage: trigger
+  trigger:
+    include:
+      - local: apps/admin/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - apps/admin/**
+        - packages/contracts/**
+        - pnpm-lock.yaml
