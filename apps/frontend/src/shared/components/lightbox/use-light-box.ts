@@ -1,8 +1,7 @@
+import type { UseLightBoxReturn } from './types';
 import type { Slide, SlideImage, SlideVideo } from 'yet-another-react-lightbox';
 
 import { useState, useCallback } from 'react';
-
-import type { UseLightBoxReturn } from './types';
 
 // ----------------------------------------------------------------------
 

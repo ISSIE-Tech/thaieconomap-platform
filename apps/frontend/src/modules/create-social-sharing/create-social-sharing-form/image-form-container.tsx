@@ -1,12 +1,11 @@
 import Image from 'next/image';
 import { useCallback } from 'react';
+import { common } from 'src/theme/core';
 import { useFormContext } from 'react-hook-form';
+import { RHFUpload } from 'src/shared/components/hook-form';
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-
-import { common } from 'src/theme/core';
-import { RHFUpload } from 'src/shared/components/hook-form';
 
 type Props = {
   name: string;

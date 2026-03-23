@@ -1,13 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import type { Sharing } from '../_types/sharing.type';
 
+import { useEffect } from 'react';
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import FormButton from 'src/shared/components/custom-buttons/form-button';
 import useGetHistory from 'src/modules/form-history/_hooks/use-get-history';
 import EditSocialSharingDrawer from 'src/modules/create-social-sharing/edit-social-sharing-drawer/edit-social-sharing-drawer';
-
-import type { Sharing } from '../_types/sharing.type';
 
 type Props = {
   sharing?: Sharing | null;

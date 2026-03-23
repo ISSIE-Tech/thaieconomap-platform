@@ -1,6 +1,5 @@
 import type { z } from 'zod';
 import type { Sharing } from 'src/modules/sharings/_types/sharing.type';
-
 import type { formSchema } from '../create-social-sharing-form/form-validators';
 
 export type FormValues = z.infer<typeof formSchema>;

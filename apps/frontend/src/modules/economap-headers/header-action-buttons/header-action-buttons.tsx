@@ -2,14 +2,13 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { paths } from 'src/shared/routes/paths.config';
+import { toast } from 'src/shared/components/snackbar';
 import { useRouter, usePathname } from 'next/navigation';
+import { useAuthContext } from 'src/modules/auth/_hooks/use-auth-context';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-
-import { paths } from 'src/shared/routes/paths.config';
-import { toast } from 'src/shared/components/snackbar';
-import { useAuthContext } from 'src/modules/auth/_hooks/use-auth-context';
 
 // ----------------------------------------------------------------------
 

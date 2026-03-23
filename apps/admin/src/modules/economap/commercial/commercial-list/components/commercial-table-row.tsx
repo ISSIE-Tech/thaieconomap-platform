@@ -1,3 +1,6 @@
+import type { CommercialItem } from '../../types';
+import type { UserLookupMap } from '../../../_hooks/use-user-lookup';
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -25,9 +28,6 @@ import {
   COMMERCIAL_CATEGORY,
   COMMERCIAL_CATEGORY_TRANSLATIONS,
 } from '../../_configs/commercial-category.config';
-
-import type { CommercialItem } from '../../types';
-import type { UserLookupMap } from '../../../_hooks/use-user-lookup';
 
 // ----------------------------------------------------------------------
 

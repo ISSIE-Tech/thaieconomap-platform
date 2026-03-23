@@ -1,14 +1,13 @@
+import type { ImageProps } from './types';
+
 import { forwardRef } from 'react';
+import { CONFIG } from 'src/config-global';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
-import { CONFIG } from 'src/config-global';
-
 import { imageClasses } from './classes';
-
-import type { ImageProps } from './types';
 
 // ----------------------------------------------------------------------
 

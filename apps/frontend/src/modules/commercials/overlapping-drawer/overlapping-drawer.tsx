@@ -2,17 +2,17 @@
 
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
+import { maxLine } from 'src/theme/styles/mixins';
+import { Image } from 'src/shared/components/image';
+import { Iconify } from 'src/shared/components/iconify';
+import { BlueRoundedHeader } from 'src/modules/economap-headers';
+
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import Skeleton from '@mui/material/Skeleton';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-
-import { maxLine } from 'src/theme/styles/mixins';
-import { Image } from 'src/shared/components/image';
-import { Iconify } from 'src/shared/components/iconify';
-import { BlueRoundedHeader } from 'src/modules/economap-headers';
 
 import useGetCommercial from '../_hooks/use-get-commercial';
 import { CommercialCategory, type CommercialTiny } from '../_types/commercials.type';
@@ -35,7 +35,7 @@ export default function OverlappingDrawer({
       open={controller.value}
       onClose={controller.onFalse}
       anchor="right"
-      slotProps={{ backdrop: { sx: { display: { md: 'none' } } } }}
+      slotProps={{ backdrop: { sx: { backgroundColor: 'transparent' } } }}
       PaperProps={{
         sx: {
           width: { xs: '100vw', md: 480 },

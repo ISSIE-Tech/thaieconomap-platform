@@ -1,7 +1,7 @@
-import { createFileFormUrl } from 'src/utils/get-file-form-url';
-
 import type { CommercialItem } from '../types';
 import type { FormSchema } from '../commercial-create/form-schema';
+
+import { createFileFormUrl } from 'src/utils/get-file-form-url';
 
 //--------------------------------------------------------------
 

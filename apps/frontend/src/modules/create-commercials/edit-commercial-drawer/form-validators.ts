@@ -1,7 +1,6 @@
 import type { z } from 'zod';
-import type { Commercial } from 'src/modules/commercials/_types/commercials.type';
-
 import type { formSchema } from '../create-commercials-form/form-validators';
+import type { Commercial } from 'src/modules/commercials/_types/commercials.type';
 
 export type FormValues = z.infer<typeof formSchema>;
 

@@ -1,11 +1,11 @@
+import type { registerDistrictsParams } from '../types';
+
 import { useMutation } from '@tanstack/react-query';
 
 import { queryClient } from 'src/components/react-query';
 
 import { registerManagerDistricts } from '../_services/manager.service';
 import { MANAGER_QUERY_KEYS } from '../_configs/manager-query-keys.config';
-
-import type { registerDistrictsParams } from '../types';
 
 export const useRegisterManagerDistricts = () =>
   useMutation({

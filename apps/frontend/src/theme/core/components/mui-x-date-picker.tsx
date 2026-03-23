@@ -1,8 +1,7 @@
-import type { SvgIconProps } from '@mui/material/SvgIcon';
-import type { Theme, Components } from '@mui/material/styles';
-
 import SvgIcon from '@mui/material/SvgIcon';
 import { buttonClasses } from '@mui/material/Button';
+import type { SvgIconProps } from '@mui/material/SvgIcon';
+import type { Theme, Components } from '@mui/material/styles';
 import { dialogActionsClasses } from '@mui/material/DialogActions';
 
 import { stylesMode } from '../../styles';
@@ -180,14 +179,14 @@ const MuiPickersLayout: Components<Theme>['MuiPickersLayout'] = {
   },
 };
 
-const MuiPickersPopper: Components<Theme>['MuiPickersPopper'] = {
+const MuiPickersPopper: Record<string, any> = {
   /** **************************************
    * DEFAULT PROPS
    *************************************** */
   styleOverrides: {
-    paper: ({ theme }) => ({
+    paper: ({ theme }: { theme: Theme }) => ({
       boxShadow: theme.customShadows.dropdown,
-      borderRadius: theme.shape.borderRadius * 1.5,
+      borderRadius: Number(theme.shape.borderRadius) * 1.5,
     }),
   },
 };

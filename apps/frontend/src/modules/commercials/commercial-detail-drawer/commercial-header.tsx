@@ -1,12 +1,11 @@
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
+import type { Commercial } from '../_types/commercials.type';
 
 import { StatusText } from 'src/modules/favorites';
 import { Iconify } from 'src/shared/components/iconify';
 import { BackBtn } from 'src/shared/components/custom-buttons';
 
-import type { Commercial } from '../_types/commercials.type';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 type Props = {
   commercial?: Commercial | null;
@@ -18,52 +17,52 @@ export function CommercialHeader({ commercial, closeDrawer, title }: Props) {
   const hasFavorite = commercial?.isFavorite;
 
   return (
-    <Grid
-      container
+    <Box
       py={2}
       px={3}
-      sx={{ bgcolor: (theme) => theme.palette.primary.dark, borderBottomRightRadius: '3rem' }}
+      sx={{
+        bgcolor: (theme) => theme.palette.primary.dark,
+        borderBottomRightRadius: '3rem',
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+      }}
     >
-      <Grid container xs={4} alignContent="center">
-        <BackBtn onClick={closeDrawer} />
-      </Grid>
+      <BackBtn onClick={closeDrawer} />
 
-      <Grid container xs={4} justifyContent="center">
-        <Typography textAlign="center" color="white" fontWeight="bold">
-          {title ?? 'ข้อมูลร้าน'}
-        </Typography>
+      <Typography
+        color="white"
+        fontWeight="bold"
+        sx={{
+          position: 'absolute',
+          left: '50%',
+          transform: 'translateX(-50%)',
+        }}
+      >
+        {title ?? 'ข้อมูลร้าน'}
+      </Typography>
 
-        {hasFavorite && (
-          <StatusText sx={{ bgcolor: '#2F9F5C' }}>
-            <Iconify width={20} icon="ic:round-star" color="white" />
-            <Typography color="white" variant="overline" fontWeight="bold">
-              รายการโปรด
-            </Typography>
-          </StatusText>
-        )}
-      </Grid>
+      {hasFavorite && (
+        <StatusText sx={{ bgcolor: '#2F9F5C', ml: 'auto' }}>
+          <Iconify width={20} icon="ic:round-star" color="white" />
+          <Typography color="white" variant="overline" fontWeight="bold">
+            รายการโปรด
+          </Typography>
+        </StatusText>
+      )}
 
       {commercial?.isNewlyOpened && (
-        <Grid container xs={4} justifyContent="end">
-          {/* invisible box to align status text, aria-hidden for screen reader */}
-          <Box visibility="hidden" aria-hidden="true">
-            invisible
-          </Box>
-
-          <StatusText
-            sx={{
-              bgcolor: (theme) => theme.palette.primary.main,
-              right: 0,
-              left: 'auto',
-              transform: 'none',
-            }}
-          >
-            <Typography color="white" variant="overline" fontWeight="bold">
-              ร้านใหม่แกะกล่อง
-            </Typography>
-          </StatusText>
-        </Grid>
+        <StatusText
+          sx={{
+            bgcolor: (theme) => theme.palette.primary.main,
+            ml: 'auto',
+          }}
+        >
+          <Typography color="white" variant="overline" fontWeight="bold">
+            ร้านใหม่แกะกล่อง
+          </Typography>
+        </StatusText>
       )}
-    </Grid>
+    </Box>
   );
 }

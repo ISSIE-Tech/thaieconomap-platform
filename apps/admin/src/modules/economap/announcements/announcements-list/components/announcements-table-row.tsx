@@ -1,3 +1,5 @@
+import type { AnnouncementItem } from '../../types';
+
 import React from 'react';
 
 import { Box, Stack, Checkbox, TableRow, TableCell, Typography } from '@mui/material';
@@ -8,8 +10,6 @@ import { Label } from 'src/components/label/label';
 
 import { AnnouncementsTableRowDrawer } from './announcements-table-row-drawer';
 import { ANNOUNCEMENT_STATUS, ANNOUNCEMENT_STATUS_TRANSLATIONS } from '../../types';
-
-import type { AnnouncementItem } from '../../types';
 
 type Props = {
   row: AnnouncementItem;

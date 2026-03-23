@@ -1,8 +1,10 @@
-import type { UseBooleanReturn } from 'src/hooks/use-boolean';
 import type { UseMutateAsyncFunction } from '@tanstack/react-query';
-import type { EconomapError, AdditionalImageUpload } from 'src/types/economap.type';
 
 import { toast } from 'sonner';
+
+import type { UseBooleanReturn } from 'src/hooks/use-boolean';
+
+import type { EconomapError, AdditionalImageUpload } from 'src/types/economap.type';
 
 export const mapAdditionalImage = async (
   images: File[],
@@ -27,7 +29,7 @@ export const mapAdditionalImage = async (
 
   const uploadPromises: Promise<AdditionalImageUpload>[] = [];
 
-  // eslint-disable-next-line no-restricted-syntax
+   
   for (const image of images) {
     if (imageList.length < 5) {
       imageList.push(image);

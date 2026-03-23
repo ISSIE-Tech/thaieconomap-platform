@@ -1,8 +1,7 @@
+import type { CarouselOptions } from '../types';
 import type { EmblaEventType, EmblaCarouselType } from 'embla-carousel';
 
 import { useRef, useEffect, useCallback } from 'react';
-
-import type { CarouselOptions } from '../types';
 
 // ----------------------------------------------------------------------
 

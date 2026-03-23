@@ -1,12 +1,11 @@
-import type { RatingProps } from '@mui/material/Rating';
-import type { Theme, SxProps } from '@mui/material/styles';
-import type { FormHelperTextProps } from '@mui/material/FormHelperText';
-
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
+import type { RatingProps } from '@mui/material/Rating';
 import FormHelperText from '@mui/material/FormHelperText';
+import type { Theme, SxProps } from '@mui/material/styles';
+import type { FormHelperTextProps } from '@mui/material/FormHelperText';
 
 // ----------------------------------------------------------------------
 

@@ -1,11 +1,11 @@
+import type { registerParams } from '../types';
+
 import { useMutation } from '@tanstack/react-query';
 
 import { queryClient } from 'src/components/react-query';
 
 import { registerManager } from '../_services/manager.service';
 import { MANAGER_QUERY_KEYS } from '../_configs/manager-query-keys.config';
-
-import type { registerParams } from '../types';
 
 export const useRegisterManager = () =>
   useMutation({

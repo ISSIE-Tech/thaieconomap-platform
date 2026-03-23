@@ -1,14 +1,14 @@
 'use client';
 
-import List from '@mui/material/List';
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
+import type { JobPost } from '../_types/jobs.type';
 
 import { Iconify } from 'src/shared/components/iconify';
 import { BulletList } from 'src/shared/components/custom-list';
 
-import type { JobPost } from '../_types/jobs.type';
+import List from '@mui/material/List';
+import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 
 type Props = {
   job?: JobPost | null;

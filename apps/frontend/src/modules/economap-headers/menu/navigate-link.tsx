@@ -1,8 +1,7 @@
 'use client';
 
-import type { TypographyProps } from '@mui/material/Typography';
-
 import Typography from '@mui/material/Typography';
+import type { TypographyProps } from '@mui/material/Typography';
 
 // -------------------------------------------------------------
 

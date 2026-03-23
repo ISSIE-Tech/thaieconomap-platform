@@ -4,7 +4,6 @@ import type { MapPath } from 'src/shared/stores/map';
 import { useState, useEffect } from 'react';
 import { useMapEvents } from 'react-leaflet';
 import { usePathname } from 'next/navigation';
-
 import { useMapStore, pathLastViewedCoordMap } from 'src/shared/stores/map';
 
 const useSaveMapSetting = () => {

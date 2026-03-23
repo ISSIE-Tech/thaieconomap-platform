@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
 import { Menu } from './menu';
@@ -17,17 +17,17 @@ type Props = {
 export function EconomapHeader({ title, menu, actionButton }: Props) {
   return (
     <Grid container py={2} px={3}>
-      <Grid container xs={4} alignContent="center">
+      <Grid container size={4} alignContent="center">
         {menu || <Menu />}
       </Grid>
 
-      <Grid container xs={4} justifyContent="center">
+      <Grid container size={4} justifyContent="center">
         <Typography variant="body1" fontWeight="bold" whiteSpace="nowrap">
           {title}
         </Typography>
       </Grid>
 
-      <Grid container xs={4} justifyContent="flex-end">
+      <Grid container size={4} justifyContent="flex-end">
         {actionButton || <HeaderActionButtons />}
       </Grid>
     </Grid>

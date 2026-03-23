@@ -1,12 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
+import { paths } from 'src/shared/routes/paths.config';
+import FormButton from 'src/shared/components/custom-buttons/form-button';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-
-import { paths } from 'src/shared/routes/paths.config';
-import FormButton from 'src/shared/components/custom-buttons/form-button';
 
 const EditSuccessful = () => (
   <Stack

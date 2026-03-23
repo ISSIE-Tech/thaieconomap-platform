@@ -1,11 +1,11 @@
 import type { PropsWithChildren } from 'react';
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-
 import { EconomapHeader } from 'src/modules/economap-headers';
 import CommercialTabs from 'src/modules/commercials/commercial-tabs';
 import SearchFilterBar from 'src/modules/commercials/commercial-search-filter-bar';
+
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 // ----------------------------------------------------------------------
 

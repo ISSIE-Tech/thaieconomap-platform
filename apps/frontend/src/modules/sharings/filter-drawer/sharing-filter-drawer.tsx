@@ -1,10 +1,12 @@
 'use client';
 
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
+import type { StatusFilter, LocationFilter } from '../_types/sharing.type';
 
 import Image from 'next/image';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { TagsSection } from 'src/modules/commercials/filter-drawer/filter-tags';
 
 import Fab from '@mui/material/Fab';
 import Grid from '@mui/material/Grid';
@@ -14,12 +16,8 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
-import { TagsSection } from 'src/modules/commercials/filter-drawer/filter-tags';
-
 import { LocationWithDistrictTags } from './filter-tags';
 import { sharingFilter, sharingFilterDefault } from '../_types/sharing.type';
-
-import type { StatusFilter, LocationFilter } from '../_types/sharing.type';
 
 type Props = {
   controller: UseBooleanReturn;
@@ -88,15 +86,15 @@ export function SharingFilterDrawer({ controller }: Props) {
       }}
     >
       <Grid container py={2} px={3}>
-        <Grid xs={4} />
+        <Grid size={4} />
 
-        <Grid container xs={4} alignContent="center" justifyContent="center">
+        <Grid container size={4} alignContent="center" justifyContent="center">
           <Typography variant="body1" fontWeight="bold">
             ฟิลเตอร์
           </Typography>
         </Grid>
 
-        <Grid container xs={4} alignContent="center" justifyContent="end">
+        <Grid container size={4} alignContent="center" justifyContent="end">
           <Fab color="default" size="small" sx={{ bgcolor: 'white' }} onClick={controller.onFalse}>
             <Image src="/assets/icons/cross.svg" alt="cross icon" width="24" height="24" />
           </Fab>

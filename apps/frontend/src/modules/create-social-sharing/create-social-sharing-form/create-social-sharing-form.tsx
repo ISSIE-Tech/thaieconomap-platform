@@ -1,9 +1,10 @@
+import type { FormValues } from './form-validators';
 import type { SubmitHandler } from 'react-hook-form';
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
+import type { FormSteps } from '../_types/create-social-sharing.type';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-
 import { Form } from 'src/shared/components/hook-form';
 import { toast } from 'src/shared/components/snackbar';
 
@@ -12,9 +13,6 @@ import { reformatFormData } from '../reformat-data';
 import { formSchema, defaultValue } from './form-validators';
 import useCreatePendingShares from '../_hooks/use-create-pending-shares';
 import useCreateAdditionalImage from '../_hooks/use-create-additional-image';
-
-import type { FormValues } from './form-validators';
-import type { FormSteps } from '../_types/create-social-sharing.type';
 
 type Props = {
   handleNextFormProgress: () => void;

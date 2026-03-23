@@ -1,14 +1,13 @@
 'use client';
 
 import type { SyntheticEvent } from 'react';
+import type { TabValue } from './_constants/favourites-tabs';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { useTheme } from '@mui/material/styles';
 
 import { FAVORITE_TABS } from './_constants/favourites-tabs';
-
-import type { TabValue } from './_constants/favourites-tabs';
 
 type Props = {
   tab: TabValue;

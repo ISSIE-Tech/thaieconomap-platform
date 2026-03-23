@@ -1,8 +1,7 @@
-import type { Theme, SxProps } from '@mui/material/styles';
-
 import { forwardRef } from 'react';
 
 import SvgIcon from '@mui/material/SvgIcon';
+import type { Theme, SxProps } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 

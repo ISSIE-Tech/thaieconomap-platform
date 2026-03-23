@@ -2,6 +2,7 @@
 
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
+import { paths } from 'src/shared/routes/paths.config';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
@@ -9,8 +10,6 @@ import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-
-import { paths } from 'src/shared/routes/paths.config';
 
 import { FilterHeader } from './filter-header';
 import useGetBusinessTypes from '../_hooks/use-get-business-types';

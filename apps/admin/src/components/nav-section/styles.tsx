@@ -1,12 +1,11 @@
-import type { BoxProps } from '@mui/material/Box';
-import type { CollapseProps } from '@mui/material/Collapse';
-import type { ListSubheaderProps } from '@mui/material/ListSubheader';
+import { stylesMode } from 'src/theme/styles';
 
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
+import type { BoxProps } from '@mui/material/Box';
 import ListSubheader from '@mui/material/ListSubheader';
-
-import { stylesMode } from 'src/theme/styles';
+import type { CollapseProps } from '@mui/material/Collapse';
+import type { ListSubheaderProps } from '@mui/material/ListSubheader';
 
 import { navSectionClasses } from './classes';
 import { svgColorClasses } from '../svg-color';

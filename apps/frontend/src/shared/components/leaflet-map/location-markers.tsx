@@ -1,13 +1,11 @@
 'use client';
 
+import type { MarkerIcon, PinLocation } from './types';
 import type { LeafletEventHandlerFnMap } from 'leaflet';
 
 import { useState } from 'react';
 import { Marker, useMap, Tooltip } from 'react-leaflet';
-
 import useMapLoading from 'src/modules/commercials/_hooks/use-map-loading';
-
-import type { MarkerIcon, PinLocation } from './types';
 
 type Props = {
   isLoading: boolean;

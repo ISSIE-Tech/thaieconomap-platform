@@ -1,11 +1,10 @@
 import React from 'react';
-
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-
 import { UserProfile } from 'src/modules/account';
 import AccountMenu from 'src/modules/account/account-menu';
 import { EconomapHeader } from 'src/modules/economap-headers';
+
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 // ----------------------------------------------------------------------
 

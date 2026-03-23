@@ -1,11 +1,9 @@
-import type { Theme, SxProps } from '@mui/material/styles';
-
 import { forwardRef } from 'react';
+import { CONFIG } from 'src/config-global';
 
 import Box from '@mui/material/Box';
 import NoSsr from '@mui/material/NoSsr';
-
-import { CONFIG } from 'src/config-global';
+import type { Theme, SxProps } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 

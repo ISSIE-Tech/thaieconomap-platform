@@ -1,8 +1,8 @@
+import type { CommercialType } from '../_types/create-commercials.type';
+
 import Stack from '@mui/material/Stack';
 
 import { ImageFormContainer } from './image-form-container';
-
-import type { CommercialType } from '../_types/create-commercials.type';
 
 type Props = {
   commercialType: CommercialType;

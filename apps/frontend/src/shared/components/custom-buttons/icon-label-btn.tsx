@@ -1,8 +1,8 @@
 import type { Theme } from 'src/theme/types';
-import type { SxProps } from '@mui/material';
 
 import Fab from '@mui/material/Fab';
 import Stack from '@mui/material/Stack';
+import type { SxProps } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
 import { Iconify } from '../iconify';

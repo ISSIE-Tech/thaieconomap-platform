@@ -1,10 +1,9 @@
 import type { UseMutateAsyncFunction } from '@tanstack/react-query';
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
-
-import { toast } from 'src/shared/components/snackbar';
-
 import type { FormValues } from './create-social-sharing-form/form-validators';
 import type { CommercialError, additionalImageUpload } from './_types/create-social-sharing.type';
+
+import { toast } from 'src/shared/components/snackbar';
 
 export const reformatFormData = async (
   data: FormValues,
@@ -30,7 +29,7 @@ export const reformatFormData = async (
     .map((item: additionalImageUpload) => item.data)
     .flat();
 
-  // eslint-disable-next-line no-restricted-syntax
+   
   for (const [key, value] of Object.entries(data)) {
     switch (key) {
       case 'ownerName':
@@ -93,7 +92,7 @@ export const mapAdditionalImage = async (
 
   const uploadPromises: Promise<additionalImageUpload>[] = [];
 
-  // eslint-disable-next-line no-restricted-syntax
+   
   for (const image of images) {
     if (imageList.length < 5) {
       imageList.push(image);

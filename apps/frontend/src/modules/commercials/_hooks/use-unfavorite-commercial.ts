@@ -1,6 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-
 import { QUERY_KEY } from 'src/modules/favorites/_config';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { unfavoriteCommercial } from '../_services/commercial.service';
 

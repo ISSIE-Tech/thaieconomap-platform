@@ -1,15 +1,13 @@
 import type { District } from 'src/modules/commercials/_types/commercials.type';
+import type { CommercialType, CommercialOptions } from '../_types/create-commercials.type';
 
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { RHFTextField, RHFAutocomplete } from 'src/shared/components/hook-form';
 
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-
-import { RHFTextField, RHFAutocomplete } from 'src/shared/components/hook-form';
-
-import type { CommercialType, CommercialOptions } from '../_types/create-commercials.type';
 
 type Props = {
   commercialType: CommercialType;

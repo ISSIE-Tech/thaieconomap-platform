@@ -1,5 +1,8 @@
-import type { SettingsState } from 'src/components/settings';
+import type { ThemeComponents, ThemeUpdateOptions } from '../types';
+
 import type { Theme, Components } from '@mui/material/styles';
+
+import type { SettingsState } from 'src/components/settings';
 
 import COLORS from '../core/colors.json';
 import PRIMARY_COLOR from './primary-color.json';
@@ -7,8 +10,6 @@ import { components as coreComponents } from '../core/components';
 import { hexToRgbChannel, createPaletteChannel } from '../styles';
 import { grey as coreGreyPalette, primary as corePrimaryPalette } from '../core/palette';
 import { createShadowColor, customShadows as coreCustomShadows } from '../core/custom-shadows';
-
-import type { ThemeComponents, ThemeUpdateOptions } from '../types';
 
 // ----------------------------------------------------------------------
 
@@ -22,6 +23,8 @@ export function updateCoreWithSettings(
   settings: SettingsState
 ): ThemeUpdateOptions {
   const { colorSchemes, customShadows } = theme;
+  const lightScheme = typeof colorSchemes?.light === 'object' ? colorSchemes.light : undefined;
+  const darkScheme = typeof colorSchemes?.dark === 'object' ? colorSchemes.dark : undefined;
 
   return {
     ...theme,
@@ -29,12 +32,12 @@ export function updateCoreWithSettings(
       ...colorSchemes,
       light: {
         palette: {
-          ...colorSchemes?.light?.palette,
+          ...lightScheme?.palette,
           /** [1] */
           primary: getPalettePrimary(settings.primaryColor),
           /** [2] */
           background: {
-            ...colorSchemes?.light?.palette?.background,
+            ...lightScheme?.palette?.background,
             default: getBackgroundDefault(settings.contrast),
             defaultChannel: hexToRgbChannel(getBackgroundDefault(settings.contrast)),
           },
@@ -42,7 +45,7 @@ export function updateCoreWithSettings(
       },
       dark: {
         palette: {
-          ...colorSchemes?.dark?.palette,
+          ...darkScheme?.palette,
           /** [1] */
           primary: getPalettePrimary(settings.primaryColor),
         },

@@ -1,16 +1,9 @@
 'use client';
 
+import type { Pumpuang } from '../_types/pumpuangs.type';
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
 import { useCallback } from 'react';
-
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
-import { useTheme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-
 import { maxLine } from 'src/theme/styles/mixins';
 import { Image } from 'src/shared/components/image';
 import { MapContainer } from 'src/shared/components/leaflet-map';
@@ -21,14 +14,19 @@ import { CallButton, FavoriteButton } from 'src/shared/components/custom-buttons
 import { CommercialDetail } from 'src/modules/commercials/commercial-detail-drawer/commercial-detail';
 import CommercialCarouselImages from 'src/modules/commercials/commercial-detail-drawer/commercial-carousel-images';
 
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Drawer from '@mui/material/Drawer';
+import Divider from '@mui/material/Divider';
+import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+
 import { MAP_ZOOM } from '../_config';
 import useGetPumpuangById from '../_hooks/use-get-pumpuang';
 import { PumpuangWorkingStatus } from '../_types/pumpuangs.type';
 import useFavoritePumpuang from '../_hooks/use-favorite-pumpuang';
 import { PumpuangRoutingHistory } from './pumpuang-route-history';
 import useUnfavoritePumpuang from '../_hooks/use-unfavorite-pumpuang';
-
-import type { Pumpuang } from '../_types/pumpuangs.type';
 
 type DrawerProps = {
   controller: UseBooleanReturn;
@@ -51,7 +49,7 @@ export default function PumpuangDrawer({ controller, pumpuang }: DrawerProps) {
       open={controller.value}
       onClose={controller.onFalse}
       anchor="right"
-      slotProps={{ backdrop: { sx: { display: { md: 'none' } } } }}
+      slotProps={{ backdrop: { sx: { backgroundColor: 'transparent' } } }}
       PaperProps={{
         sx: { width: { xs: '100vw', md: 480 }, overflowX: 'hidden', overflowY: 'scroll', pb: 8 },
       }}

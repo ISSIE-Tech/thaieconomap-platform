@@ -1,15 +1,14 @@
 'use client';
 
 import { m } from 'framer-motion';
+import { SimpleLayout } from 'src/layouts/simple';
+import { ServerErrorIllustration } from 'src/assets/illustrations';
 
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 import { RouterLink } from 'src/routes/components';
-
-import { SimpleLayout } from 'src/layouts/simple';
-import { ServerErrorIllustration } from 'src/assets/illustrations';
 
 import { varBounce, MotionContainer } from 'src/components/animate';
 

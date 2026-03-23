@@ -10,4 +10,4 @@ export interface IGateWayResponse<T> extends IGateWayMetaData {
   data: T;
 }
 
-export interface IGateWayPrivilegeUserReponse extends IUser {}
+export type IGateWayPrivilegeUserReponse = IUser;

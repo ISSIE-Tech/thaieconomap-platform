@@ -1,6 +1,6 @@
-import axios from 'src/utils/axios';
-
 import { endpoints } from 'src/configs/endpoints.config';
+
+import axios from 'src/utils/axios';
 
 export const updatePendingSocialSharing = async (id: string, params: FormData) => {
   const res = await axios.put(endpoints['pending-social-sharing'].update(id), params);

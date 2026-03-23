@@ -1,9 +1,8 @@
 import type { ApiResponse } from 'src/shared/types/api.type';
+import type { Sharing, SharingTiny } from '../_types/sharing.type';
 
 import axios from 'src/shared/utils/axios';
 import { endpoints } from 'src/shared/configs/endpoints.config';
-
-import type { Sharing, SharingTiny } from '../_types/sharing.type';
 
 type Params = {
   queryKey: string[];

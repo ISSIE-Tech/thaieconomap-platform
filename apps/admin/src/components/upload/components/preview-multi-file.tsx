@@ -1,15 +1,15 @@
+import type { MultiFilePreviewProps } from '../types';
+
+import { varAlpha } from 'src/theme/styles';
+
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 
 import { fData } from 'src/utils/format-number';
 
-import { varAlpha } from 'src/theme/styles';
-
 import { Iconify } from '../../iconify';
 import { fileData, FileThumbnail } from '../../file-thumbnail';
-
-import type { MultiFilePreviewProps } from '../types';
 
 // ----------------------------------------------------------------------
 

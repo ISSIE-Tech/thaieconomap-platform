@@ -1,6 +1,6 @@
-import type { EconomapError } from 'src/types/economap.type';
-
 import { useMutation } from '@tanstack/react-query';
+
+import type { EconomapError } from 'src/types/economap.type';
 
 import { updateCommercials } from '../_services/commercial.service';
 

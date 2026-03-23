@@ -1,6 +1,9 @@
 'use client';
 
 
+import type { ManagerItem } from '../../types';
+import type { FormSchema} from '../form-schema';
+
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -20,9 +23,6 @@ import { Form } from 'src/components/hook-form';
 import { formSchema } from '../form-schema';
 import ManagerInfoForm from './manager-info-form';
 import { useRegisterManager } from '../../_hooks/use-register-manager';
-
-import type { ManagerItem } from '../../types';
-import type { FormSchema} from '../form-schema';
 
 // ----------------------------------------------------------------------
 

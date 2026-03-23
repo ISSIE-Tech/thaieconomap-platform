@@ -1,4 +1,4 @@
-import type { UseBooleanReturn } from 'src/hooks/use-boolean';
+import type { ManagerItem } from '../../types';
 
 import { useRouter } from 'next/navigation';
 
@@ -10,10 +10,10 @@ import { Divider, Typography } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 
+import type { UseBooleanReturn } from 'src/hooks/use-boolean';
+
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
-
-import type { ManagerItem } from '../../types';
 
 // ----------------------------------------------------------------------
 

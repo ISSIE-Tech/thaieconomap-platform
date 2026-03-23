@@ -1,15 +1,14 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { Image } from 'src/shared/components/image';
+import { paths } from 'src/shared/routes/paths.config';
 import { useEffect, type PropsWithChildren } from 'react';
+import { useBoolean } from 'src/shared/hooks/use-boolean';
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
-
-import { Image } from 'src/shared/components/image';
-import { paths } from 'src/shared/routes/paths.config';
-import { useBoolean } from 'src/shared/hooks/use-boolean';
 
 import { useAuthContext } from '../_hooks/use-auth-context';
 

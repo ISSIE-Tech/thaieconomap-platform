@@ -4,7 +4,12 @@ import type { ReactNode } from 'react';
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
 import React, { useState } from 'react';
+import { primary } from 'src/theme/core';
 import { useRouter } from 'next/navigation';
+import { useBoolean } from 'src/shared/hooks/use-boolean';
+import NavigateLink from 'src/modules/account/navigate-link';
+import { BlueRoundedHeader } from 'src/modules/economap-headers';
+import { SERVICE_LINKS, OUR_CONTACT_NUMBER } from 'src/modules/account/_constants';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -13,12 +18,6 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
-
-import { primary } from 'src/theme/core';
-import { useBoolean } from 'src/shared/hooks/use-boolean';
-import NavigateLink from 'src/modules/account/navigate-link';
-import { BlueRoundedHeader } from 'src/modules/economap-headers';
-import { SERVICE_LINKS, OUR_CONTACT_NUMBER } from 'src/modules/account/_constants';
 
 const services = Object.keys(SERVICE_LINKS) as (keyof typeof SERVICE_LINKS)[];
 

@@ -1,3 +1,6 @@
+import type { UploadProps } from './types';
+
+import { varAlpha } from 'src/theme/styles';
 import { useDropzone } from 'react-dropzone';
 
 import Box from '@mui/material/Box';
@@ -5,15 +8,11 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import FormHelperText from '@mui/material/FormHelperText';
 
-import { varAlpha } from 'src/theme/styles';
-
 import { Iconify } from '../iconify';
 import { UploadPlaceholder } from './components/placeholder';
 import { RejectionFiles } from './components/rejection-files';
 import { MultiFilePreview } from './components/preview-multi-file';
 import { DeleteButton, SingleFilePreview } from './components/preview-single-file';
-
-import type { UploadProps } from './types';
 
 // ----------------------------------------------------------------------
 

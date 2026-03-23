@@ -1,8 +1,7 @@
 import { useFormContext } from 'react-hook-form';
+import { useGetDistricts } from 'src/modules/economap/commercial/_hooks/use-get-districts';
 
 import { Stack } from '@mui/material';
-
-import { useGetDistricts } from 'src/modules/economap/commercial/_hooks/use-get-districts';
 
 import { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
@@ -27,7 +26,7 @@ export default function ManagerInfoForm() {
         label="เขต / อำเภอที่รับผิดชอบ"
         options={districts || []}
         getOptionLabel={(option) =>
-          `${option.districtType}${option.districtName} จังหวัด${option.provinceName}` || ''
+          `${option.districtType}${option.districtName} จังหวัด${option.provinceName}`
         }
         renderOption={(props, option) => (
           <li {...props} key={option._id}>

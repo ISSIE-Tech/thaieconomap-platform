@@ -1,3 +1,5 @@
+import type { CarouselProps, CarouselOptions } from './types';
+
 import { Children, isValidElement } from 'react';
 
 import Box from '@mui/material/Box';
@@ -5,8 +7,6 @@ import { styled } from '@mui/material/styles';
 
 import { carouselClasses } from './classes';
 import { CarouselSlide } from './components/carousel-slide';
-
-import type { CarouselProps, CarouselOptions } from './types';
 
 // ----------------------------------------------------------------------
 
@@ -24,11 +24,14 @@ export const StyledRoot = styled(Box, {
   }),
 }));
 
-export const StyledContainer = styled(Box, {
+export const StyledContainer = styled('ul', {
   shouldForwardProp: (prop) => prop !== 'axis' && prop !== 'slideSpacing',
 })<StyledProps>(({ axis, slideSpacing }) => ({
   display: 'flex',
   backfaceVisibility: 'hidden',
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
   ...(axis === 'x' && {
     touchAction: 'pan-y pinch-zoom',
     marginLeft: `calc(${slideSpacing} * -1)`,
@@ -68,7 +71,6 @@ export function Carousel({ carousel, children, sx, slotProps }: CarouselProps) {
   return (
     <StyledRoot sx={sx} axis={axis} ref={mainRef} dir={direction} className={carouselClasses.root}>
       <StyledContainer
-        component="ul"
         axis={axis}
         slideSpacing={slideSpacing}
         className={carouselClasses.container}

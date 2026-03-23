@@ -1,6 +1,6 @@
 'use client';
 
-import type { IconButtonProps } from '@mui/material/IconButton';
+import type { NotificationItemProps } from './notification-item';
 
 import { m } from 'framer-motion';
 import { useState, useCallback } from 'react';
@@ -15,6 +15,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import type { IconButtonProps } from '@mui/material/IconButton';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
@@ -25,8 +26,6 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { CustomTabs } from 'src/components/custom-tabs';
 
 import { NotificationItem } from './notification-item';
-
-import type { NotificationItemProps } from './notification-item';
 
 // ----------------------------------------------------------------------
 

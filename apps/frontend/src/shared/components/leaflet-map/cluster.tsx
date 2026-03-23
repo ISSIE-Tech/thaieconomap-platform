@@ -4,9 +4,8 @@ import type L from 'leaflet';
 import type { MarkerCluster, LeafletMouseEvent } from 'leaflet';
 
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import { useState, useEffect, useCallback, type PropsWithChildren } from 'react';
-
 import { useBoolean } from 'src/shared/hooks/use-boolean';
+import { useState, useEffect, useCallback, type PropsWithChildren } from 'react';
 
 import { ClusterDialog } from './cluster-dialog';
 import { groupCluster, activeCluster, areChildrenMarkersClose } from './map';

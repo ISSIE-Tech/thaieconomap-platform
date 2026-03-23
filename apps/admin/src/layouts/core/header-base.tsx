@@ -1,4 +1,8 @@
-import type { NavSectionProps } from 'src/components/nav-section';
+import type { HeaderSectionProps } from './header-section';
+import type { AccountDrawerProps } from '../components/account-drawer';
+import type { ContactsPopoverProps } from '../components/contacts-popover';
+import type { LanguagePopoverProps } from '../components/language-popover';
+import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -9,6 +13,7 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { Logo } from 'src/components/logo';
+import type { NavSectionProps } from 'src/components/nav-section';
 
 import { HeaderSection } from './header-section';
 import { Searchbar } from '../components/searchbar';
@@ -20,12 +25,6 @@ import {
   NotificationsDrawer,
   type NotificationsDrawerProps,
 } from '../components/notifications-drawer';
-
-import type { HeaderSectionProps } from './header-section';
-import type { AccountDrawerProps } from '../components/account-drawer';
-import type { ContactsPopoverProps } from '../components/contacts-popover';
-import type { LanguagePopoverProps } from '../components/language-popover';
-import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
 
 // ----------------------------------------------------------------------
 

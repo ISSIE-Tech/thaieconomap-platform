@@ -1,10 +1,10 @@
-import type { ApiResponse } from 'src/types/api';
-
-import axios from 'src/utils/axios';
+import type { CommercialType } from '../types';
 
 import { endpoints } from 'src/configs/endpoints.config';
 
-import type { CommercialType } from '../types';
+import axios from 'src/utils/axios';
+
+import type { ApiResponse } from 'src/types/api';
 
 // ----------------------------------------------------------------------
 

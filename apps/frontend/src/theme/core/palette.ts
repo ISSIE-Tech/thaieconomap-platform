@@ -148,5 +148,4 @@ export const darkPalette = {
 
 export const colorSchemes: Partial<Record<'dark' | 'light', ColorSystemOptions>> = {
   light: { palette: lightPalette },
-  dark: { palette: darkPalette },
 };

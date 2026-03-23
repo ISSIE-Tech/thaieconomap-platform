@@ -3,7 +3,6 @@
 import type { PropsWithChildren } from 'react';
 
 import { useEffect, useCallback } from 'react';
-
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 
 import { useGeolocationStore } from './_store/geolocation.store';

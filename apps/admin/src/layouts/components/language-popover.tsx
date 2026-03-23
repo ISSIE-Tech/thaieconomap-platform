@@ -1,6 +1,6 @@
 'use client';
 
-import type { IconButtonProps } from '@mui/material/IconButton';
+import type { Language } from '../config-nav-languages';
 
 import { m } from 'framer-motion';
 import { useCallback } from 'react';
@@ -8,13 +8,12 @@ import { useCallback } from 'react';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
+import type { IconButtonProps } from '@mui/material/IconButton';
 
 import { varHover } from 'src/components/animate';
 import { FlagIcon } from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
-
-import type { Language } from '../config-nav-languages';
 
 // ----------------------------------------------------------------------
 

@@ -1,9 +1,8 @@
+import type { LoginResponse } from '../_types/auth.type';
 import type { ApiResponse } from 'src/shared/types/api.type';
 
 import axios from 'src/shared/utils/axios';
 import { endpoints } from 'src/shared/configs/endpoints.config';
-
-import type { LoginResponse } from '../_types/auth.type';
 
 // ----------------------------------------------------------------------
 

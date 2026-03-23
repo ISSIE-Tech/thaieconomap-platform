@@ -25,7 +25,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const { url, method } = request;
     const userAgent = request.headers['user-agent'];
     const remoteIp =
-      request.headers['x-forwarded-for'] || request.connection.remoteAddress || request.ip;
+      request.headers['x-forwarded-for'] || request.socket?.remoteAddress || request.ip;
 
     return next.handle().pipe(
       tap(() => {

@@ -1,9 +1,9 @@
 'use client';
 
-import Box from '@mui/material/Box';
-
 import { Image } from 'src/shared/components/image';
 import { BackBtn } from 'src/shared/components/custom-buttons';
+
+import Box from '@mui/material/Box';
 
 type Props = {
   handleBackFormProgress: () => void;

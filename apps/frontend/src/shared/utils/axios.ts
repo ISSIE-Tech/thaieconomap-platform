@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import { CONFIG } from 'src/config-global';
 import { endpoints } from 'src/shared/configs/endpoints.config';
 import { STORAGE_KEY, REFRESH_TOKEN_KEY } from 'src/modules/auth/_constants/auth.constant';

@@ -1,12 +1,12 @@
 'use client';
 
+import type { FormSchema } from '../social-sharing-create/form-schema';
+
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 
 import { reformatDefaultValues } from './utils';
 import SocialSharingEditForm from './social-sharing-edit-form';
 import { useGetSocialSharings } from '../_hooks/use-get-social-sharings';
-
-import type { FormSchema } from '../social-sharing-create/form-schema';
 
 type Props = {
   socialSharingId: string;

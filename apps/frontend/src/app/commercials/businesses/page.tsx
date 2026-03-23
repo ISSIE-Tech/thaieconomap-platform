@@ -3,7 +3,6 @@
 import { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
-
 import { useMapStore } from 'src/shared/stores/map';
 import { DATA_NAME_THAI } from 'src/shared/components/constants';
 import { CommercialLoading } from 'src/modules/commercials/commercial-loading';

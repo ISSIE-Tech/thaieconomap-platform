@@ -1,9 +1,8 @@
-import type { Theme, SxProps } from '@mui/material/styles';
+import { varAlpha, stylesMode } from 'src/theme/styles';
 
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
-
-import { varAlpha, stylesMode } from 'src/theme/styles';
+import type { Theme, SxProps } from '@mui/material/styles';
 
 import { Iconify } from 'src/components/iconify';
 

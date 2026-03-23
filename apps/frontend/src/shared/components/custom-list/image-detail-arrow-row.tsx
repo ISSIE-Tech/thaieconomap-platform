@@ -2,14 +2,14 @@
 
 import type { ReactNode } from 'react';
 
+import { maxLine } from 'src/theme/styles/mixins';
+import { Image } from 'src/shared/components/image';
+import { Iconify } from 'src/shared/components/iconify';
+
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
-
-import { maxLine } from 'src/theme/styles/mixins';
-import { Image } from 'src/shared/components/image';
-import { Iconify } from 'src/shared/components/iconify';
 
 type Props = {
   imageUrl: string;

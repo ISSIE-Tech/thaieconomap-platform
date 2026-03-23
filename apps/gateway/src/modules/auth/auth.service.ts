@@ -281,7 +281,7 @@ export class AuthService {
 
     return this.jwtService.sign(payload, {
       secret: this.configService.get<string>(globalConfig.JWT_ACCESS_TOKEN_SECRET),
-      expiresIn: this.configService.get<string>(globalConfig.JWT_ACCESS_TOKEN_EXPIRATION_TIME),
+      expiresIn: this.configService.get<string>(globalConfig.JWT_ACCESS_TOKEN_EXPIRATION_TIME) as any,
     });
   }
 
@@ -294,7 +294,7 @@ export class AuthService {
 
     const token = this.jwtService.sign(payload, {
       secret: this.configService.get<string>(globalConfig.JWT_REFRESH_TOKEN_SECRET),
-      expiresIn: this.configService.get<string>(globalConfig.JWT_REFRESH_TOKEN_EXPIRATION_TIME),
+      expiresIn: this.configService.get<string>(globalConfig.JWT_REFRESH_TOKEN_EXPIRATION_TIME) as any,
     });
 
     await this.userService.updateRefreshToken(userId, token);

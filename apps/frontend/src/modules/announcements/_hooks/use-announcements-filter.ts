@@ -1,10 +1,10 @@
+import type { LocationType } from '../_constants/location';
+
 import { useMemo, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { ANNOUNCEMENTS_FILTER_TYPES } from '../_constants/location';
 import { useAnnouncementsStore } from '../_stores/announcements.store';
-
-import type { LocationType } from '../_constants/location';
 
 export const useAnnouncementsFilter = () => {
   const {

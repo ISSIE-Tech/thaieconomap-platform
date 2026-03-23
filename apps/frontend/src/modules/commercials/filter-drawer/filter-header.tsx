@@ -15,15 +15,15 @@ type Props = {
 export function FilterHeader({ controller }: Props) {
   return (
     <Grid container py={2} px={3}>
-      <Grid xs={4} />
+      <Grid size={4} />
 
-      <Grid container xs={4} alignContent="center" justifyContent="center">
+      <Grid container size={4} alignContent="center" justifyContent="center">
         <Typography variant="body1" fontWeight="bold">
           ฟิลเตอร์
         </Typography>
       </Grid>
 
-      <Grid container xs={4} alignContent="center" justifyContent="end">
+      <Grid container size={4} alignContent="center" justifyContent="end">
         <Fab color="default" size="small" sx={{ bgcolor: 'white' }} onClick={controller.onFalse}>
           <Image src="/assets/icons/cross.svg" alt="cross icon" width="24" height="24" />
         </Fab>

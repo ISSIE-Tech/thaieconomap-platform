@@ -1,3 +1,5 @@
+import type { LightBoxProps } from './types';
+
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import Video from 'yet-another-react-lightbox/plugins/video';
 import Captions from 'yet-another-react-lightbox/plugins/captions';
@@ -10,8 +12,6 @@ import Box from '@mui/material/Box';
 
 import { Iconify } from '../iconify';
 import { lightboxClasses } from './classes';
-
-import type { LightBoxProps } from './types';
 
 // ----------------------------------------------------------------------
 

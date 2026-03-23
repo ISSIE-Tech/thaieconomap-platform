@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useGetDistricts } from 'src/modules/economap/commercial/_hooks/use-get-districts';
 
 import Stack from '@mui/material/Stack';
-
-import { useGetDistricts } from 'src/modules/economap/commercial/_hooks/use-get-districts';
 
 import { RHFAutocomplete } from '../rhf-autocomplete';
 

@@ -1,8 +1,4 @@
 import type { ApiResponse } from 'src/shared/types/api.type';
-
-import axios from 'src/shared/utils/axios';
-import { endpoints } from 'src/shared/configs/endpoints.config';
-
 import type {
   District,
   Province,
@@ -10,6 +6,9 @@ import type {
   CommercialTiny,
   CommercialType,
 } from '../_types/commercials.type';
+
+import axios from 'src/shared/utils/axios';
+import { endpoints } from 'src/shared/configs/endpoints.config';
 
 type Params = {
   queryKey: string[];

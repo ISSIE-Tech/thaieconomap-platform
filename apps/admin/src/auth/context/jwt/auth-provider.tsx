@@ -1,5 +1,7 @@
 'use client';
 
+import type { AuthState } from '../../types';
+
 import { useMemo, useEffect, useCallback } from 'react';
 
 import { useSetState } from 'src/hooks/use-set-state';
@@ -11,8 +13,6 @@ import { useGetUserProfile } from 'src/auth/hooks/use-get-user-profile';
 import { STORAGE_KEY } from './constant';
 import { AuthContext } from '../auth-context';
 import { setSession, isValidToken } from './utils';
-
-import type { AuthState } from '../../types';
 
 // ----------------------------------------------------------------------
 

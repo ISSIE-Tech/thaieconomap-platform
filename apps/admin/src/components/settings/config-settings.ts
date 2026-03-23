@@ -1,8 +1,8 @@
+import type { SettingsState } from './types';
+
 import { defaultFont } from 'src/theme/core/typography';
 import { _languages } from 'src/layouts/config-nav-languages';
 import { _workspaces } from 'src/layouts/config-nav-workspace';
-
-import type { SettingsState } from './types';
 
 // ----------------------------------------------------------------------
 

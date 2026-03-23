@@ -1,11 +1,12 @@
+import type { FormValues } from './form-validators';
 import type { SubmitHandler } from 'react-hook-form';
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
+import type { FormSteps } from '../_types/create-social-sharing.type';
 import type { Sharing } from 'src/modules/sharings/_types/sharing.type';
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-
 import { Form } from 'src/shared/components/hook-form';
 import { toast } from 'src/shared/components/snackbar';
 
@@ -14,9 +15,6 @@ import useUpdateSocialSharing from '../_hooks/use-update-sharing';
 import FormButton from '../create-social-sharing-form/form-button';
 import { formSchema } from '../create-social-sharing-form/form-validators';
 import useCreateAdditionalImage from '../_hooks/use-create-additional-image';
-
-import type { FormValues } from './form-validators';
-import type { FormSteps } from '../_types/create-social-sharing.type';
 
 type Props = {
   sharing: Sharing;

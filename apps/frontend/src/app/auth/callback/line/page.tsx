@@ -1,15 +1,14 @@
 'use client';
 
 import { useEffect, useCallback } from 'react';
+import { Image } from 'src/shared/components/image';
+import { toast } from 'src/shared/components/snackbar';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useAuthContext } from 'src/modules/auth/_hooks/use-auth-context';
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
-
-import { Image } from 'src/shared/components/image';
-import { toast } from 'src/shared/components/snackbar';
-import { useAuthContext } from 'src/modules/auth/_hooks/use-auth-context';
 
 export default function LineCallbackPage() {
   const { login } = useAuthContext();

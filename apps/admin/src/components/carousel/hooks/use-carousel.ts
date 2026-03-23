@@ -1,4 +1,5 @@
 import type { EmblaPluginType } from 'embla-carousel';
+import type { CarouselOptions, UseCarouselReturn } from '../types';
 
 import { useMemo } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -8,8 +9,6 @@ import { useCarouselDots } from './use-carousel-dots';
 import { useParallax } from './use-carousel-parallax';
 import { useCarouselArrows } from './use-carousel-arrows';
 import { useCarouselProgress } from './use-carousel-progress';
-
-import type { CarouselOptions, UseCarouselReturn } from '../types';
 
 // ----------------------------------------------------------------------
 

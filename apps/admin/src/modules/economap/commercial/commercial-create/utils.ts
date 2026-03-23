@@ -1,13 +1,14 @@
-import type { UseBooleanReturn } from 'src/hooks/use-boolean';
+import type { Opening, CommercialType } from './types';
+import type { DateSchema, FormSchema } from './form-schema';
 import type { UseMutateAsyncFunction } from '@tanstack/react-query';
-import type { EconomapError, AdditionalImageUpload } from 'src/types/economap.type';
+
+import type { UseBooleanReturn } from 'src/hooks/use-boolean';
 
 import { getNewUrlList, mapAdditionalImage } from 'src/utils/map-additionalImage';
 
-import { CommercialTypeLabel } from './types';
+import type { EconomapError, AdditionalImageUpload } from 'src/types/economap.type';
 
-import type { Opening, CommercialType } from './types';
-import type { DateSchema, FormSchema } from './form-schema';
+import { CommercialTypeLabel } from './types';
 
 export const reformatFormData = async (
   data: FormSchema,
@@ -30,7 +31,7 @@ export const reformatFormData = async (
     .map((item: AdditionalImageUpload) => item.data)
     .flat();
 
-  // eslint-disable-next-line no-restricted-syntax
+   
   for (const [key, value] of Object.entries(data)) {
     switch (key) {
       case 'thumbnail':

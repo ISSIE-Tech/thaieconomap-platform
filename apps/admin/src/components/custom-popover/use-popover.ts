@@ -1,8 +1,8 @@
-import type { PopoverProps } from '@mui/material/Popover';
+import type { UsePopoverReturn } from './types';
 
 import { useState, useCallback } from 'react';
 
-import type { UsePopoverReturn } from './types';
+import type { PopoverProps } from '@mui/material/Popover';
 
 // ----------------------------------------------------------------------
 

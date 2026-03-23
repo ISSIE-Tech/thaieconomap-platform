@@ -1,10 +1,5 @@
 import type { UseMutateAsyncFunction } from '@tanstack/react-query';
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
-
-import { toast } from 'sonner';
-
-import { CommercialTypeLabel } from './_types/create-commercials.type';
-
 import type { DateSchema, FormValues } from './create-commercials-form/form-validators';
 import type {
   Opening,
@@ -12,6 +7,10 @@ import type {
   CommercialError,
   additionalImageUpload,
 } from './_types/create-commercials.type';
+
+import { toast } from 'sonner';
+
+import { CommercialTypeLabel } from './_types/create-commercials.type';
 
 export const reformatFormData = async (
   data: FormValues,
@@ -37,7 +36,7 @@ export const reformatFormData = async (
     .map((item: additionalImageUpload) => item.data)
     .flat();
 
-  // eslint-disable-next-line no-restricted-syntax
+   
   for (const [key, value] of Object.entries(data)) {
     switch (key) {
       case 'image':
@@ -99,7 +98,7 @@ export const mapAdditionalImage = async (
 
   const uploadPromises: Promise<additionalImageUpload>[] = [];
 
-  // eslint-disable-next-line no-restricted-syntax
+   
   for (const image of images) {
     if (imageList.length < 5) {
       imageList.push(image);

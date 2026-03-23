@@ -1,18 +1,16 @@
 'use client';
 
-import type { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
-
 import * as React from 'react';
+import { Iconify } from 'src/shared/components/iconify';
+import { useDistrictOptionMap } from 'src/shared/hooks/use-get-districts';
+import { useProvinceOptionMap } from 'src/modules/commercials/_hooks/use-get-provinces';
 
 import Popper from '@mui/material/Popper';
 import TextField from '@mui/material/TextField';
 import { styled, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
-
-import { Iconify } from 'src/shared/components/iconify';
-import { useDistrictOptionMap } from 'src/shared/hooks/use-get-districts';
-import { useProvinceOptionMap } from 'src/modules/commercials/_hooks/use-get-provinces';
+import type { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
 
 import { ListboxComponent } from './listbox-component';
 import { LOCATION_LENGTH } from '../_constants/location';

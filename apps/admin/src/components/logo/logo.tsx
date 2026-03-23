@@ -1,15 +1,13 @@
 'use client';
 
-import type { BoxProps } from '@mui/material/Box';
-
 import { forwardRef } from 'react';
+import { CONFIG } from 'src/config-global';
 
 import Box from '@mui/material/Box';
 import NoSsr from '@mui/material/NoSsr';
+import type { BoxProps } from '@mui/material/Box';
 
 import { RouterLink } from 'src/routes/components';
-
-import { CONFIG } from 'src/config-global';
 
 import { logoClasses } from './classes';
 

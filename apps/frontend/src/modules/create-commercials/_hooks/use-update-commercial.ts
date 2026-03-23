@@ -1,8 +1,8 @@
+import type { CommercialError } from '../_types/create-commercials.type';
+
 import { useMutation } from '@tanstack/react-query';
 
 import { updatePendingCommercials } from '../_services/update-commercial.service';
-
-import type { CommercialError } from '../_types/create-commercials.type';
 
 const useUpdateCommercial = () =>
   useMutation({

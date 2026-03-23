@@ -1,10 +1,10 @@
 'use client';
 
+import { Image } from 'src/shared/components/image';
+
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-
-import { Image } from 'src/shared/components/image';
 
 import { useAuthContext } from '../auth/_hooks/use-auth-context';
 

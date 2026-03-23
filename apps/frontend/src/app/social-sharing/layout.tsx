@@ -1,10 +1,10 @@
 import type { PropsWithChildren } from 'react';
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-
 import { EconomapHeader } from 'src/modules/economap-headers';
 import { SharingFooter } from 'src/modules/sharings/sharing-footer/sharing-footer';
+
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 // ----------------------------------------------------------------------
 

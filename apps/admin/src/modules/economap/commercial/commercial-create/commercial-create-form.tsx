@@ -1,5 +1,7 @@
 'use client';
 
+import type { CommercialType } from './types';
+
 import { toast } from 'sonner';
 import { useMemo } from 'react';
 import dynamic from 'next/dynamic';
@@ -20,8 +22,6 @@ import useCreateCommercials from '../_hooks/use-create-commercial';
 import { CommercialInfoForm } from './components/commercial-info-form';
 import useCreateAdditionalImage from '../_hooks/use-create-additional-images';
 import CommercialOpeningDaysForm from './components/commercial-opening-days-form';
-
-import type { CommercialType } from './types';
 
 type Props = {
   commercialType: CommercialType;

@@ -1,11 +1,12 @@
 import { ManagerEditPage } from 'src/modules/manager/edit-manager/manager-edit-page';
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
-export default function Page({ params }: Props) {
-  return <ManagerEditPage managerId={params.id} />;
+export default async function Page({ params }: Props) {
+  const { id } = await params;
+  return <ManagerEditPage managerId={id} />;
 }

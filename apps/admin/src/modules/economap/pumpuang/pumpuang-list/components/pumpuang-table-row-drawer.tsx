@@ -1,9 +1,10 @@
-import type { AlertColor } from '@mui/material/Alert';
+import type { PumpuangItem } from '../../type';
 
 import { z as zod } from 'zod';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ECONOMAP_STATUS } from 'src/modules/economap/_config/economap-status.config';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -14,10 +15,9 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
+import type { AlertColor } from '@mui/material/Alert';
 
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/use-boolean';
-
-import { ECONOMAP_STATUS } from 'src/modules/economap/_config/economap-status.config';
 
 import { Image } from 'src/components/image';
 import { toast } from 'src/components/snackbar';
@@ -29,8 +29,6 @@ import { Carousel, useCarousel } from 'src/components/carousel';
 
 import { useRejectPumpuang } from '../../_hooks/use-reject-pumpuang';
 import { useApprovePumpuang } from '../../_hooks/use-approve-pumpuang';
-
-import type { PumpuangItem } from '../../type';
 
 // ----------------------------------------------------------------------
 
@@ -224,11 +222,11 @@ export default function PumpuangTableRowDrawer({ drawerController, row }: Props)
               ข้อมูลรถพุ่มพวง
             </Typography>
             <Grid container>
-              <Grid xs={1} pt={0.2}>
+              <Grid size={1} pt={0.2}>
                 <Iconify icon="solar:clock-circle-linear" width={16} />
               </Grid>
 
-              <Grid xs={11}>
+              <Grid size={11}>
                 {row?.displayOpening.map((opening) => (
                   <Stack key={opening.days} direction="row" spacing={1.5}>
                     <Typography variant="body2" fontWeight="bold">
@@ -247,11 +245,11 @@ export default function PumpuangTableRowDrawer({ drawerController, row }: Props)
                 <Divider />
 
                 <Grid container>
-                  <Grid xs={1} pt={0.2}>
+                  <Grid size={1} pt={0.2}>
                     <Iconify icon="solar:info-circle-linear" width={16} />
                   </Grid>
 
-                  <Grid xs={11}>
+                  <Grid size={11}>
                     <Typography variant="body2">{row?.moreInfo}</Typography>
                   </Grid>
                 </Grid>
@@ -260,11 +258,11 @@ export default function PumpuangTableRowDrawer({ drawerController, row }: Props)
             <Divider />
 
             <Grid container>
-              <Grid xs={1} display="flex" alignItems="center">
+              <Grid size={1} display="flex" alignItems="center">
                 <Iconify icon="solar:user-linear" width={16} />
               </Grid>
 
-              <Grid xs={11}>
+              <Grid size={11}>
                 <Typography variant="body2">{row?.owner}</Typography>
               </Grid>
             </Grid>

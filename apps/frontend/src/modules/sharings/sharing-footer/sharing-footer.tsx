@@ -1,10 +1,10 @@
 'use client';
 
+import { useBoolean } from 'src/shared/hooks/use-boolean';
+
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-
-import { useBoolean } from 'src/shared/hooks/use-boolean';
 
 import { SharingBoardDrawer } from './sharing-board-drawer';
 

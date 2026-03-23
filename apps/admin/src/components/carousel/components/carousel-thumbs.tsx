@@ -1,20 +1,18 @@
-import type { BoxProps } from '@mui/material/Box';
-import type { CSSObject } from '@mui/material/styles';
-import type { ButtonBaseProps } from '@mui/material/ButtonBase';
+import type { CarouselOptions, CarouselThumbProps, CarouselThumbsProps } from '../types';
 
+import { varAlpha } from 'src/theme/styles';
 import { Children, forwardRef, isValidElement } from 'react';
 
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
+import type { BoxProps } from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
-
-import { varAlpha } from 'src/theme/styles';
+import type { CSSObject } from '@mui/material/styles';
+import type { ButtonBaseProps } from '@mui/material/ButtonBase';
 
 import { carouselClasses } from '../classes';
 import { CarouselSlide } from './carousel-slide';
 import { StyledRoot, StyledContainer } from '../carousel';
-
-import type { CarouselOptions, CarouselThumbProps, CarouselThumbsProps } from '../types';
 
 // ----------------------------------------------------------------------
 
@@ -58,7 +56,6 @@ export const CarouselThumbs = forwardRef<HTMLDivElement, BoxProps & CarouselThum
         {...other}
       >
         <StyledContainer
-          component="ul"
           axis={axis}
           slideSpacing={slideSpacing}
           className={carouselClasses.thumbContainer}

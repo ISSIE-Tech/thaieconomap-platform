@@ -1,13 +1,13 @@
-import type { Theme as BaseTheme } from '@mui/material/styles/createTheme';
-import type { CssVarsTheme, CssVarsThemeOptions } from '@mui/material/styles';
-import type { TypographyOptions } from '@mui/material/styles/createTypography';
+import type { Theme as MuiTheme } from '@mui/material/styles';
+import type { CssVarsThemeOptions } from '@mui/material/styles';
+import type { TypographyVariantsOptions } from '@mui/material/styles/createTypography';
 
 // ----------------------------------------------------------------------
 
-export type Theme = Omit<BaseTheme, 'palette' | 'applyStyles'> & CssVarsTheme;
+export type Theme = MuiTheme;
 
 export type ThemeUpdateOptions = Omit<CssVarsThemeOptions, 'typography'> & {
-  typography?: TypographyOptions;
+  typography?: TypographyVariantsOptions;
 };
 
 export type ThemeComponents = CssVarsThemeOptions['components'];

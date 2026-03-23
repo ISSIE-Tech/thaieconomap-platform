@@ -1,8 +1,7 @@
-import type { SvgIconProps } from '@mui/material/SvgIcon';
-import type { Theme, Components } from '@mui/material/styles';
-
 import SvgIcon from '@mui/material/SvgIcon';
 import { buttonClasses } from '@mui/material/Button';
+import type { SvgIconProps } from '@mui/material/SvgIcon';
+import type { Theme, Components } from '@mui/material/styles';
 import { dialogActionsClasses } from '@mui/material/DialogActions';
 
 import { stylesMode } from '../../styles';
@@ -180,14 +179,14 @@ const MuiPickersLayout: Components<Theme>['MuiPickersLayout'] = {
   },
 };
 
-const MuiPickersPopper: Components<Theme>['MuiPickersPopper'] = {
+const MuiPickerPopper: Components<Theme>['MuiPickerPopper'] = {
   /** **************************************
    * DEFAULT PROPS
    *************************************** */
   styleOverrides: {
     paper: ({ theme }) => ({
       boxShadow: theme.customShadows.dropdown,
-      borderRadius: theme.shape.borderRadius * 1.5,
+      borderRadius: Number(theme.shape.borderRadius) * 1.5,
     }),
   },
 };
@@ -195,7 +194,7 @@ const MuiPickersPopper: Components<Theme>['MuiPickersPopper'] = {
 // ----------------------------------------------------------------------
 
 export const datePicker = {
-  MuiPickersPopper,
+  MuiPickerPopper,
   MuiPickersLayout,
   // Date
   MuiDatePicker,

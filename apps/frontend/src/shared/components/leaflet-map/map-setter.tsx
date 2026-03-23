@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 import { type Map as LeafletMap } from 'leaflet';
-
 import { useSaveMapSettings } from 'src/shared/hooks/map';
 
 type Props = {

@@ -1,6 +1,5 @@
-import { useMemo, useState, useEffect, useCallback } from 'react';
-
 import { isEqual } from 'src/shared/utils/helper';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 // ----------------------------------------------------------------------
 

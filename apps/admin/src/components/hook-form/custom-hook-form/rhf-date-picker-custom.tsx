@@ -1,11 +1,4 @@
-import type { ChipProps } from '@mui/material/Chip';
-import type { SelectProps } from '@mui/material/Select';
-import type { CheckboxProps } from '@mui/material/Checkbox';
-import type { MenuItemProps } from '@mui/material/MenuItem';
 import type { ControllerRenderProps } from 'react-hook-form';
-import type { InputLabelProps } from '@mui/material/InputLabel';
-import type { FormControlProps } from '@mui/material/FormControl';
-import type { FormHelperTextProps } from '@mui/material/FormHelperText';
 
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -16,8 +9,15 @@ import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import { Button, Typography } from '@mui/material';
+import type { ChipProps } from '@mui/material/Chip';
 import FormControl from '@mui/material/FormControl';
+import type { SelectProps } from '@mui/material/Select';
 import FormHelperText from '@mui/material/FormHelperText';
+import type { CheckboxProps } from '@mui/material/Checkbox';
+import type { MenuItemProps } from '@mui/material/MenuItem';
+import type { InputLabelProps } from '@mui/material/InputLabel';
+import type { FormControlProps } from '@mui/material/FormControl';
+import type { FormHelperTextProps } from '@mui/material/FormHelperText';
 import { styled, type Theme, type SxProps } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------

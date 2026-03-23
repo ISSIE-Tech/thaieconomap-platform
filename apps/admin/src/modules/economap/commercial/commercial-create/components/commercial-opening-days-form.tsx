@@ -1,3 +1,5 @@
+import type { CommercialType } from '../types';
+
 import Image from 'next/image';
 import React, { useEffect } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
@@ -12,8 +14,6 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import DatePicker from 'src/components/hook-form/custom-hook-form/date-picker';
 import { RHFTimePickerCustom } from 'src/components/hook-form/custom-hook-form/rhf-time-picker-custom';
-
-import type { CommercialType } from '../types';
 
 // ----------------------------------------------------------------------
 

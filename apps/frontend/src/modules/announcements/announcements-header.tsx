@@ -1,13 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import { EconomapHeader } from 'src/modules/economap-headers';
 import { MenuDrawer } from 'src/modules/economap-headers/menu/menu-drawer';
+
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 import DistrictsAutocomplete from './districts-autocomplete/districts-autocomplete';
 

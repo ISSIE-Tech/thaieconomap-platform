@@ -76,7 +76,7 @@ export class CachingService {
       }
 
       this.logger.log('Caching data updated successfully');
-    } catch (error) {
+    } catch (_error) {
       throw new ErrorException(CODES.TEC_004);
     }
   }

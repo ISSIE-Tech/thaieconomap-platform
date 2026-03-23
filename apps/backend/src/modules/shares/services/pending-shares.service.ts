@@ -367,7 +367,7 @@ export class PendingSharesService {
   }
 
   @Span('Delete Many Pending Shares')
-  async deleteMany(filterQuery: FilterQuery<ShareDocument>): Promise<Boolean> {
+  async deleteMany(filterQuery: FilterQuery<ShareDocument>): Promise<boolean> {
     this.logger.debug(
       `{${PendingSharesService.name}-[${getSpanName()}]} (called)\
       \n[param] ${prettyObjectString({

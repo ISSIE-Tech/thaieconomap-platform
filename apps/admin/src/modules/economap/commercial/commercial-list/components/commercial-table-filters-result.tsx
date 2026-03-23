@@ -1,9 +1,11 @@
-import type { Theme, SxProps } from '@mui/material/styles';
-import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+import type { CommercialTableFilters } from '../types';
 
 import { useCallback } from 'react';
 
 import Chip from '@mui/material/Chip';
+import type { Theme, SxProps } from '@mui/material/styles';
+
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
 import { FiltersBlock } from 'src/components/filters-result/filters-block';
 import { chipProps, FiltersResult } from 'src/components/filters-result/filters-result';
@@ -12,8 +14,6 @@ import {
   ECONOMAP_STATUS,
   ECONOMAP_STATUS_TRANSLATIONS,
 } from '../../../_config/economap-status.config';
-
-import type { CommercialTableFilters } from '../types';
 
 // ----------------------------------------------------------------------
 

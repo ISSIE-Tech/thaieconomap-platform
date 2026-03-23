@@ -1,13 +1,8 @@
 'use client';
 
+import type { SharingTiny } from '../_types/sharing.type';
+
 import { useState } from 'react';
-
-import Stack from '@mui/material/Stack';
-import { useTheme } from '@mui/material';
-import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-
 import { maxLine } from 'src/theme/styles/mixins';
 import { Image } from 'src/shared/components/image';
 import { fToNow } from 'src/shared/utils/format-time';
@@ -16,11 +11,15 @@ import { BlueRoundedHeader } from 'src/modules/economap-headers';
 import { useBoolean, type UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 import { translateTimeExpressionEngThai } from 'src/shared/components/constants/date';
 
+import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material';
+import Drawer from '@mui/material/Drawer';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
+
 import useGetSharing from '../_hooks/use-get-sharing';
 import { SharingDrawer } from '../sharing-detail-drawer';
 import useGetAllTinySharings from '../_hooks/use-get-all-tiny-sharings';
-
-import type { SharingTiny } from '../_types/sharing.type';
 
 type Props = {
   controller: UseBooleanReturn;
@@ -43,7 +42,7 @@ export function SharingBoardDrawer({ controller }: Props) {
       open={controller.value}
       onClose={controller.onFalse}
       anchor="right"
-      slotProps={{ backdrop: { sx: { display: { md: 'none' } } } }}
+      slotProps={{ backdrop: { sx: { backgroundColor: 'transparent' } } }}
       PaperProps={{ sx: { width: { xs: '100vw', md: 480 }, overflowX: 'hidden' } }}
     >
       <BlueRoundedHeader title="บอร์ดแบ่งสิ่งของ" onClose={controller.onFalse} />

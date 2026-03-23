@@ -1,8 +1,8 @@
+import { common, primary } from 'src/theme/core';
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-
-import { common, primary } from 'src/theme/core';
 
 type Props = {
   progressPercentage: number;
