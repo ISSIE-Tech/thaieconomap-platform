@@ -8,7 +8,8 @@ import { primary } from 'src/theme/core/palette';
 import { LocalizationProvider } from 'src/locales';
 import { ThemeProvider } from 'src/theme/theme-provider';
 import { GeolocationProvider } from 'src/modules/geolocation';
-import { getInitColorSchemeScript } from 'src/theme/color-scheme-script';
+import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
+import { schemeConfig } from 'src/theme/color-scheme-script';
 
 import { Snackbar } from 'src/components/snackbar';
 import { ProgressBar } from 'src/components/progress-bar';
@@ -42,7 +43,7 @@ export default async function RootLayout({ children }: Props) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        {getInitColorSchemeScript}
+        <InitColorSchemeScript modeStorageKey={schemeConfig.modeStorageKey} defaultMode={schemeConfig.defaultMode} />
 
         <LocalizationProvider>
           <ReactQueryProvider>

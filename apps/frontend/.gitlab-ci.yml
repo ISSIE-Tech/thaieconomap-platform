@@ -16,7 +16,7 @@ build-push-dev:
     - k8s-dev
   image:
     name: moby/buildkit:rootless
-    entrypoint: ['']
+    entrypoint: [""]
   variables:
     BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
   before_script:
@@ -33,8 +33,7 @@ build-push-dev:
         --opt filename=Dockerfile \
         --output type=image,\"name=$REGISTRY/$IMAGE_PATH/dev:$CI_COMMIT_SHORT_SHA\",push=true
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+    - when: on_success
 
 deploy-dev:
   stage: deploy-dev
@@ -52,8 +51,7 @@ deploy-dev:
   needs:
     - build-push-dev
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+    - when: on_success
 
 build-push-stg:
   stage: build-stg
@@ -61,7 +59,7 @@ build-push-stg:
     - k8s-dev
   image:
     name: moby/buildkit:rootless
-    entrypoint: ['']
+    entrypoint: [""]
   variables:
     BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
   before_script:
@@ -78,7 +76,7 @@ build-push-stg:
         --opt filename=Dockerfile \
         --output type=image,\"name=$REGISTRY/$IMAGE_PATH/stg:$CI_COMMIT_SHORT_SHA\",push=true
   rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
+    - if: $CI_COMMIT_BRANCH == "main"
 
 deploy-stg:
   stage: deploy-stg
@@ -96,7 +94,7 @@ deploy-stg:
   needs:
     - build-push-stg
   rules:
-    - if: $CI_COMMIT_BRANCH == "staging"
+    - if: $CI_COMMIT_BRANCH == "main"
 
 build-push-prod:
   stage: build-prod
@@ -104,7 +102,7 @@ build-push-prod:
     - k8s-dev
   image:
     name: moby/buildkit:rootless
-    entrypoint: ['']
+    entrypoint: [""]
   variables:
     BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
   before_script:
@@ -124,7 +122,6 @@ build-push-prod:
         --output type=image,\"name=$REGISTRY/$IMAGE_PATH:$CI_COMMIT_SHORT_SHA,$REGISTRY/$IMAGE_PATH:latest\",push=true
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
-      when: manual
 
 deploy-prod:
   stage: deploy-prod
