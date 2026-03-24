@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { Iconify } from 'src/components/iconify';
+import { DarkModeButton } from 'src/layouts/components/dark-mode-button';
 
 import { useGetLineLoginUrl } from 'src/auth/hooks/use-get-line-login-url';
 import { useGetAuthentikLoginUrl } from 'src/auth/hooks/use-get-authentik-login-url';
@@ -87,6 +88,7 @@ export default function AuthLoginPage() {
           position: 'relative',
         }}
       >
+        <DarkModeButton sx={{ position: 'absolute', top: 16, right: 16 }} />
         <Stack
           sx={{
             maxWidth: { md: 400 },

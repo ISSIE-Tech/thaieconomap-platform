@@ -1,5 +1,5 @@
 import type { Theme } from '@mui/material/styles';
-import { extendTheme } from '@mui/material/styles';
+import { createTheme as muiCreateTheme } from '@mui/material/styles';
 
 import type { SettingsState } from 'src/components/settings';
 
@@ -22,7 +22,10 @@ export function createTheme(settings: SettingsState): Theme {
       ...typography,
       fontFamily: setFont(settings.fontFamily),
     },
-    cssVarPrefix: '',
+    colorSchemeSelector: 'data-mui-color-scheme',
+    cssVariables: {
+      cssVarPrefix: '',
+    },
     shouldSkipGeneratingVar,
   };
 
@@ -34,7 +37,7 @@ export function createTheme(settings: SettingsState): Theme {
   /**
    * 2.Create theme + add locale + update component with settings.
    */
-  const theme = extendTheme(updateTheme, updateComponentsWithSettings(settings), overridesTheme);
+  const theme = muiCreateTheme(updateTheme, updateComponentsWithSettings(settings), overridesTheme);
 
   return theme;
 }
@@ -72,26 +75,3 @@ function shouldSkipGeneratingVar(keys: string[], value: string | number): boolea
 
   return keys.some((key) => skipGlobalKeys?.includes(key));
 }
-
-/**
-* createTheme without @settings and @locale components.
-*
- ```jsx
-export function createTheme(): Theme {
-  const initialTheme = {
-    colorSchemes,
-    shadows: shadows('light'),
-    customShadows: customShadows('light'),
-    shape: { borderRadius: 8 },
-    components,
-    typography,
-    cssVarPrefix: '',
-    shouldSkipGeneratingVar,
-  };
-
-  const theme = extendTheme(initialTheme, overridesTheme);
-
-  return theme;
-}
- ```
-*/
