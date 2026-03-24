@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { CommercialWorkingStatus } from '@thaieconomap/contracts';
-import { RedisCache } from 'cache-manager-redis-yet';
+import { Cache } from 'cache-manager';
 import mongoose, {
   FilterQuery,
   Model,
@@ -29,7 +29,7 @@ export class CommercialsRepository extends EntityRepository<CommercialDocument> 
     private readonly commercialModel: Model<CommercialDocument>,
 
     @Inject(CACHE_MANAGER)
-    private readonly cacheManager: RedisCache,
+    private readonly cacheManager: Cache,
   ) {
     super(commercialModel);
   }

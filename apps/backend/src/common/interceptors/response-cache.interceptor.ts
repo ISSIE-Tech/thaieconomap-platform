@@ -3,7 +3,7 @@ import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } fr
 import { Reflector } from '@nestjs/core';
 
 import { HttpMethod } from '@thaieconomap/contracts';
-import { RedisCache } from 'cache-manager-redis-yet';
+import { Cache } from 'cache-manager';
 import { Request } from 'express';
 import { RedisClientType } from 'redis';
 import { Observable, tap } from 'rxjs';
@@ -22,7 +22,7 @@ export const REPONSE_CACHE_NAMESPACE: string = 'REPONSE_CACHE_NAMESPACE';
 @Injectable()
 export class ResponseCacheInterceptor extends CacheInterceptor {
   constructor(
-    protected readonly cacheManager: RedisCache,
+    protected readonly cacheManager: Cache,
     protected readonly reflector: Reflector,
   ) {
     super(cacheManager, reflector);
