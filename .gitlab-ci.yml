@@ -1,3 +1,9 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "staging"
+
 stages:
   - trigger
 
@@ -12,12 +18,6 @@ trigger-backend:
     strategy: depend
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      changes:
-        paths:
-          - apps/backend/**
-          - packages/contracts/**
-          - pnpm-lock.yaml
-        compare_to: refs/heads/main
     - if: $CI_COMMIT_BRANCH == "main"
 
 # ──────────────────────────────────────────────
@@ -31,12 +31,6 @@ trigger-gateway:
     strategy: depend
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      changes:
-        paths:
-          - apps/gateway/**
-          - packages/contracts/**
-          - pnpm-lock.yaml
-        compare_to: refs/heads/main
     - if: $CI_COMMIT_BRANCH == "staging"
     - if: $CI_COMMIT_BRANCH == "main"
 
@@ -51,12 +45,6 @@ trigger-frontend:
     strategy: depend
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      changes:
-        paths:
-          - apps/frontend/**
-          - packages/contracts/**
-          - pnpm-lock.yaml
-        compare_to: refs/heads/main
     - if: $CI_COMMIT_BRANCH == "staging"
     - if: $CI_COMMIT_BRANCH == "main"
 
@@ -71,10 +59,4 @@ trigger-admin:
     strategy: depend
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      changes:
-        paths:
-          - apps/admin/**
-          - packages/contracts/**
-          - pnpm-lock.yaml
-        compare_to: refs/heads/main
     - if: $CI_COMMIT_BRANCH == "main"
