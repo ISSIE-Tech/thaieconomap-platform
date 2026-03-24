@@ -1,6 +1,11 @@
 import { PumpuangStatus, SubmissionStatus } from '../../../enums';
 import { IDisplayOpening, IOpening } from '../../../models';
 
+export interface ProductTypeDto {
+  _id: string;
+  name: string;
+}
+
 export interface PumpuangResponseDto {
   _id: string;
   name: string;
@@ -13,7 +18,7 @@ export interface PumpuangResponseDto {
   additionalImageUrl?: string[];
   opening: IOpening[];
   displayOpening: IDisplayOpening[];
-  types: string[];
+  types: ProductTypeDto[];
   status: PumpuangStatus;
   submissionStatus: SubmissionStatus;
   submissionMessage: string;
@@ -50,7 +55,7 @@ export interface PendingPumpuangResponseDto {
   additionalImageUrl?: string[];
   opening: IOpening[];
   displayOpening: IDisplayOpening[];
-  types: string[];
+  types: ProductTypeDto[];
   submissionStatus: SubmissionStatus;
   submissionMessage: string;
   createdBy?: string;
