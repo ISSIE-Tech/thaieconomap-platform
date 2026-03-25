@@ -17,6 +17,9 @@ import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import type { AlertColor } from '@mui/material/Alert';
 
+import { RouterLink } from 'src/routes/components';
+import { paths } from 'src/routes/paths';
+
 import { useBoolean, type UseBooleanReturn } from 'src/hooks/use-boolean';
 
 import { Image } from 'src/components/image';
@@ -180,7 +183,13 @@ export default function PumpuangTableRowDrawer({ drawerController, row }: Props)
               </Typography>
             </Stack>
 
-            <Stack alignItems="center" spacing={0.5}>
+            <Stack
+              alignItems="center"
+              spacing={0.5}
+              component={RouterLink}
+              href={paths.pumpuang.dashboard.tracking(row._id)}
+              sx={{ textDecoration: 'none', color: 'inherit' }}
+            >
               <Stack
                 p={0.6}
                 sx={{

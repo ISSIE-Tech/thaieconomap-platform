@@ -18,7 +18,13 @@ trigger-backend:
     strategy: depend
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - apps/backend/**/*
+        - packages/contracts/**/*
     - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - apps/backend/**/*
+        - packages/contracts/**/*
 
 # ──────────────────────────────────────────────
 # Gateway
@@ -31,8 +37,17 @@ trigger-gateway:
     strategy: depend
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - apps/gateway/**/*
+        - packages/contracts/**/*
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - apps/gateway/**/*
+        - packages/contracts/**/*
     - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - apps/gateway/**/*
+        - packages/contracts/**/*
 
 # ──────────────────────────────────────────────
 # Frontend
@@ -45,8 +60,17 @@ trigger-frontend:
     strategy: depend
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - apps/frontend/**/*
+        - packages/contracts/**/*
     - if: $CI_COMMIT_BRANCH == "staging"
+      changes:
+        - apps/frontend/**/*
+        - packages/contracts/**/*
     - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - apps/frontend/**/*
+        - packages/contracts/**/*
 
 # ──────────────────────────────────────────────
 # Admin
@@ -59,4 +83,10 @@ trigger-admin:
     strategy: depend
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - apps/admin/**/*
+        - packages/contracts/**/*
     - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - apps/admin/**/*
+        - packages/contracts/**/*

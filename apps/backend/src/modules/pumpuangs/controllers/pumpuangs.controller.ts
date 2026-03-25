@@ -118,7 +118,7 @@ export class PumpuangsController {
     return PumpuangMapper.toResponseDto(pumpuang);
   }
 
-  @ApiOkResponse({ description: 'Return pumpuang route' })
+  @ApiOkResponse({ description: 'Return all pumpuang route history records' })
   @ApiBadRequestResponse({ description: DOC_DESCRIPTION.MUST_BE_MONGOID('pumpuangId') })
   @ApiNotFoundResponse({ description: DOC_DESCRIPTION.ENTITY_NOT_FOUND(Pumpuang.name) })
   @ApiParam({ name: 'pumpuangId' })
@@ -126,8 +126,8 @@ export class PumpuangsController {
   @UseInterceptors(TransformPumpuangLocation)
   async getPumpuangRoute(
     @ObjectId('pumpuangId') pumpuangId: string,
-  ): Promise<PumpuangRouteResponseDto> {
-    return this.pumpuangService.getPumpuangRoute(pumpuangId) as unknown as Promise<PumpuangRouteResponseDto>;
+  ): Promise<PumpuangRouteResponseDto[]> {
+    return this.pumpuangService.getPumpuangRoute(pumpuangId) as unknown as Promise<PumpuangRouteResponseDto[]>;
   }
 
   @ApiOkResponse({ description: 'Return by pumpuang' })
@@ -379,6 +379,24 @@ export class PumpuangsController {
   @UseGuards(PumpuangJwtAccessGuard)
   async pumpuangRevokeToken(@CurrentUser('_id') pumpuangId: string): Promise<void> {
     await this.pumpuangService.revokeRefreshToken(pumpuangId);
+  }
+
+  @ApiCreatedResponse({ description: 'Force stop pumpuang tracking' })
+  @ApiBadRequestResponse({
+    description: buildMultiLineDocDescription(
+      DOC_DESCRIPTION.MUST_BE_MONGOID('pumpuangId'),
+      DOC_DESCRIPTION.PUMPUANG_IS_NOT_RUNNING,
+    ),
+  })
+  @ApiNotFoundResponse({ description: DOC_DESCRIPTION.ENTITY_NOT_FOUND(Pumpuang.name) })
+  @ApiParam({ name: 'pumpuangId' })
+  @Post(':pumpuangId/force-stop')
+  @ExcludeRoles(UserRole.CUSTOMER)
+  @UseGuards(AuthGuard, RolesGuard)
+  async forceStopPumpuangTracking(
+    @ObjectId('pumpuangId') pumpuangId: string,
+  ): Promise<{ status: PumpuangStatus }> {
+    return this.pumpuangService.forceStopPumpuangTracking(pumpuangId);
   }
 
   @ApiCreatedResponse({ description: 'Favorite to pumpuang.' })

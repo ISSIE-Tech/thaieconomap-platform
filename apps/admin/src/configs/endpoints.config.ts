@@ -93,6 +93,13 @@ export const endpoints = {
     approve: (id: string) => `/services/thai-economap/pending-pumpuangs/${id}/approve`,
     reject: (id: string) => `/services/thai-economap/pending-pumpuangs/${id}/reject`,
     delete: (id: string) => `/services/thai-economap/pumpuangs/${id}`,
+    create: '/services/thai-economap/pumpuangs',
+    update: (id: string) => `/services/thai-economap/pumpuangs/${id}`,
+    getById: (id: string) => `/services/thai-economap/pumpuangs/${id}`,
+    route: (id: string) => `/services/thai-economap/pumpuangs/${id}/route`,
+    uploadImg: '/services/thai-economap/pumpuangs/upload-additional-image',
+    deleteImg: (id: string) => `/services/thai-economap/pumpuangs/${id}/delete-additional-image`,
+    forceStop: (id: string) => `/services/thai-economap/pumpuangs/${id}/force-stop`,
     types: {
       list: '/services/thai-economap/product-types',
       create: '/services/thai-economap/product-types',

@@ -12,6 +12,7 @@ export type PumpuangItem = {
   imageUrl: string;
   additionalImageUrl: string[];
   submissionStatus: ECONOMAP_STATUS;
+  status?: 'RUNNING' | 'INACTIVE';
   opening: {
     day: string;
     enable: boolean;
@@ -39,4 +40,26 @@ export type PumpuangItem = {
 export type PumpuangTableFilters = {
   status: ECONOMAP_STATUS;
   owner: string;
+};
+
+// Tracking history types (after TransformPumpuangLocation interceptor, data is GeoJSON)
+export type GeoJsonPoint = {
+  type: 'Point';
+  coordinates: [number, number]; // [longitude, latitude]
+};
+
+export type GeoJsonLineString = {
+  type: 'LineString';
+  coordinates: [number, number][]; // [[longitude, latitude], ...]
+};
+
+export type PumpuangRouteResponse = {
+  _id: string;
+  current: GeoJsonPoint;
+  history: GeoJsonLineString[];
+  types: {
+    _id: string;
+    name: string;
+  }[];
+  lastLocationSent?: number;
 };

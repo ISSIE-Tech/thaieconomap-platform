@@ -72,6 +72,9 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.PUMPURANG}`,
       list: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.PUMPURANG}/list`,
       types: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.PUMPURANG}/types`,
+      new: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.PUMPURANG}/new`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.PUMPURANG}/edit/${id}`,
+      tracking: (id: string) => `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.PUMPURANG}/${id}/tracking`,
     },
   },
 };

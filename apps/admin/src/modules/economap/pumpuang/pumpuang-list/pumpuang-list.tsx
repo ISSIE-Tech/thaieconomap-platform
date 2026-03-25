@@ -36,6 +36,7 @@ const TABLE_HEAD = [
   { id: 'owner', label: 'ชื่อ' },
   { id: 'types', label: 'ประเภท', width: 180 },
   { id: 'licensePlate', label: 'เลขทะเบียน', width: 180 },
+  { id: 'status', label: 'สถานะ', width: 130 },
   { id: 'createdAt', label: 'สร้างเมื่อ', width: 180 },
   { id: 'updatedAt', label: 'แก้ไขเมื่อ', width: 180 },
   { id: 'createdBy', label: 'สร้างโดย', width: 160 },
