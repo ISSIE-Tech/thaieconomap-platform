@@ -780,6 +780,32 @@ export class PumpuangsService implements OnModuleInit {
     }
   }
 
+  @Cron('50 23 * * *', { timeZone: 'Asia/Bangkok' })
+  async forceCloseAllTrackingDaily(): Promise<void> {
+    const ctx = `${PumpuangsService.name}-${this.forceCloseAllTrackingDaily.name}`;
+    const runningPumpuangs = await this.pumpuangRepository.find({
+      status: PumpuangStatus.RUNNING,
+    });
+
+    if (!runningPumpuangs.length) {
+      return;
+    }
+
+    this.logger.debug(`{${ctx}} force-closing ${runningPumpuangs.length} running pumpuangs at 23:50`);
+
+    for (const pumpuang of runningPumpuangs) {
+      await this.stopPumpuangRiderTracking(pumpuang);
+
+      this.notificationService
+        .sendToPumpuang(
+          pumpuang._id.toString(),
+          'ปิดการติดตามอัตโนมัติ',
+          'ระบบปิดการติดตามตำแหน่งอัตโนมัติเนื่องจากสิ้นสุดวัน',
+        )
+        .catch(err => this.logger.error(`FCM daily force-close notification error: ${err.message}`));
+    }
+  }
+
   private async updateLocationCache(
     pumpuang: PumpuangDocument,
     opening: Opening,
