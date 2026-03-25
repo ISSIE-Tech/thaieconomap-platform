@@ -93,6 +93,7 @@ deploy-prod:
     - git push origin main
   needs:
     - build-push-prod
+  allow_failure: true
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
       when: manual
