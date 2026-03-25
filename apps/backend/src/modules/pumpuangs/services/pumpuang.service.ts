@@ -605,6 +605,26 @@ export class PumpuangsService implements OnModuleInit {
     };
   }
 
+  async forceStopPumpuangTracking(pumpuangId: string): Promise<IPumpuangStatus> {
+    const pumpuang = await this.pumpuangRepository.findById(pumpuangId);
+
+    if (!pumpuang) {
+      throw new ErrorException(CODES.TEC_064);
+    }
+
+    if (pumpuang.status !== PumpuangStatus.RUNNING) {
+      throw new ErrorException(CODES.TEC_077);
+    }
+
+    await this.deletePumpuangLocationFromCache(pumpuangId);
+
+    const updatedPumpuang = await this.pumpuangRepository.findByIdAndUpdate(pumpuangId, {
+      status: PumpuangStatus.INACTIVE,
+    });
+
+    return { status: updatedPumpuang.status };
+  }
+
   async pumpuangRiderTracking(
     pumpuang: PumpuangDocument,
     locationDto: PumpuangLocationDto,
@@ -654,12 +674,41 @@ export class PumpuangsService implements OnModuleInit {
     };
   }
 
-  async getPumpuangRoute(pumpuangId: string): Promise<IGetPumpuangRouteResponse> {
+  async getPumpuangRoute(pumpuangId: string): Promise<IGetPumpuangRouteResponse[]> {
     await this.getPumpuangById(undefined, pumpuangId);
 
-    const result = await this.redisClient.json.get(CACHE_KEY.pumpuang.location(pumpuangId));
+    const results: IGetPumpuangRouteResponse[] = [];
 
-    return result as unknown as IGetPumpuangRouteResponse;
+    // Include active tracking session from Redis if exists
+    const cachedResult = await this.redisClient.json.get(CACHE_KEY.pumpuang.location(pumpuangId));
+
+    if (cachedResult) {
+      results.push(cachedResult as unknown as IGetPumpuangRouteResponse);
+    }
+
+    // Include all historical tracking records from MongoDB
+    const persistedLocations = await this.pumpuangLocationRepository.find(
+      { pumpuangId },
+      {},
+      { sort: { createdAt: -1 } },
+    );
+
+    for (const record of persistedLocations) {
+      results.push({
+        _id: record._id?.toString(),
+        current: record.current,
+        history: (record.history || [])
+          .map((histories) =>
+            (histories || [])
+              .filter((h) => h?.location)
+              .map((h) => JSON.stringify({ location: h.location, trackedAt: h.trackedAt })),
+          )
+          .filter((histories) => histories.length > 0),
+        types: record.types,
+      } as unknown as IGetPumpuangRouteResponse);
+    }
+
+    return results;
   }
 
   private async deletePumpuangLocationFromCache(pumpuangId: string): Promise<void> {

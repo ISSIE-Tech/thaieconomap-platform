@@ -13,6 +13,9 @@ import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
+import { RouterLink } from 'src/routes/components';
+import { paths } from 'src/routes/paths';
+
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { fDateTime } from 'src/utils/format-time';
@@ -20,10 +23,12 @@ import { fDateTime } from 'src/utils/format-time';
 import { Image } from 'src/components/image';
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
+import { Label } from 'src/components/label';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import PumpuangTableRowDrawer from './pumpuang-table-row-drawer';
 import { useDeletePumpuang } from '../../_hooks/use-delete-pumpuang';
+import { useForceStopPumpuang } from '../../_hooks/use-force-stop-pumpuang';
 import { getUserRole, getUserDisplayName } from '../../../_hooks/use-user-lookup';
 
 // ----------------------------------------------------------------------
@@ -40,7 +45,11 @@ export default function PumpuangTableRow({ row, selected, onSelectRow, userLooku
 
   const deleteDialog = useBoolean();
 
+  const forceStopDialog = useBoolean();
+
   const deletePumpuang = useDeletePumpuang();
+
+  const forceStopPumpuang = useForceStopPumpuang();
 
   // ----------------------------------------------------------------------
 
@@ -54,6 +63,17 @@ export default function PumpuangTableRow({ row, selected, onSelectRow, userLooku
       toast.error('เกิดข้อผิดพลาดในการลบข้อมูล');
     }
   }, [deleteDialog, deletePumpuang, row._id]);
+
+  const handleForceStop = useCallback(async () => {
+    try {
+      await forceStopPumpuang.mutateAsync(row._id);
+      toast.success('หยุดการติดตามสำเร็จ');
+      forceStopDialog.onFalse();
+    } catch (error) {
+      console.error(error);
+      toast.error('เกิดข้อผิดพลาดในการหยุดการติดตาม');
+    }
+  }, [forceStopDialog, forceStopPumpuang, row._id]);
 
   // ----------------------------------------------------------------------
 
@@ -103,6 +123,14 @@ export default function PumpuangTableRow({ row, selected, onSelectRow, userLooku
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{row?.licensePlate}</TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          {row?.submissionStatus === ECONOMAP_STATUS.APPROVED && (
+            <Label color={row?.status === 'RUNNING' ? 'success' : 'default'}>
+              {row?.status === 'RUNNING' ? 'กำลังวิ่ง' : 'ไม่ได้ใช้งาน'}
+            </Label>
+          )}
+        </TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
           <Typography variant="body2">{fDateTime(row?.createdAt)}</Typography>
         </TableCell>
 
@@ -132,11 +160,37 @@ export default function PumpuangTableRow({ row, selected, onSelectRow, userLooku
         </TableCell>
 
         <TableCell>
-          {row?.submissionStatus === ECONOMAP_STATUS.APPROVED && (
-            <Button onClick={deleteDialog.onTrue}>
-              <Iconify icon="solar:trash-bin-trash-bold" />
-            </Button>
-          )}
+          <Stack direction="row" spacing={0.5}>
+            {row?.submissionStatus === ECONOMAP_STATUS.APPROVED && (
+              <>
+                <Button
+                  component={RouterLink}
+                  href={paths.pumpuang.dashboard.edit(row._id)}
+                  size="small"
+                >
+                  <Iconify icon="solar:pen-bold" />
+                </Button>
+
+                <Button
+                  component={RouterLink}
+                  href={paths.pumpuang.dashboard.tracking(row._id)}
+                  size="small"
+                >
+                  <Iconify icon="solar:route-bold" />
+                </Button>
+
+                <Button onClick={deleteDialog.onTrue} size="small">
+                  <Iconify icon="solar:trash-bin-trash-bold" />
+                </Button>
+              </>
+            )}
+
+            {row?.status === 'RUNNING' && (
+              <Button onClick={forceStopDialog.onTrue} size="small" color="warning">
+                <Iconify icon="solar:stop-bold" />
+              </Button>
+            )}
+          </Stack>
         </TableCell>
       </TableRow>
 
@@ -163,6 +217,31 @@ export default function PumpuangTableRow({ row, selected, onSelectRow, userLooku
             loading={deletePumpuang.isPending}
           >
             ลบ
+          </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
+        open={forceStopDialog.value}
+        onClose={forceStopDialog.onFalse}
+        title="ยืนยันการหยุดติดตาม"
+        content={
+          <Typography variant="body2" color="text.secondary">
+            คุณต้องการหยุดการติดตาม{' '}
+            <Typography component="span" sx={{ textDecoration: 'underline' }} color="black">
+              {row?.name}
+            </Typography>{' '}
+            ใช่หรือไม่?
+          </Typography>
+        }
+        action={
+          <LoadingButton
+            variant="contained"
+            color="warning"
+            onClick={handleForceStop}
+            loading={forceStopPumpuang.isPending}
+          >
+            หยุดติดตาม
           </LoadingButton>
         }
       />

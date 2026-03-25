@@ -127,6 +127,7 @@ export const economapNavData = [
         icon: ICONS.ecommerce,
         children: [
           { title: 'รายการ', path: paths.pumpuang.dashboard.list },
+          { title: 'สร้างรายการใหม่', path: paths.pumpuang.dashboard.new },
           { title: 'ประเภท', path: paths.pumpuang.dashboard.types },
         ],
       },

@@ -2,8 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { HydratedDocument } from 'mongoose';
 
-import { CONFIG } from '../../../config';
-import { COLLECTION_NAME, ONE_MONTH_IN_MS } from '../../../shared/constants';
+import { COLLECTION_NAME } from '../../../shared/constants';
 
 export type PumpuangLocationDocument = HydratedDocument<PumpuangLocation>;
 
@@ -60,23 +59,6 @@ export class PumpuangLocation {
     name: string;
   }[];
 
-  @Prop({
-    type: Date,
-    index: {
-      expires: CONFIG.AUTO_DELETE_DURATION,
-    },
-  })
-  autoDelete?: Date;
-
-  @Prop({
-    type: Date,
-    default: () => {
-      const doc = this as PumpuangLocationDocument;
-
-      return doc?.autoDelete ? Date.now() + ONE_MONTH_IN_MS : undefined;
-    },
-  })
-  completelyDeleteAt?: Date;
 }
 
 export const PumpuangLocationSchema = SchemaFactory.createForClass(PumpuangLocation);
