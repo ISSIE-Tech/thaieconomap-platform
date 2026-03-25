@@ -767,8 +767,9 @@ export class PumpuangsService implements OnModuleInit {
     };
 
     const currentLocation = {
-      ...locationDto,
       location: formattedLocation,
+      direction: locationDto.location.coords.heading ?? 0,
+      speed: locationDto.location.coords.speed ?? 0,
     };
 
     if (!history[currentHistoryIndex]) {

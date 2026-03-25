@@ -27,6 +27,7 @@ export interface IPumpuangLocationTrackingResponse {
 interface ICurrentPumpuangLocation {
   location: string;
   direction: number;
+  speed?: number;
 }
 
 export interface IGetTinyPumpuangResponse {
