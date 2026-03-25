@@ -33,12 +33,12 @@ export interface PumpuangResponseDto {
 
 export interface PumpuangTinyResponseDto {
   _id: string;
-  current: { location: string; direction: number };
+  current: { location: string; direction: number; speed?: number };
 }
 
 export interface PumpuangRouteResponseDto {
   _id: string;
-  current: { location: string; direction: number };
+  current: { location: string; direction: number; speed?: number };
   types: string[];
   history: string[][];
 }

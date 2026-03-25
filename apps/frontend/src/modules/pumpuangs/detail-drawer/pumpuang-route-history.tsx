@@ -34,19 +34,26 @@ export function PumpuangRoutingHistory({ id }: Props) {
     setAngle(routeHistory.current.direction);
   }, [routeHistory]);
 
+  const getIconByDirection = useCallback(
+    (dir: number) => (dir >= 0 && dir < 180 ? pumpuangRightMarker : pumpuangLeftMarker),
+    []
+  );
+
   // turn pumpuang image into L.marker and set it as marker
   const setCarIcon = useCallback(() => {
-    if (!map || !newCoordinate || !angle) return;
+    if (!map || !newCoordinate || angle === null) return;
 
     if (!marker) {
       const pumpuangCar = L.marker(L.latLng(newCoordinate[0], newCoordinate[1]), {
-        icon: angle < 180 && angle >= 0 ? pumpuangRightMarker : pumpuangLeftMarker,
+        icon: getIconByDirection(angle),
+        zIndexOffset: 1000,
       }).addTo(map);
 
       pumpuangCar.setRotationOrigin('center');
+      pumpuangCar.setRotationAngle(angle);
       setMarker(pumpuangCar);
     }
-  }, [angle, map, marker, newCoordinate]);
+  }, [map, marker, newCoordinate, angle, getIconByDirection]);
 
   // set marker to be L.marker that can rotate
   useEffect(() => {
@@ -54,18 +61,18 @@ export function PumpuangRoutingHistory({ id }: Props) {
   }, [setCarIcon]);
 
   const updateMarkerCoordAngle = useCallback(() => {
-    if (!marker || !newCoordinate || !angle) return;
+    if (!marker || !newCoordinate || angle === null) return;
 
     marker.setRotationAngle(angle);
-    marker.setIcon(angle < 180 && angle >= 0 ? pumpuangRightMarker : pumpuangLeftMarker);
+    marker.setIcon(getIconByDirection(angle));
     marker.setLatLng([newCoordinate[0], newCoordinate[1]]);
-  }, [angle, marker, newCoordinate]);
+  }, [angle, marker, newCoordinate, getIconByDirection]);
 
   // whenever new coord and angle come in
   // set the center of map to pumpuang current location
   // set the marker there with the angle
   useEffect(() => {
-    if (!map || !newCoordinate || !angle) return;
+    if (!map || !newCoordinate || angle === null) return;
 
     map.setView(newCoordinate);
     updateMarkerCoordAngle();

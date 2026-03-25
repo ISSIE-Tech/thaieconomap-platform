@@ -13,6 +13,7 @@ import activeSharing from '/public/assets/icons/active-sharing-node.svg';
 import activeCommercial from '/public/assets/icons/active-commercial-node.svg';
 import pumpuangLeft from '/public/assets/icons/pumpuang/Handoff_Icon-Red-Left.png';
 import pumpuangRight from '/public/assets/icons/pumpuang/Handoff_Icon-Red-Right.png';
+import pumpuangCar from '/public/assets/icons/pumpuang/Handoff_Car.png';
 import overlappingCommercial from '/public/assets/icons/overlapping-commercial-node.svg';
 
 export const areChildrenMarkersClose = (cluster: MarkerCluster) => {
@@ -114,6 +115,12 @@ export const pumpuangLeftMarker = new L.Icon({
 export const pumpuangRightMarker = new L.Icon({
   iconUrl: pumpuangRight.src,
   iconSize: new L.Point(80, 80),
+});
+
+export const pumpuangCarMarker = new L.Icon({
+  iconUrl: pumpuangCar.src,
+  iconSize: new L.Point(80, 80),
+  iconAnchor: new L.Point(40, 40),
 });
 
 export const activeCommercialMarker = new L.Icon({
