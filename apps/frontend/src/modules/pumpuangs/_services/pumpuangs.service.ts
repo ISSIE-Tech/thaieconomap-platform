@@ -87,10 +87,8 @@ export const getPumpuangRouteById = async ({ queryKey }: Params) => {
 
   if (!records || !records.length) return null;
 
-  // Use first record for current location (active tracking from Redis comes first)
+  // Use first record only (latest/active session) — historical routes are admin-only
   const firstRecord = records[0];
-  // Flatten all records' history for complete polyline display
-  const allHistory = records.flatMap((r) => r.history || []);
 
   const formattedRoute: PumpuangDayHistory = {
     ...firstRecord,
@@ -101,7 +99,7 @@ export const getPumpuangRouteById = async ({ queryKey }: Params) => {
         coordinates: transformCoordinates(firstRecord.current.location.coordinates),
       },
     },
-    history: allHistory.map((shortHistory) => ({
+    history: (firstRecord.history || []).map((shortHistory) => ({
       ...shortHistory,
       coordinates: shortHistory.coordinates.map(transformCoordinates),
     })),
