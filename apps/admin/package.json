@@ -5,7 +5,7 @@
   "description": "Next Starter & TypeScript",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 4004",
+    "dev": "next dev -p 8001",
     "start": "next start -p 3000",
     "build": "next build",
     "lint": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",

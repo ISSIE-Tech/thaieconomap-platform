@@ -52,16 +52,24 @@ export function convertToGeoJsonPointFromCoordinates(location: string): Location
   };
 }
 
-export function convertToGeoJsonLineStringFromCoordinates(histories: string[]): Location {
-  const coordinates = histories.map((history: string) => {
-    const { location } = JSON.parse(history);
+export function convertToGeoJsonLineStringFromCoordinates(
+  histories: string[],
+): Location & { startedAt?: string; endedAt?: string } {
+  const parsed = histories.map((history: string) => JSON.parse(history));
 
-    return location.split(',').map(Number);
-  });
+  const coordinates = parsed.map(({ location }) => location.split(',').map(Number));
+
+  const timestamps = parsed
+    .map(({ trackedAt }) => trackedAt)
+    .filter(Boolean);
 
   return {
     type: GeoJsonType.LINESTRING,
     coordinates,
+    ...(timestamps.length > 0 && {
+      startedAt: timestamps[0],
+      endedAt: timestamps[timestamps.length - 1],
+    }),
   };
 }
 
