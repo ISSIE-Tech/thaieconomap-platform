@@ -4,8 +4,8 @@ import { getValueBasedOnEnv } from 'src/utils/development';
 
 const auth = {
   dev: {
-    link: 'vDev/auth/thai-economap/line-login/link',
-    login: 'vDev/auth/thai-economap/line-login/login',
+    link: '/auth/thai-economap-admin/line-login/link',
+    login: '/auth/thai-economap-admin/line-login/login',
   },
   prod: {
     link: '/auth/thai-economap-admin/line-login/link',
@@ -15,8 +15,8 @@ const auth = {
 
 const authentikAuth = {
   dev: {
-    link: 'vDev/auth/thai-economap-admin/authentik/link',
-    login: 'vDev/auth/thai-economap-admin/authentik/login',
+    link: '/auth/thai-economap-admin/authentik/link',
+    login: '/auth/thai-economap-admin/authentik/login',
   },
   prod: {
     link: '/auth/thai-economap-admin/authentik/link',

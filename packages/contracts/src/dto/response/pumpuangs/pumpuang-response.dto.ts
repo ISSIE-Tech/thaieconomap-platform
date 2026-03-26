@@ -77,6 +77,7 @@ export interface PumpuangRequestOtpResponseDto {
 export interface PumpuangLocationTrackingResponseDto {
   location: { latitude: number; longitude: number };
   status: PumpuangStatus;
+  background_geolocation: string[];
 }
 
 export interface RequestSessionResponseDto {

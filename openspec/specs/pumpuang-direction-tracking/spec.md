@@ -21,7 +21,7 @@ The backend SHALL extract `coords.speed` from the device location payload and st
 - **THEN** the backend SHALL store `current.speed` as `0` in Redis
 
 ### Requirement: API returns direction in pumpuang responses
-The `/pumpuangs/tiny` and `/pumpuangs/:id/route` API endpoints SHALL return `current.direction` as a number in their response.
+The `/pumpuangs/tiny` and `/pumpuangs/:id/route` API endpoints SHALL return `current.direction` as a number in their response. The `POST app/tracking` endpoint response SHALL additionally include `background_geolocation` as a `string[]` field to control the mobile app's background geolocation behavior.
 
 #### Scenario: Tiny pumpuang response includes direction
 - **WHEN** a client requests `GET /pumpuangs/tiny`
@@ -30,6 +30,10 @@ The `/pumpuangs/tiny` and `/pumpuangs/:id/route` API endpoints SHALL return `cur
 #### Scenario: Route response includes direction
 - **WHEN** a client requests `GET /pumpuangs/:id/route`
 - **THEN** the response SHALL include `current.direction` as a number (0-360)
+
+#### Scenario: Tracking response includes background geolocation commands
+- **WHEN** the app sends a location update to `POST app/tracking`
+- **THEN** the response SHALL include `background_geolocation` as a `string[]` field
 
 ### Requirement: Frontend debug code is removed
 The debug arrow polyline in `pumpuang-route-history.tsx` SHALL be removed before release.

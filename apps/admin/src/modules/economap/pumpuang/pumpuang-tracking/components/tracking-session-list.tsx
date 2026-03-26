@@ -8,6 +8,8 @@ import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 
+import { fDateTime } from 'src/utils/format-time';
+
 type Props = {
   sessions: GeoJsonLineString[];
   selectedIndex: number;
@@ -30,9 +32,21 @@ export default function TrackingSessionList({ sessions, selectedIndex, onSelect 
             <ListItemText
               primary={`ช่วงเวลาที่ ${index + 1}`}
               secondary={
-                <Typography variant="caption" component="span" display="block">
-                  จุดติดตาม: {session.coordinates?.length || 0} จุด
-                </Typography>
+                <>
+                  <Typography variant="caption" component="span" display="block">
+                    จุดติดตาม: {session.coordinates?.length || 0} จุด
+                  </Typography>
+                  {session.startedAt && (
+                    <Typography variant="caption" component="span" display="block">
+                      เริ่ม: {fDateTime(session.startedAt)}
+                    </Typography>
+                  )}
+                  {session.endedAt && (
+                    <Typography variant="caption" component="span" display="block">
+                      สิ้นสุด: {fDateTime(session.endedAt)}
+                    </Typography>
+                  )}
+                </>
               }
             />
           </ListItemButton>

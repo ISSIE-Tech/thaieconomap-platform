@@ -22,6 +22,7 @@ export interface IPumpuangStatus {
 export interface IPumpuangLocationTrackingResponse {
   location: PumpuangLocationDto;
   status: PumpuangStatus;
+  background_geolocation: string[];
 }
 
 interface ICurrentPumpuangLocation {

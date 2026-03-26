@@ -51,6 +51,8 @@ export type GeoJsonPoint = {
 export type GeoJsonLineString = {
   type: 'LineString';
   coordinates: [number, number][]; // [[longitude, latitude], ...]
+  startedAt?: string;
+  endedAt?: string;
 };
 
 export type PumpuangRouteResponse = {

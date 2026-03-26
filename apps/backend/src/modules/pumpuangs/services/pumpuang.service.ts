@@ -643,6 +643,7 @@ export class PumpuangsService implements OnModuleInit {
       return {
         location: locationDto,
         status: pumpuang.status,
+        background_geolocation: ['stop'],
       };
     }
 
@@ -671,6 +672,7 @@ export class PumpuangsService implements OnModuleInit {
     return {
       location: locationDto,
       status: pumpuang.status,
+      background_geolocation: [],
     };
   }
 
