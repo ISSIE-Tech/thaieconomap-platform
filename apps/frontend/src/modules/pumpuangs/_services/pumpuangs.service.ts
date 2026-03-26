@@ -79,22 +79,29 @@ export const getPumpuangRouteById = async ({ queryKey }: Params) => {
   // query data cannot be undefined
   if (pumpuangId === '') return null;
 
-  const { data: rawData } = await axios.get<ApiResponse<PumpuangDayHistory>>(
+  const { data: rawData } = await axios.get<ApiResponse<PumpuangDayHistory[]>>(
     endpoints.commercials.pumpuang.route(pumpuangId)
   );
 
-  const { current, history } = rawData.data;
+  const records = rawData.data;
+
+  if (!records || !records.length) return null;
+
+  // Use first record for current location (active tracking from Redis comes first)
+  const firstRecord = records[0];
+  // Flatten all records' history for complete polyline display
+  const allHistory = records.flatMap((r) => r.history || []);
 
   const formattedRoute: PumpuangDayHistory = {
-    ...rawData.data,
+    ...firstRecord,
     current: {
-      ...current,
+      ...firstRecord.current,
       location: {
         type: 'Point',
-        coordinates: transformCoordinates(current.location.coordinates),
+        coordinates: transformCoordinates(firstRecord.current.location.coordinates),
       },
     },
-    history: history.map((shortHistory) => ({
+    history: allHistory.map((shortHistory) => ({
       ...shortHistory,
       coordinates: shortHistory.coordinates.map(transformCoordinates),
     })),
