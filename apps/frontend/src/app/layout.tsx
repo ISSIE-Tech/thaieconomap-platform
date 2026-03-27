@@ -6,6 +6,7 @@ import 'src/global.css';
 
 import type { Metadata } from 'next';
 
+import Script from 'next/script';
 import { Suspense, type PropsWithChildren } from 'react';
 import { ThemeProvider } from 'src/theme/theme-provider';
 import { Snackbar } from 'src/shared/components/snackbar';
@@ -23,6 +24,25 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <Script
+        defer
+        src="https://umami.issie.dev/script.js"
+        data-website-id="87551f9f-c32e-41eb-b2dd-fcfd6ddfc392"
+        strategy="afterInteractive"
+      />
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-C31NKXJM4M"
+        strategy="afterInteractive"
+      />
+      <Script id="gtag-init" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-C31NKXJM4M');
+        `}
+      </Script>
       <body>
         <Suspense>
           <ReactQueryProvider>

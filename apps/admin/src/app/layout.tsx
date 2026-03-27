@@ -8,6 +8,7 @@ import { primary } from 'src/theme/core/palette';
 import { LocalizationProvider } from 'src/locales';
 import { ThemeProvider } from 'src/theme/theme-provider';
 import { GeolocationProvider } from 'src/modules/geolocation';
+import Script from 'next/script';
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import { schemeConfig } from 'src/theme/color-scheme-script';
 
@@ -42,6 +43,12 @@ export default async function RootLayout({ children }: Props) {
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <Script
+        defer
+        src="https://umami.issie.dev/script.js"
+        data-website-id="5b84da94-380d-439d-a8ea-541e0e8c559a"
+        strategy="afterInteractive"
+      />
       <body>
         <InitColorSchemeScript modeStorageKey={schemeConfig.modeStorageKey} defaultMode={schemeConfig.defaultMode} />
 
