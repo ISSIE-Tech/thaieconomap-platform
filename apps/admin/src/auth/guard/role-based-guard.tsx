@@ -26,7 +26,11 @@ export function RoleBasedGuard({
   currentRole,
   acceptRoles,
 }: RoleBasedGuardProp) {
-  if (typeof acceptRoles !== 'undefined' && !acceptRoles.includes(currentRole)) {
+  // DEVELOPER inherits all ADMIN permissions
+  const effectiveRoles = currentRole === 'DEVELOPER' ? [currentRole, 'ADMIN'] : [currentRole];
+  const hasAccess = effectiveRoles.some((role) => acceptRoles.includes(role));
+
+  if (typeof acceptRoles !== 'undefined' && !hasAccess) {
     return hasContent ? (
       <Container component={MotionContainer} sx={{ textAlign: 'center', ...sx }}>
         <m.div variants={varBounce().in}>

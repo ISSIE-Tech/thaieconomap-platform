@@ -19,3 +19,5 @@ export * from './externals/external.module';
 export * from './pumpuangs/pumpuangs.module';
 
 export * from './notifications/notifications.module';
+
+export * from './otp-logs/otp-logs.module';

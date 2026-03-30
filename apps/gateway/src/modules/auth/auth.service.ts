@@ -316,7 +316,8 @@ export class AuthService {
     if (
       roleKey &&
       user.roles[roleKey] !== UserRole.ADMIN &&
-      user.roles[roleKey] !== UserRole.MANAGER
+      user.roles[roleKey] !== UserRole.MANAGER &&
+      user.roles[roleKey] !== UserRole.DEVELOPER
     ) {
       throw new ErrorException(CODES.AGW_003);
     }

@@ -10,6 +10,7 @@ import { iconButtonClasses } from '@mui/material/IconButton';
 import type { Theme, SxProps, CSSObject, Breakpoint } from '@mui/material/styles';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useAuthContext } from 'src/auth/hooks';
 
 import { bulletColor } from 'src/components/nav-section';
 import type { SettingsState } from 'src/components/settings';
@@ -23,7 +24,7 @@ import { NavVertical } from './nav-vertical';
 import { NavHorizontal } from './nav-horizontal';
 import { _account } from '../config-nav-account';
 import { HeaderBase } from '../core/header-base';
-import { navConfig } from '../config-nav-dashboard';
+import { navConfig, filterNavByRole } from '../config-nav-dashboard';
 import { _languages } from '../config-nav-languages';
 import { _workspaces } from '../config-nav-workspace';
 import { LayoutSection } from '../core/layout-section';
@@ -45,13 +46,20 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
 
   const settings = useSettingsContext();
 
+  const { user } = useAuthContext();
+
   const { workspace } = settings;
 
   const navColorVars = useNavColorVars(theme, settings);
 
   const layoutQuery: Breakpoint = 'lg';
 
-  const navData = navConfig[workspace.id];
+  const userRole = user?.role ?? '';
+
+  const navData = useMemo(
+    () => filterNavByRole(navConfig[workspace.id], userRole),
+    [workspace.id, userRole]
+  );
 
   const isNavMini = settings.navLayout === 'mini';
 

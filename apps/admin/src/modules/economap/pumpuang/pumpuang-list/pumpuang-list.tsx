@@ -2,7 +2,7 @@
 
 import type { PumpuangItem, PumpuangTableFilters } from '../type';
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { varAlpha } from 'src/theme/styles';
 
 import Box from '@mui/material/Box';
@@ -25,6 +25,7 @@ import {
 
 import { useUserLookup } from '../../_hooks/use-user-lookup';
 import { useGetPumpuangs } from '../_hooks/use-get-pumpuangs';
+import { useGetTokenCounts } from '../../fcm-logs/_hooks/use-get-token-counts';
 import PumpuangTableRow from './components/pumpuang-table-row';
 import PumpuangTableToolbar from './components/pumpuang-table-toolbar';
 import PumpuangTableFiltersResult from './components/pumpuang-table-filters-result';
@@ -42,6 +43,7 @@ const TABLE_HEAD = [
   { id: 'createdBy', label: 'สร้างโดย', width: 160 },
   { id: 'lastModifiedBy', label: 'แก้ไขโดย', width: 160 },
   { id: 'approvedBy', label: 'อนุมัติโดย', width: 200 },
+  { id: 'fcmTokens', label: 'FCM Tokens', width: 120 },
   { id: '', width: 88 },
 ];
 
@@ -53,6 +55,13 @@ export default function PumpuangList() {
   const userLookup = useUserLookup();
 
   const pumpuangs = useGetPumpuangs();
+
+  const pumpuangIds = useMemo(
+    () => (pumpuangs.data?.data ?? []).map((p) => p._id),
+    [pumpuangs.data?.data]
+  );
+
+  const tokenCounts = useGetTokenCounts(pumpuangIds);
 
   const filters = useSetState<PumpuangTableFilters>({
     owner: '',
@@ -153,6 +162,7 @@ export default function PumpuangList() {
                     userLookup={userLookup}
                     selected={table.selected.includes(row._id)}
                     onSelectRow={() => table.onSelectRow(row._id)}
+                    tokenCount={tokenCounts.data?.[row._id] ?? 0}
                   />
                 ))}
             </TableBody>

@@ -15,6 +15,7 @@ import {
   MapModule,
   MinioClientModule,
   NotificationsModule,
+  OtpLogsModule,
   PumpuangsModule,
   SharesModule,
   UsersModule,

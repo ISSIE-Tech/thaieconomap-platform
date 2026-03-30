@@ -9,6 +9,8 @@ const ROOTS = {
   ANNOUNCEMENTS: '/announcements',
   USER: `/manager`,
   PUMPURANG: '/pumpuang',
+  FCM_LOGS: '/fcm-logs',
+  OTP_LOGS: '/otp-logs',
 };
 
 // ----------------------------------------------------------------------
@@ -65,6 +67,18 @@ export const paths = {
       new: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.ANNOUNCEMENTS}/new`,
       deleted: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.ANNOUNCEMENTS}/deleted`,
       edit: (id: string) => `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.ANNOUNCEMENTS}/edit/${id}`,
+    },
+  },
+  'fcm-logs': {
+    dashboard: {
+      root: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.FCM_LOGS}`,
+      list: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.FCM_LOGS}/list`,
+    },
+  },
+  'otp-logs': {
+    dashboard: {
+      root: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.OTP_LOGS}`,
+      list: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.OTP_LOGS}/list`,
     },
   },
   pumpuang: {
