@@ -506,7 +506,12 @@ export class PumpuangsService implements OnModuleInit {
     const isOtpExpired = now > new Date(otpExists?.expiredAt);
 
     if (otpExists && !isOtpExpired) {
-      await this.otpLogService.logRequestSuccess(phoneNumber, pumpuangExists._id.toString(), pumpuangExists.owner, otpExists.refno);
+      await this.otpLogService.logRequestSuccess(
+        phoneNumber,
+        pumpuangExists._id.toString(),
+        pumpuangExists.owner,
+        otpExists.refno,
+      );
 
       return {
         refno: otpExists.refno,
@@ -531,11 +536,21 @@ export class PumpuangsService implements OnModuleInit {
         CONFIG.OTP_CACHE_TTL,
       );
 
-      await this.otpLogService.logRequestSuccess(phoneNumber, pumpuangExists._id.toString(), pumpuangExists.owner, requestOtp.refno);
+      await this.otpLogService.logRequestSuccess(
+        phoneNumber,
+        pumpuangExists._id.toString(),
+        pumpuangExists.owner,
+        requestOtp.refno,
+      );
 
       return otpResponse;
     } catch (error) {
-      await this.otpLogService.logRequestFailure(phoneNumber, pumpuangExists._id.toString(), pumpuangExists.owner, error.message);
+      await this.otpLogService.logRequestFailure(
+        phoneNumber,
+        pumpuangExists._id.toString(),
+        pumpuangExists.owner,
+        error.message,
+      );
       throw error;
     }
   }
@@ -559,14 +574,24 @@ export class PumpuangsService implements OnModuleInit {
     const otpExists = await this.cacheManager.get<IOtpCache>(otpCacheKey);
 
     if (!otpExists) {
-      await this.otpLogService.logVerifyFailure(phoneNumber, pumpuangId, pumpuangExists.owner, 'OTP not found in cache');
+      await this.otpLogService.logVerifyFailure(
+        phoneNumber,
+        pumpuangId,
+        pumpuangExists.owner,
+        'OTP not found in cache',
+      );
       throw new ErrorException(CODES.TEC_076);
     }
 
     try {
       await this.thaiBulkSmsService.verifyOtp(otpExists.token, pin);
     } catch (error) {
-      await this.otpLogService.logVerifyFailure(phoneNumber, pumpuangId, pumpuangExists.owner, error.message);
+      await this.otpLogService.logVerifyFailure(
+        phoneNumber,
+        pumpuangId,
+        pumpuangExists.owner,
+        error.message,
+      );
       throw error;
     }
 
@@ -718,12 +743,12 @@ export class PumpuangsService implements OnModuleInit {
         _id: record._id?.toString(),
         current: record.current,
         history: (record.history || [])
-          .map((histories) =>
+          .map(histories =>
             (histories || [])
-              .filter((h) => h?.location)
-              .map((h) => JSON.stringify({ location: h.location, trackedAt: h.trackedAt })),
+              .filter(h => h?.location)
+              .map(h => JSON.stringify({ location: h.location, trackedAt: h.trackedAt })),
           )
-          .filter((histories) => histories.length > 0),
+          .filter(histories => histories.length > 0),
         types: record.types,
       } as unknown as IGetPumpuangRouteResponse);
     }
@@ -762,41 +787,130 @@ export class PumpuangsService implements OnModuleInit {
   }
 
   @Cron(CronExpression.EVERY_MINUTE)
-  async autoCloseExpiredTracking(): Promise<void> {
-    const ctx = `${PumpuangsService.name}-${this.autoCloseExpiredTracking.name}`;
-    const runningPumpuangs = await this.pumpuangRepository.find({
-      status: PumpuangStatus.RUNNING,
-    });
+  async sendOpenTimeNotifications(): Promise<void> {
+    const ctx = `${PumpuangsService.name}-${this.sendOpenTimeNotifications.name}`;
 
-    if (!runningPumpuangs.length) {
-      return;
-    }
+    try {
+      const now = new Date();
+      const today = now.getDay();
+      const currentMinutes = Math.floor(getCurrentMiniutesPassSinceMidnight(now));
+      const dateStr = now.toISOString().slice(0, 10);
 
-    const today = new Date().getDay();
-    const currentMinutes = getCurrentMiniutesPassSinceMidnight(new Date());
+      const pumpuangs = await this.pumpuangRepository.find({
+        submissionStatus: SubmissionStatus.ACCEPTED,
+      });
 
-    for (const pumpuang of runningPumpuangs) {
-      const opening = pumpuang.opening[today];
-      const shouldClose =
-        !opening.enable ||
-        !opening.hours.length ||
-        currentMinutes > opening.hours[opening.hours.length - 1].close;
+      for (const pumpuang of pumpuangs) {
+        const opening = pumpuang.opening[today];
 
-      if (!shouldClose) {
-        continue;
+        if (!opening.enable || !opening.hours.length) {
+          continue;
+        }
+
+        const firstOpenTime = opening.hours[0].open;
+
+        if (currentMinutes !== firstOpenTime) {
+          continue;
+        }
+
+        const pumpuangId = pumpuang._id.toString();
+        const cacheKey = CACHE_KEY.pumpuang.notifOpen(pumpuangId, dateStr);
+        const alreadySent = await this.redisClient.get(cacheKey);
+
+        if (alreadySent) {
+          continue;
+        }
+
+        this.logger.debug(`{${ctx}} sending open-time notification to pumpuang ${pumpuangId}`);
+
+        this.notificationService
+          .sendToPumpuang(
+            pumpuangId,
+            'ถึงเวลาเปิดร้านแล้ว',
+            'กรุณาเริ่มส่งตำแหน่งรถพุ่มพวง',
+            undefined,
+            'open-time-reminder',
+          )
+          .then(() => this.redisClient.set(cacheKey, '1', { EX: 86400 }))
+          .catch(err => this.logger.error(`FCM open-time notification error: ${err.message}`));
       }
+    } catch (err) {
+      this.logger.error(`{${ctx}} error: ${err.message}`);
+    }
+  }
 
-      this.logger.debug(`{${ctx}} auto-closing pumpuang ${pumpuang._id}`);
+  @Cron(CronExpression.EVERY_MINUTE)
+  async sendCloseTimeNotifications(): Promise<void> {
+    const ctx = `${PumpuangsService.name}-${this.sendCloseTimeNotifications.name}`;
 
-      await this.stopPumpuangRiderTracking(pumpuang);
+    try {
+      const now = new Date();
+      const today = now.getDay();
+      const currentMinutes = Math.floor(getCurrentMiniutesPassSinceMidnight(now));
+      const dateStr = now.toISOString().slice(0, 10);
 
-      this.notificationService
-        .sendToPumpuang(
-          pumpuang._id.toString(),
-          'ปิดการติดตามอัตโนมัติ',
-          'ระบบปิดการติดตามตำแหน่งรถปั่นเปี๊ยงอัตโนมัติเนื่องจากถึงเวลาปิดแล้ว',
-        )
-        .catch(err => this.logger.error(`FCM auto-close notification error: ${err.message}`));
+      const runningPumpuangs = await this.pumpuangRepository.find({
+        status: PumpuangStatus.RUNNING,
+      });
+
+      for (const pumpuang of runningPumpuangs) {
+        const opening = pumpuang.opening[today];
+
+        if (!opening.enable || !opening.hours.length) {
+          continue;
+        }
+
+        const lastCloseTime = opening.hours[opening.hours.length - 1].close;
+        const pumpuangId = pumpuang._id.toString();
+
+        // Close-time notification
+        if (currentMinutes === lastCloseTime) {
+          const cacheKey = CACHE_KEY.pumpuang.notifClose(pumpuangId, dateStr);
+          const alreadySent = await this.redisClient.get(cacheKey);
+
+          if (!alreadySent) {
+            this.logger.debug(`{${ctx}} sending close-time notification to pumpuang ${pumpuangId}`);
+
+            this.notificationService
+              .sendToPumpuang(
+                pumpuangId,
+                'ถึงเวลาปิดร้านแล้ว',
+                'กรุณาปิดการส่งตำแหน่งรถพุ่มพวง',
+                undefined,
+                'close-time-reminder',
+              )
+              .then(() => this.redisClient.set(cacheKey, '1', { EX: 86400 }))
+              .catch(err => this.logger.error(`FCM close-time notification error: ${err.message}`));
+          }
+        }
+
+        // Close-time follow-up notification (1 hour after close)
+        if (currentMinutes === lastCloseTime + 60) {
+          const followupKey = CACHE_KEY.pumpuang.notifCloseFollowup(pumpuangId, dateStr);
+          const alreadySent = await this.redisClient.get(followupKey);
+
+          if (!alreadySent) {
+            this.logger.debug(
+              `{${ctx}} sending close-time follow-up notification to pumpuang ${pumpuangId}`,
+            );
+
+            this.notificationService
+              .sendToPumpuang(
+                pumpuangId,
+                'เตือนอีกครั้ง',
+                'รถพุ่มพวงยังเปิดอยู่ กรุณาปิดการส่งตำแหน่ง',
+                undefined,
+                'close-time-reminder-followup',
+              )
+              .then(() => this.redisClient.set(followupKey, '1', { EX: 86400 }))
+              .catch(err =>
+                this.logger.error(`FCM close-time follow-up notification error: ${err.message}`),
+              );
+          }
+        }
+      }
+    } catch (err) {
+      this.logger.error(`{${ctx}} error: ${err.message}`);
     }
   }
 
@@ -811,7 +925,9 @@ export class PumpuangsService implements OnModuleInit {
       return;
     }
 
-    this.logger.debug(`{${ctx}} force-closing ${runningPumpuangs.length} running pumpuangs at 23:50`);
+    this.logger.debug(
+      `{${ctx}} force-closing ${runningPumpuangs.length} running pumpuangs at 23:50`,
+    );
 
     for (const pumpuang of runningPumpuangs) {
       await this.stopPumpuangRiderTracking(pumpuang);
@@ -822,7 +938,9 @@ export class PumpuangsService implements OnModuleInit {
           'ปิดการติดตามอัตโนมัติ',
           'ระบบปิดการติดตามตำแหน่งอัตโนมัติเนื่องจากสิ้นสุดวัน',
         )
-        .catch(err => this.logger.error(`FCM daily force-close notification error: ${err.message}`));
+        .catch(err =>
+          this.logger.error(`FCM daily force-close notification error: ${err.message}`),
+        );
     }
   }
 
@@ -894,7 +1012,7 @@ export class PumpuangsService implements OnModuleInit {
 
   private notifyFirstLocation(pumpuangId: string): void {
     this.notificationService
-      .sendToPumpuang(pumpuangId, 'เริ่มส่งตำแหน่งแล้ว', 'ไรเดอร์เริ่มส่งตำแหน่งของรถปั่นเปี๊ยงแล้ว')
+      .sendToPumpuang(pumpuangId, 'เริ่มส่งตำแหน่งแล้ว', 'ไรเดอร์เริ่มส่งตำแหน่งของรถพุ่มพวงแล้ว')
       .catch(err => this.logger.error(`FCM first-location notification error: ${err.message}`));
   }
 
