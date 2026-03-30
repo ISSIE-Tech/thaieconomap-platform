@@ -3,6 +3,10 @@ export const CACHE_KEY = {
     otp: (pumpuangId: string) => `pumpuang:otp:${pumpuangId}`,
     location: (pumpuangId: string) => `pumpuang:location:${pumpuangId}`,
     session: (sessionId: string) => `pumpuang:session:${sessionId}`,
+    notifOpen: (pumpuangId: string, date: string) => `pumpuang:notif:open:${pumpuangId}:${date}`,
+    notifClose: (pumpuangId: string, date: string) => `pumpuang:notif:close:${pumpuangId}:${date}`,
+    notifCloseFollowup: (pumpuangId: string, date: string) =>
+      `pumpuang:notif:close-followup:${pumpuangId}:${date}`,
   },
   commercials: {
     all: 'commercials:*',
