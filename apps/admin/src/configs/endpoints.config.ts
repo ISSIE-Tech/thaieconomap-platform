@@ -88,6 +88,14 @@ export const endpoints = {
     getById: (id: string) => `/services/thai-economap/announcements/${id}`,
     getAll: `/services/thai-economap/announcements/`,
   },
+  otp: {
+    logs: '/services/thai-economap/otp/logs',
+  },
+  notifications: {
+    logs: '/services/thai-economap/notifications/logs',
+    tokenCounts: '/services/thai-economap/notifications/token-counts',
+    testSend: '/services/thai-economap/notifications/test-send',
+  },
   pumpuang: {
     list: '/services/thai-economap/all-pumpuangs',
     approve: (id: string) => `/services/thai-economap/pending-pumpuangs/${id}/approve`,

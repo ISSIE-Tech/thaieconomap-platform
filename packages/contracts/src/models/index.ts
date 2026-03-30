@@ -9,3 +9,4 @@ export * from './favorite.model';
 export * from './announcement.model';
 export * from './district.model';
 export * from './token.model';
+export * from './fcm-notification-log.model';

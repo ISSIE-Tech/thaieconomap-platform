@@ -29,6 +29,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import PumpuangTableRowDrawer from './pumpuang-table-row-drawer';
 import { useDeletePumpuang } from '../../_hooks/use-delete-pumpuang';
 import { useForceStopPumpuang } from '../../_hooks/use-force-stop-pumpuang';
+import { useTestSendNotification } from '../../../fcm-logs/_hooks/use-test-send-notification';
 import { getUserRole, getUserDisplayName } from '../../../_hooks/use-user-lookup';
 
 // ----------------------------------------------------------------------
@@ -38,18 +39,23 @@ type Props = {
   selected: boolean;
   onSelectRow: () => void;
   userLookup: UserLookupMap;
+  tokenCount: number;
 };
 
-export default function PumpuangTableRow({ row, selected, onSelectRow, userLookup }: Props) {
+export default function PumpuangTableRow({ row, selected, onSelectRow, userLookup, tokenCount }: Props) {
   const drawerController = useBoolean();
 
   const deleteDialog = useBoolean();
 
   const forceStopDialog = useBoolean();
 
+  const testSendDialog = useBoolean();
+
   const deletePumpuang = useDeletePumpuang();
 
   const forceStopPumpuang = useForceStopPumpuang();
+
+  const testSendNotification = useTestSendNotification();
 
   // ----------------------------------------------------------------------
 
@@ -74,6 +80,22 @@ export default function PumpuangTableRow({ row, selected, onSelectRow, userLooku
       toast.error('เกิดข้อผิดพลาดในการหยุดการติดตาม');
     }
   }, [forceStopDialog, forceStopPumpuang, row._id]);
+
+  const handleTestSend = useCallback(async () => {
+    try {
+      if (tokenCount === 0) {
+        toast.warning('ไม่มี FCM token ที่ลงทะเบียน');
+        testSendDialog.onFalse();
+        return;
+      }
+      await testSendNotification.mutateAsync(row._id);
+      toast.success(`ส่งการแจ้งเตือนทดสอบไปยัง ${tokenCount} อุปกรณ์แล้ว`);
+      testSendDialog.onFalse();
+    } catch (error) {
+      console.error(error);
+      toast.error('เกิดข้อผิดพลาดในการส่งการแจ้งเตือนทดสอบ');
+    }
+  }, [testSendDialog, testSendNotification, row._id, tokenCount]);
 
   // ----------------------------------------------------------------------
 
@@ -159,6 +181,20 @@ export default function PumpuangTableRow({ row, selected, onSelectRow, userLooku
           </Typography>
         </TableCell>
 
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Typography variant="body2">{tokenCount}</Typography>
+            <Button
+              size="small"
+              variant="soft"
+              color="info"
+              onClick={testSendDialog.onTrue}
+            >
+              Test Send
+            </Button>
+          </Stack>
+        </TableCell>
+
         <TableCell>
           <Stack direction="row" spacing={0.5}>
             {row?.submissionStatus === ECONOMAP_STATUS.APPROVED && (
@@ -242,6 +278,31 @@ export default function PumpuangTableRow({ row, selected, onSelectRow, userLooku
             loading={forceStopPumpuang.isPending}
           >
             หยุดติดตาม
+          </LoadingButton>
+        }
+      />
+
+      <ConfirmDialog
+        open={testSendDialog.value}
+        onClose={testSendDialog.onFalse}
+        title="ส่งการแจ้งเตือนทดสอบ"
+        content={
+          <Typography variant="body2" color="text.secondary">
+            ส่งการแจ้งเตือนทดสอบไปยัง{' '}
+            <Typography component="span" sx={{ textDecoration: 'underline' }} color="black">
+              {row?.owner}
+            </Typography>{' '}
+            ({tokenCount} อุปกรณ์) ใช่หรือไม่?
+          </Typography>
+        }
+        action={
+          <LoadingButton
+            variant="contained"
+            color="info"
+            onClick={handleTestSend}
+            loading={testSendNotification.isPending}
+          >
+            ส่งทดสอบ
           </LoadingButton>
         }
       />

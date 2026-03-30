@@ -40,4 +40,24 @@ export class DeviceTokenRepository {
     if (tokens.length === 0) return;
     await this.deviceTokenModel.deleteMany({ token: { $in: tokens } });
   }
+
+  async countTokensByPumpuangIds(
+    pumpuangIds: string[],
+  ): Promise<Record<string, number>> {
+    const result: Record<string, number> = {};
+    pumpuangIds.forEach(id => (result[id] = 0));
+
+    if (pumpuangIds.length === 0) return result;
+
+    const counts = await this.deviceTokenModel.aggregate([
+      { $match: { pumpuangId: { $in: pumpuangIds } } },
+      { $group: { _id: '$pumpuangId', count: { $sum: 1 } } },
+    ]);
+
+    counts.forEach(({ _id, count }) => {
+      result[_id] = count;
+    });
+
+    return result;
+  }
 }

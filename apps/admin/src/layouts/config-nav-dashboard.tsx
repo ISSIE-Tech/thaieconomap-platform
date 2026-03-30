@@ -49,11 +49,13 @@ type NavItem = {
   icon?: React.ReactElement;
   children?: NavItem[];
   disabled?: boolean;
+  roles?: string[];
 };
 
 type NavSection = {
   subheader: string;
   items: NavItem[];
+  roles?: string[];
 };
 
 // ----------------------------------------------------------------------
@@ -133,6 +135,24 @@ export const economapNavData = [
       },
     ],
   },
+  {
+    subheader: 'นักพัฒนา',
+    roles: ['DEVELOPER'],
+    items: [
+      {
+        title: 'FCM Logs',
+        path: paths['fcm-logs'].dashboard.list,
+        icon: ICONS.analytics,
+        roles: ['DEVELOPER'],
+      },
+      {
+        title: 'OTP Logs',
+        path: paths['otp-logs'].dashboard.list,
+        icon: ICONS.lock,
+        roles: ['DEVELOPER'],
+      },
+    ],
+  },
 ];
 
 // ----------------------------------------------------------------------
@@ -161,3 +181,29 @@ export const navConfig: Record<workspace, NavSection[]> = {
   [workspace.economap]: economapNavData,
   [workspace.csc]: chialShareCarrierNavData,
 };
+
+// ----------------------------------------------------------------------
+
+function filterNavItems(items: NavItem[], userRole: string): NavItem[] {
+  // DEVELOPER inherits all ADMIN permissions
+  const effectiveRoles = userRole === 'DEVELOPER' ? [userRole, 'ADMIN'] : [userRole];
+
+  return items
+    .filter((item) => !item.roles || item.roles.some((r) => effectiveRoles.includes(r)))
+    .map((item) => ({
+      ...item,
+      ...(item.children && { children: filterNavItems(item.children, userRole) }),
+    }));
+}
+
+export function filterNavByRole(sections: NavSection[], userRole: string): NavSection[] {
+  const effectiveRoles = userRole === 'DEVELOPER' ? [userRole, 'ADMIN'] : [userRole];
+
+  return sections
+    .filter((section) => !section.roles || section.roles.some((r) => effectiveRoles.includes(r)))
+    .map((section) => ({
+      ...section,
+      items: filterNavItems(section.items, userRole),
+    }))
+    .filter((section) => section.items.length > 0);
+}

@@ -4,7 +4,9 @@ import { ConfigService } from '@nestjs/config';
 import * as admin from 'firebase-admin';
 
 import { GLOBAL_CONFIG } from '../../../shared/constants';
-import { DeviceTokenRepository } from '../repositories';
+import { prettyObjectString } from '../../../shared/utils';
+import { DeviceTokenRepository, FcmNotificationLogRepository } from '../repositories';
+import { FcmNotificationStatus } from '../schemas';
 
 @Injectable()
 export class FcmService implements OnModuleInit {
@@ -14,6 +16,7 @@ export class FcmService implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService,
     private readonly deviceTokenRepository: DeviceTokenRepository,
+    private readonly logRepository: FcmNotificationLogRepository,
   ) {}
 
   onModuleInit() {
@@ -22,7 +25,7 @@ export class FcmService implements OnModuleInit {
     const privateKey = this.configService.get<string>(GLOBAL_CONFIG.FCM_PRIVATE_KEY);
 
     if (!projectId || !clientEmail || !privateKey) {
-      this.logger.warn('FCM credentials not configured — push notifications disabled');
+      this.logger.warn(`{${FcmService.name}-${this.onModuleInit.name}} FCM credentials not configured — push notifications disabled`);
 
       return;
     }
@@ -36,7 +39,7 @@ export class FcmService implements OnModuleInit {
     });
 
     this.isInitialized = true;
-    this.logger.log('Firebase Admin SDK initialized successfully');
+    this.logger.log(`{${FcmService.name}-${this.onModuleInit.name}} Firebase Admin SDK initialized successfully`);
   }
 
   async sendToDevice(
@@ -44,8 +47,20 @@ export class FcmService implements OnModuleInit {
     title: string,
     body: string,
     data?: Record<string, string>,
+    reason = 'notification',
+    pumpuangName?: string | null,
   ): Promise<void> {
-    if (!this.isInitialized) return;
+    const ctx = `${FcmService.name}-${this.sendToDevice.name}`;
+
+    this.logger.debug(
+      `{${ctx}} (called)\
+      \n[param] ${prettyObjectString({ token: `${token.substring(0, 12)}...`, title, body, reason })}`,
+    );
+
+    if (!this.isInitialized) {
+      this.logger.warn(`{${ctx}} FCM not initialized — skipping`);
+      return;
+    }
 
     try {
       const result = await admin.messaging().send({
@@ -54,8 +69,12 @@ export class FcmService implements OnModuleInit {
         ...(data && { data }),
       });
 
-      this.logger.debug(`FCM send result: ${result}`);
+      this.logger.log(`{${ctx}} (success) messageId: ${result}`);
+      await this.logRepository.create({ sendTo: token, pumpuangName, status: FcmNotificationStatus.SUCCESS, reason });
     } catch (error) {
+      this.logger.error(`{${ctx}} (failed)\
+      \n[error] ${prettyObjectString({ code: error.code, message: error.message })}`);
+      await this.logRepository.create({ sendTo: token, pumpuangName, status: FcmNotificationStatus.FAILURE, reason, errorMessage: error.message });
       await this.handleSendError(error, [token]);
     }
   }
@@ -65,11 +84,23 @@ export class FcmService implements OnModuleInit {
     title: string,
     body: string,
     data?: Record<string, string>,
+    reason = 'notification',
+    pumpuangName?: string | null,
   ): Promise<void> {
-    if (!this.isInitialized) return;
+    const ctx = `${FcmService.name}-${this.sendToMultiple.name}`;
+
+    this.logger.debug(
+      `{${ctx}} (called)\
+      \n[param] ${prettyObjectString({ tokenCount: tokens.length, title, body, reason })}`,
+    );
+
+    if (!this.isInitialized) {
+      this.logger.warn(`{${ctx}} FCM not initialized — skipping`);
+      return;
+    }
 
     if (tokens.length === 0) {
-      this.logger.debug('No tokens to send to — skipping');
+      this.logger.debug(`{${ctx}} no tokens to send to — skipping`);
 
       return;
     }
@@ -81,24 +112,48 @@ export class FcmService implements OnModuleInit {
         ...(data && { data }),
       });
 
-      this.logger.debug(
-        `FCM multicast: ${response.successCount} success, ${response.failureCount} failures`,
+      this.logger.log(
+        `{${ctx}} (result) ${prettyObjectString({
+          total: tokens.length,
+          successCount: response.successCount,
+          failureCount: response.failureCount,
+        })}`,
       );
 
       const invalidTokens: string[] = [];
+      const logPromises: Promise<unknown>[] = [];
 
       response.responses.forEach((resp, idx) => {
-        if (resp.error && resp.error.code === 'messaging/registration-token-not-registered') {
-          invalidTokens.push(tokens[idx]);
+        if (resp.success) {
+          logPromises.push(
+            this.logRepository.create({ sendTo: tokens[idx], pumpuangName, status: FcmNotificationStatus.SUCCESS, reason }),
+          );
+        } else {
+          this.logger.verbose(
+            `{${ctx}} (device failed) ${prettyObjectString({
+              token: `${tokens[idx].substring(0, 12)}...`,
+              error: resp.error?.message,
+              code: resp.error?.code,
+            })}`,
+          );
+          logPromises.push(
+            this.logRepository.create({ sendTo: tokens[idx], pumpuangName, status: FcmNotificationStatus.FAILURE, reason, errorMessage: resp.error?.message ?? 'Unknown error' }),
+          );
+          if (resp.error?.code === 'messaging/registration-token-not-registered') {
+            invalidTokens.push(tokens[idx]);
+          }
         }
       });
 
+      await Promise.all(logPromises);
+
       if (invalidTokens.length > 0) {
-        this.logger.warn(`Removing ${invalidTokens.length} invalid FCM tokens`);
+        this.logger.warn(`{${ctx}} removing ${invalidTokens.length} invalid FCM tokens`);
         await this.deviceTokenRepository.removeTokensByValues(invalidTokens);
       }
     } catch (error) {
-      this.logger.error(`FCM multicast error: ${error.message}`);
+      this.logger.error(`{${ctx}} (failed)\
+      \n[error] ${prettyObjectString({ message: error.message })}`);
     }
   }
 
@@ -107,8 +162,19 @@ export class FcmService implements OnModuleInit {
     title: string,
     body: string,
     data?: Record<string, string>,
+    reason = 'topic notification',
   ): Promise<void> {
-    if (!this.isInitialized) return;
+    const ctx = `${FcmService.name}-${this.sendToTopic.name}`;
+
+    this.logger.debug(
+      `{${ctx}} (called)\
+      \n[param] ${prettyObjectString({ topic, title, body, reason })}`,
+    );
+
+    if (!this.isInitialized) {
+      this.logger.warn(`{${ctx}} FCM not initialized — skipping`);
+      return;
+    }
 
     try {
       const result = await admin.messaging().send({
@@ -117,18 +183,21 @@ export class FcmService implements OnModuleInit {
         ...(data && { data }),
       });
 
-      this.logger.debug(`FCM topic send result: ${result}`);
+      this.logger.log(`{${ctx}} (success) messageId: ${result}`);
+      await this.logRepository.create({ sendTo: `topic:${topic}`, status: FcmNotificationStatus.SUCCESS, reason });
     } catch (error) {
-      this.logger.error(`FCM topic send error: ${error.message}`);
+      this.logger.error(`{${ctx}} (failed)\
+      \n[error] ${prettyObjectString({ code: error.code, message: error.message })}`);
+      await this.logRepository.create({ sendTo: `topic:${topic}`, status: FcmNotificationStatus.FAILURE, reason, errorMessage: error.message });
     }
   }
 
   private async handleSendError(error: { code?: string; message?: string }, tokens: string[]): Promise<void> {
+    const ctx = `${FcmService.name}-${this.handleSendError.name}`;
+
     if (error.code === 'messaging/registration-token-not-registered') {
-      this.logger.warn(`Invalid FCM token detected, removing: ${tokens}`);
+      this.logger.warn(`{${ctx}} invalid FCM token detected, removing ${tokens.length} token(s)`);
       await this.deviceTokenRepository.removeTokensByValues(tokens);
-    } else {
-      this.logger.error(`FCM send error: ${error.message}`);
     }
   }
 }

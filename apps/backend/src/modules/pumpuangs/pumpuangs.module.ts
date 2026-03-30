@@ -7,6 +7,7 @@ import { AuthModule } from '../auth/auth.module';
 import { ExternalModule } from '../externals/external.module';
 import { MinioClientModule } from '../minio-client/minio-client.module';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { OtpLogsModule } from '../otp-logs/otp-logs.module';
 import { UsersModule } from '../users/users.module';
 
 import {
@@ -61,6 +62,7 @@ import { PumpuangJwtAccessTokenStrategy, PumpuangJwtRefreshTokenStrategy } from 
     ExternalModule,
     AuthModule,
     NotificationsModule,
+    OtpLogsModule,
   ],
   controllers: [
     AllPumpuangsController,

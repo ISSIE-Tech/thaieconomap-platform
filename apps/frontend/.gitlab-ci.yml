@@ -8,7 +8,7 @@ stages:
 
 variables:
   REGISTRY: registry.issie.dev
-  IMAGE_PATH: thaieconomap/thaieconomap-frontend
+  IMAGE_PATH: thaieconomap/thaieconomap-monorepo/frontend
 
 build-push-dev:
   stage: build-dev

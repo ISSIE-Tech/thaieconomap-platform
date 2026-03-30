@@ -134,7 +134,9 @@ export class AuthentikOauthService extends AbstractBaseOauthService {
 
     let role: UserRole;
 
-    if (groups.includes('thaieconomap-admin')) {
+    if (groups.includes('thaieconomap-dev')) {
+      role = UserRole.DEVELOPER;
+    } else if (groups.includes('thaieconomap-admin')) {
       role = UserRole.ADMIN;
     } else if (groups.includes('thaieconomap-manager')) {
       role = UserRole.MANAGER;

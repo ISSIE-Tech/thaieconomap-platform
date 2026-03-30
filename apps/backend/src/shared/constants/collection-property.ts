@@ -23,4 +23,6 @@ export const COLLECTION_NAME = {
   productTypes: 'product_types',
   pumpuangLocation: 'pumpuang_location',
   deviceTokens: 'device_tokens',
+  fcmNotificationLogs: 'fcm_notification_logs',
+  otpLogs: 'otp_logs',
 };

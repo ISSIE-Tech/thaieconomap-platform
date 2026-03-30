@@ -51,6 +51,7 @@ import {
   transformOpeningToDisplayOpening,
 } from '../../../shared/utils';
 import { NotificationService } from '../../notifications/services';
+import { OtpLogService } from '../../otp-logs/services';
 import {
   CreatePumpuangDto,
   GetPumpuangTinyQueryDto,
@@ -99,6 +100,7 @@ export class PumpuangsService implements OnModuleInit {
     private readonly configService: ConfigService,
     private readonly locationAnalyticsService: LocationAnalyticsService,
     private readonly notificationService: NotificationService,
+    private readonly otpLogService: OtpLogService,
   ) {}
 
   async onModuleInit() {
@@ -504,29 +506,38 @@ export class PumpuangsService implements OnModuleInit {
     const isOtpExpired = now > new Date(otpExists?.expiredAt);
 
     if (otpExists && !isOtpExpired) {
+      await this.otpLogService.logRequestSuccess(phoneNumber, pumpuangExists._id.toString(), pumpuangExists.owner, otpExists.refno);
+
       return {
         refno: otpExists.refno,
         expiredAt: new Date(otpExists.expiredAt),
       };
     }
 
-    const requestOtp = await this.thaiBulkSmsService.requestOtp(phoneNumber);
-    const expiredAt = new Date(now.getTime() + CONFIG.OTP_EXPIRE_AT);
-    const otpResponse = {
-      refno: requestOtp.refno,
-      expiredAt,
-    };
+    try {
+      const requestOtp = await this.thaiBulkSmsService.requestOtp(phoneNumber);
+      const expiredAt = new Date(now.getTime() + CONFIG.OTP_EXPIRE_AT);
+      const otpResponse = {
+        refno: requestOtp.refno,
+        expiredAt,
+      };
 
-    await this.cacheManager.set(
-      otpCacheKey,
-      {
-        ...otpResponse,
-        token: requestOtp.token,
-      },
-      CONFIG.OTP_CACHE_TTL,
-    );
+      await this.cacheManager.set(
+        otpCacheKey,
+        {
+          ...otpResponse,
+          token: requestOtp.token,
+        },
+        CONFIG.OTP_CACHE_TTL,
+      );
 
-    return otpResponse;
+      await this.otpLogService.logRequestSuccess(phoneNumber, pumpuangExists._id.toString(), pumpuangExists.owner, requestOtp.refno);
+
+      return otpResponse;
+    } catch (error) {
+      await this.otpLogService.logRequestFailure(phoneNumber, pumpuangExists._id.toString(), pumpuangExists.owner, error.message);
+      throw error;
+    }
   }
 
   async pumpuangVerifyOtp(verifyOtpDto: VerifyOtpDto): Promise<IPumpuangAuthResponse> {
@@ -548,12 +559,19 @@ export class PumpuangsService implements OnModuleInit {
     const otpExists = await this.cacheManager.get<IOtpCache>(otpCacheKey);
 
     if (!otpExists) {
+      await this.otpLogService.logVerifyFailure(phoneNumber, pumpuangId, pumpuangExists.owner, 'OTP not found in cache');
       throw new ErrorException(CODES.TEC_076);
     }
 
-    await this.thaiBulkSmsService.verifyOtp(otpExists.token, pin);
+    try {
+      await this.thaiBulkSmsService.verifyOtp(otpExists.token, pin);
+    } catch (error) {
+      await this.otpLogService.logVerifyFailure(phoneNumber, pumpuangId, pumpuangExists.owner, error.message);
+      throw error;
+    }
 
     await this.cacheManager.del(otpCacheKey);
+    await this.otpLogService.logVerifySuccess(phoneNumber, pumpuangId, pumpuangExists.owner);
 
     return {
       credentials: await this.generatePumpuangCredentials(pumpuangId),

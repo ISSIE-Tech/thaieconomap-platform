@@ -23,7 +23,9 @@ export class RolesGuard implements CanActivate {
   }
 
   private matchRoles(roles: string[], userRole: string) {
-    const isRoleMatch = roles.some(role => role === userRole);
+    // DEVELOPER inherits all ADMIN permissions
+    const effectiveRoles = userRole === 'DEVELOPER' ? [userRole, 'ADMIN'] : [userRole];
+    const isRoleMatch = roles.some(role => effectiveRoles.includes(role));
 
     if (!isRoleMatch) {
       throw new ErrorException(CODES.TEC_003);
