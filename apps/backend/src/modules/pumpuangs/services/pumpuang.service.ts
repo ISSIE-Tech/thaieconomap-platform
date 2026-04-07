@@ -884,6 +884,34 @@ export class PumpuangsService implements OnModuleInit {
           }
         }
 
+        // Close-time second follow-up notification (2 hours after close) — auto-close tracking
+        if (currentMinutes === lastCloseTime + 120) {
+          const followup2Key = CACHE_KEY.pumpuang.notifCloseFollowup2(pumpuangId, dateStr);
+          const alreadySent = await this.redisClient.get(followup2Key);
+
+          if (!alreadySent) {
+            this.logger.debug(
+              `{${ctx}} sending third close-time reminder and auto-closing tracking for pumpuang ${pumpuangId}`,
+            );
+
+            try {
+              await this.stopPumpuangRiderTracking(pumpuang);
+              await this.notificationService.sendToPumpuang(
+                pumpuangId,
+                'ปิดการติดตามอัตโนมัติ',
+                'ระบบปิดการติดตามตำแหน่งให้อัตโนมัติเนื่องจากเลยเวลาปิดร้าน',
+                undefined,
+                'close-time-auto-close',
+              );
+              await this.redisClient.set(followup2Key, '1', { EX: 86400 });
+            } catch (err) {
+              this.logger.error(
+                `FCM close-time auto-close notification error: ${err.message}`,
+              );
+            }
+          }
+        }
+
         // Close-time follow-up notification (1 hour after close)
         if (currentMinutes === lastCloseTime + 60) {
           const followupKey = CACHE_KEY.pumpuang.notifCloseFollowup(pumpuangId, dateStr);
