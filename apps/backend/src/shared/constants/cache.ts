@@ -7,6 +7,8 @@ export const CACHE_KEY = {
     notifClose: (pumpuangId: string, date: string) => `pumpuang:notif:close:${pumpuangId}:${date}`,
     notifCloseFollowup: (pumpuangId: string, date: string) =>
       `pumpuang:notif:close-followup:${pumpuangId}:${date}`,
+    notifCloseFollowup2: (pumpuangId: string, date: string) =>
+      `pumpuang:notif:close-followup-2:${pumpuangId}:${date}`,
   },
   commercials: {
     all: 'commercials:*',
