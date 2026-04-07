@@ -4,6 +4,8 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import FormHelperText from '@mui/material/FormHelperText';
 
+import { compressImageFile, compressImageFiles } from 'src/utils/compress-image';
+
 import { Upload, UploadBox, UploadAvatar } from '../upload';
 
 // ----------------------------------------------------------------------
@@ -22,8 +24,8 @@ export function RHFUploadAvatar({ name, ...other }: Props) {
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => {
-        const onDrop = (acceptedFiles: File[]) => {
-          const value = acceptedFiles[0];
+        const onDrop = async (acceptedFiles: File[]) => {
+          const value = await compressImageFile(acceptedFiles[0]);
 
           setValue(name, value, { shouldValidate: true });
         };
@@ -77,8 +79,9 @@ export function RHFUpload({ name, multiple, helperText, ...other }: Props) {
           helperText: error?.message ?? helperText,
         };
 
-        const onDrop = (acceptedFiles: File[]) => {
-          const newFiles = acceptedFiles.map((file) => {
+        const onDrop = async (acceptedFiles: File[]) => {
+          const compressedFiles = await compressImageFiles(acceptedFiles);
+          const newFiles = compressedFiles.map((file) => {
             const uniqueName = `${file.name.split('.')[0]}-${Date.now()}.${file.name.split('.').pop()}`;
             return new File([file], uniqueName, {
               type: file.type,
