@@ -1,33 +1,20 @@
 ## Purpose
 
 Persist and query OTP request/verification results for developer visibility and debugging.
-
 ## Requirements
-
 ### Requirement: System logs every OTP request attempt
 The system SHALL persist a log entry for every OTP request. Each log entry MUST contain:
 - `phoneNumber`: The phone number the OTP was sent to
 - `pumpuangId`: The pumpuang ID associated with the request
+- `pumpuangName`: The pumpuang owner name at the time of the request
 - `action`: `request` or `verify`
 - `status`: `success` or `failure`
 - `refno`: The reference number from ThaiBulkSMS (for request actions)
 - `errorMessage`: The error message if status is `failure`, null otherwise
 
-#### Scenario: Successful OTP request
-- **WHEN** a pumpuang requests an OTP and ThaiBulkSMS returns successfully
-- **THEN** the system SHALL create a log entry with action `request`, status `success`, and the refno from the response
-
-#### Scenario: Failed OTP request
-- **WHEN** a pumpuang requests an OTP and ThaiBulkSMS returns an error
-- **THEN** the system SHALL create a log entry with action `request`, status `failure`, and the error message
-
-#### Scenario: Successful OTP verification
-- **WHEN** a pumpuang verifies an OTP and ThaiBulkSMS confirms the PIN is correct
-- **THEN** the system SHALL create a log entry with action `verify`, status `success`
-
-#### Scenario: Failed OTP verification
-- **WHEN** a pumpuang verifies an OTP and ThaiBulkSMS rejects the PIN
-- **THEN** the system SHALL create a log entry with action `verify`, status `failure`, and the error message
+#### Scenario: OTP log includes pumpuang name
+- **WHEN** an OTP log entry is created
+- **THEN** the entry SHALL include the `pumpuangName` field with the pumpuang owner name at the time of the event
 
 ### Requirement: OTP logs are automatically expired
 The system SHALL configure a TTL index on the `createdAt` field of the OTP logs collection. Logs older than 90 days SHALL be automatically removed by MongoDB.
@@ -53,12 +40,9 @@ The endpoint MUST be restricted to the `DEVELOPER` role.
 - **THEN** the system SHALL return the 20 most recent OTP logs regardless of action or status
 
 ### Requirement: OTP Logs admin page
-The admin dashboard SHALL include an "OTP Logs" page under the developer navigation section. The page SHALL display a table with columns: Phone Number, Pumpuang ID, Action, Status (with chip indicator), Ref No, Error Message, Timestamp. The table MUST support pagination, filtering by action and status, and search by phone number.
+The admin dashboard OTP Logs page SHALL display pumpuang name instead of pumpuang ID in the table.
 
-#### Scenario: Viewing OTP logs
+#### Scenario: Viewing OTP logs with name
 - **WHEN** a developer opens the OTP Logs page
-- **THEN** the page SHALL display the most recent OTP logs in a paginated table, sorted by timestamp descending
+- **THEN** the table SHALL show a "Pumpuang Name" column instead of "Pumpuang ID"
 
-#### Scenario: Filtering by failed verifications
-- **WHEN** a developer selects "verify" action and "failure" status filters
-- **THEN** the table SHALL show only failed verification log entries

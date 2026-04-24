@@ -47,6 +47,7 @@ import {
   generateRandomString,
   generateSha256Hash,
   getCurrentMiniutesPassSinceMidnight,
+  getTodayOpening,
   prettyObjectString,
   transformOpeningToDisplayOpening,
 } from '../../../shared/utils';
@@ -690,11 +691,10 @@ export class PumpuangsService implements OnModuleInit {
       };
     }
 
-    const today = new Date().getDay();
-    const opening = pumpuang.opening[today];
+    const opening = getTodayOpening(pumpuang.opening);
     const currentMiniutes = getCurrentMiniutesPassSinceMidnight(new Date());
 
-    if (!opening.enable || !opening.hours.length) {
+    if (!opening || !opening.enable || !opening.hours.length) {
       return;
     }
 
@@ -792,7 +792,6 @@ export class PumpuangsService implements OnModuleInit {
 
     try {
       const now = new Date();
-      const today = now.getDay();
       const currentMinutes = Math.floor(getCurrentMiniutesPassSinceMidnight(now));
       const dateStr = now.toISOString().slice(0, 10);
 
@@ -801,9 +800,9 @@ export class PumpuangsService implements OnModuleInit {
       });
 
       for (const pumpuang of pumpuangs) {
-        const opening = pumpuang.opening[today];
+        const opening = getTodayOpening(pumpuang.opening, now);
 
-        if (!opening.enable || !opening.hours.length) {
+        if (!opening || !opening.enable || !opening.hours.length) {
           continue;
         }
 
@@ -845,7 +844,6 @@ export class PumpuangsService implements OnModuleInit {
 
     try {
       const now = new Date();
-      const today = now.getDay();
       const currentMinutes = Math.floor(getCurrentMiniutesPassSinceMidnight(now));
       const dateStr = now.toISOString().slice(0, 10);
 
@@ -854,9 +852,9 @@ export class PumpuangsService implements OnModuleInit {
       });
 
       for (const pumpuang of runningPumpuangs) {
-        const opening = pumpuang.opening[today];
+        const opening = getTodayOpening(pumpuang.opening, now);
 
-        if (!opening.enable || !opening.hours.length) {
+        if (!opening || !opening.enable || !opening.hours.length) {
           continue;
         }
 

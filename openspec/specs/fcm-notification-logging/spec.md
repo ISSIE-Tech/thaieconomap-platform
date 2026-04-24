@@ -1,32 +1,22 @@
 ## Purpose
 
 Persist and query FCM notification send results for operational visibility and debugging.
-
 ## Requirements
-
 ### Requirement: System logs every FCM notification send attempt
 The system SHALL persist a log entry for every FCM notification send attempt. Each log entry MUST contain:
 - `sendTo`: The recipient identifier (device token, pumpuang ID, or topic name)
+- `pumpuangName`: The pumpuang owner name (null for topic notifications)
 - `status`: `success` or `failure`
-- `reason`: Why the notification was sent (e.g., "manual test", "tracking update", "announcement")
+- `reason`: Why the notification was sent
 - `errorMessage`: The error message if status is `failure`, null otherwise
-- `timestamp`: The UTC time when the notification was sent
 
-#### Scenario: Successful single-device notification
-- **WHEN** FcmService sends a notification to a single device and it succeeds
-- **THEN** the system SHALL create a log entry with status `success`, the device token as `sendTo`, and `errorMessage` as null
+#### Scenario: FCM log includes pumpuang name
+- **WHEN** an FCM notification is sent to a pumpuang's device
+- **THEN** the log entry SHALL include the `pumpuangName` field with the pumpuang owner name
 
-#### Scenario: Failed single-device notification
-- **WHEN** FcmService sends a notification to a single device and it fails
-- **THEN** the system SHALL create a log entry with status `failure`, the device token as `sendTo`, and the Firebase error message in `errorMessage`
-
-#### Scenario: Multicast notification with partial failures
-- **WHEN** FcmService sends a notification to multiple devices and some succeed while others fail
-- **THEN** the system SHALL create one log entry per device, each with its own status and error message
-
-#### Scenario: Topic notification
-- **WHEN** FcmService sends a notification to a topic
-- **THEN** the system SHALL create a log entry with the topic name as `sendTo`
+#### Scenario: FCM topic log has no pumpuang name
+- **WHEN** an FCM notification is sent to a topic
+- **THEN** the log entry SHALL have `pumpuangName` as null
 
 ### Requirement: Notification logs are automatically expired
 The system SHALL configure a TTL index on the `createdAt` field of the notification logs collection. Logs older than 90 days SHALL be automatically removed by MongoDB.
@@ -48,3 +38,11 @@ The system SHALL expose a `GET /notifications/logs` endpoint that returns pagina
 #### Scenario: Query logs without filters
 - **WHEN** a client sends `GET /notifications/logs?page=1&limit=20`
 - **THEN** the system SHALL return the 20 most recent logs regardless of status
+
+### Requirement: FCM Logs page displays notification history
+The FCM Logs page SHALL display a "Pumpuang Name" column in the notification log table.
+
+#### Scenario: Viewing FCM logs with name
+- **WHEN** a developer opens the FCM Logs page
+- **THEN** the table SHALL show a "Pumpuang Name" column, displaying the name or "-" for topic notifications
+

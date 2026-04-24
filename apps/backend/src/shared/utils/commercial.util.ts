@@ -1,6 +1,23 @@
+import { DayName } from '@thaieconomap/contracts';
+
 import { ShopDisplayOpening, ShopOpening } from '../../modules/caching/schemas';
 
 import { minutesSinceMidnightToTime, transfromDayNameFromEnglishToThai } from './transformer.util';
+
+const DAY_NAMES_BY_INDEX: DayName[] = [
+  DayName.Sunday,
+  DayName.Monday,
+  DayName.Tuesday,
+  DayName.Wednesday,
+  DayName.Thursday,
+  DayName.Friday,
+  DayName.Saturday,
+];
+
+export function getTodayOpening<T extends { day: string }>(opening: T[], date = new Date()): T | undefined {
+  const todayName = DAY_NAMES_BY_INDEX[date.getDay()];
+  return opening.find(o => o.day === todayName);
+}
 
 export function transformOpeningToDisplayOpening(opening: ShopOpening[]): ShopDisplayOpening[] {
   const displayOpening: ShopDisplayOpening[] = [];
