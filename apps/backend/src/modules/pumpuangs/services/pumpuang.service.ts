@@ -691,26 +691,7 @@ export class PumpuangsService implements OnModuleInit {
       };
     }
 
-    const opening = getTodayOpening(pumpuang.opening);
-    const currentMiniutes = getCurrentMiniutesPassSinceMidnight(new Date());
-
-    if (!opening || !opening.enable || !opening.hours.length) {
-      return;
-    }
-
-    if (currentMiniutes < opening.hours[0].open) {
-      return;
-    }
-
-    const lastOpeningTime = opening.hours.length - 1;
-
-    if (currentMiniutes > opening.hours[lastOpeningTime].close) {
-      await this.deletePumpuangLocationFromCache(pumpuang._id.toString());
-
-      return;
-    }
-
-    await this.updateLocationCache(pumpuang, opening, currentMiniutes, locationDto);
+    await this.updateLocationCache(pumpuang, locationDto);
 
     return {
       location: locationDto,
@@ -806,9 +787,7 @@ export class PumpuangsService implements OnModuleInit {
           continue;
         }
 
-        const firstOpenTime = opening.hours[0].open;
-
-        if (currentMinutes !== firstOpenTime) {
+        if (currentMinutes !== opening.hours[0].open) {
           continue;
         }
 
@@ -817,21 +796,25 @@ export class PumpuangsService implements OnModuleInit {
         const alreadySent = await this.redisClient.get(cacheKey);
 
         if (alreadySent) {
+          this.logger.verbose(`{${ctx}} [${pumpuangId}] open-time notification already sent today`);
           continue;
         }
 
-        this.logger.debug(`{${ctx}} sending open-time notification to pumpuang ${pumpuangId}`);
-
-        this.notificationService
-          .sendToPumpuang(
+        try {
+          await this.notificationService.sendToPumpuang(
             pumpuangId,
             'ถึงเวลาเปิดร้านแล้ว',
             'กรุณาเริ่มส่งตำแหน่งรถพุ่มพวง',
             undefined,
             'open-time-reminder',
-          )
-          .then(() => this.redisClient.set(cacheKey, '1', { EX: 86400 }))
-          .catch(err => this.logger.error(`FCM open-time notification error: ${err.message}`));
+          );
+          await this.redisClient.set(cacheKey, '1', { EX: 86400 });
+          this.logger.debug(`{${ctx}} [${pumpuangId}] open-time notification sent`);
+        } catch (err) {
+          this.logger.error(
+            `{${ctx}} [${pumpuangId}] failed to send open-time notification: ${err.message}`,
+          );
+        }
       }
     } catch (err) {
       this.logger.error(`{${ctx}} error: ${err.message}`);
@@ -861,39 +844,72 @@ export class PumpuangsService implements OnModuleInit {
         const lastCloseTime = opening.hours[opening.hours.length - 1].close;
         const pumpuangId = pumpuang._id.toString();
 
-        // Close-time notification
         if (currentMinutes === lastCloseTime) {
           const cacheKey = CACHE_KEY.pumpuang.notifClose(pumpuangId, dateStr);
           const alreadySent = await this.redisClient.get(cacheKey);
 
-          if (!alreadySent) {
-            this.logger.debug(`{${ctx}} sending close-time notification to pumpuang ${pumpuangId}`);
-
-            this.notificationService
-              .sendToPumpuang(
+          if (alreadySent) {
+            this.logger.verbose(
+              `{${ctx}} [${pumpuangId}] close-time notification already sent today`,
+            );
+          } else {
+            try {
+              await this.notificationService.sendToPumpuang(
                 pumpuangId,
-                'ถึงเวลาปิดร้านแล้ว',
+                'ถึงเวลาเลิกงานแล้ว',
                 'กรุณาปิดการส่งตำแหน่งรถพุ่มพวง',
                 undefined,
                 'close-time-reminder',
-              )
-              .then(() => this.redisClient.set(cacheKey, '1', { EX: 86400 }))
-              .catch(err => this.logger.error(`FCM close-time notification error: ${err.message}`));
+              );
+              await this.redisClient.set(cacheKey, '1', { EX: 86400 });
+              this.logger.debug(`{${ctx}} [${pumpuangId}] close-time notification sent`);
+            } catch (err) {
+              this.logger.error(
+                `{${ctx}} [${pumpuangId}] failed to send close-time notification: ${err.message}`,
+              );
+            }
           }
         }
 
-        // Close-time second follow-up notification (2 hours after close) — auto-close tracking
+        if (currentMinutes === lastCloseTime + 60) {
+          const followupKey = CACHE_KEY.pumpuang.notifCloseFollowup(pumpuangId, dateStr);
+          const alreadySent = await this.redisClient.get(followupKey);
+
+          if (alreadySent) {
+            this.logger.verbose(
+              `{${ctx}} [${pumpuangId}] close-time follow-up notification already sent today`,
+            );
+          } else {
+            try {
+              await this.notificationService.sendToPumpuang(
+                pumpuangId,
+                'เตือนอีกครั้ง',
+                'รถพุ่มพวงยังเปิดอยู่ กรุณาปิดการส่งตำแหน่ง',
+                undefined,
+                'close-time-reminder-followup',
+              );
+              await this.redisClient.set(followupKey, '1', { EX: 86400 });
+              this.logger.debug(`{${ctx}} [${pumpuangId}] close-time follow-up notification sent`);
+            } catch (err) {
+              this.logger.error(
+                `{${ctx}} [${pumpuangId}] failed to send close-time follow-up notification: ${err.message}`,
+              );
+            }
+          }
+        }
+
         if (currentMinutes === lastCloseTime + 120) {
           const followup2Key = CACHE_KEY.pumpuang.notifCloseFollowup2(pumpuangId, dateStr);
           const alreadySent = await this.redisClient.get(followup2Key);
 
-          if (!alreadySent) {
-            this.logger.debug(
-              `{${ctx}} sending third close-time reminder and auto-closing tracking for pumpuang ${pumpuangId}`,
+          if (alreadySent) {
+            this.logger.verbose(
+              `{${ctx}} [${pumpuangId}] auto-close notification already sent today`,
             );
-
+          } else {
             try {
               await this.stopPumpuangRiderTracking(pumpuang);
+              this.logger.debug(`{${ctx}} [${pumpuangId}] tracking auto-closed`);
               await this.notificationService.sendToPumpuang(
                 pumpuangId,
                 'ปิดการติดตามอัตโนมัติ',
@@ -902,36 +918,12 @@ export class PumpuangsService implements OnModuleInit {
                 'close-time-auto-close',
               );
               await this.redisClient.set(followup2Key, '1', { EX: 86400 });
+              this.logger.debug(`{${ctx}} [${pumpuangId}] auto-close notification sent`);
             } catch (err) {
               this.logger.error(
-                `FCM close-time auto-close notification error: ${err.message}`,
+                `{${ctx}} [${pumpuangId}] failed to auto-close or send notification: ${err.message}`,
               );
             }
-          }
-        }
-
-        // Close-time follow-up notification (1 hour after close)
-        if (currentMinutes === lastCloseTime + 60) {
-          const followupKey = CACHE_KEY.pumpuang.notifCloseFollowup(pumpuangId, dateStr);
-          const alreadySent = await this.redisClient.get(followupKey);
-
-          if (!alreadySent) {
-            this.logger.debug(
-              `{${ctx}} sending close-time follow-up notification to pumpuang ${pumpuangId}`,
-            );
-
-            this.notificationService
-              .sendToPumpuang(
-                pumpuangId,
-                'เตือนอีกครั้ง',
-                'รถพุ่มพวงยังเปิดอยู่ กรุณาปิดการส่งตำแหน่ง',
-                undefined,
-                'close-time-reminder-followup',
-              )
-              .then(() => this.redisClient.set(followupKey, '1', { EX: 86400 }))
-              .catch(err =>
-                this.logger.error(`FCM close-time follow-up notification error: ${err.message}`),
-              );
           }
         }
       }
@@ -943,37 +935,45 @@ export class PumpuangsService implements OnModuleInit {
   @Cron('50 23 * * *', { timeZone: 'Asia/Bangkok' })
   async forceCloseAllTrackingDaily(): Promise<void> {
     const ctx = `${PumpuangsService.name}-${this.forceCloseAllTrackingDaily.name}`;
-    const runningPumpuangs = await this.pumpuangRepository.find({
-      status: PumpuangStatus.RUNNING,
-    });
 
-    if (!runningPumpuangs.length) {
-      return;
-    }
+    try {
+      const runningPumpuangs = await this.pumpuangRepository.find({
+        status: PumpuangStatus.RUNNING,
+      });
 
-    this.logger.debug(
-      `{${ctx}} force-closing ${runningPumpuangs.length} running pumpuangs at 23:50`,
-    );
+      if (!runningPumpuangs.length) {
+        this.logger.verbose(`{${ctx}} no running pumpuangs to close`);
+        return;
+      }
 
-    for (const pumpuang of runningPumpuangs) {
-      await this.stopPumpuangRiderTracking(pumpuang);
+      this.logger.debug(
+        `{${ctx}} force-closing ${runningPumpuangs.length} running pumpuangs at 23:50`,
+      );
 
-      this.notificationService
-        .sendToPumpuang(
-          pumpuang._id.toString(),
-          'ปิดการติดตามอัตโนมัติ',
-          'ระบบปิดการติดตามตำแหน่งอัตโนมัติเนื่องจากสิ้นสุดวัน',
-        )
-        .catch(err =>
-          this.logger.error(`FCM daily force-close notification error: ${err.message}`),
-        );
+      for (const pumpuang of runningPumpuangs) {
+        const pumpuangId = pumpuang._id.toString();
+
+        try {
+          await this.stopPumpuangRiderTracking(pumpuang);
+          await this.notificationService.sendToPumpuang(
+            pumpuangId,
+            'ปิดการติดตามอัตโนมัติ',
+            'ระบบปิดการติดตามตำแหน่งอัตโนมัติเนื่องจากสิ้นสุดวัน',
+          );
+          this.logger.debug(`{${ctx}} [${pumpuangId}] daily force-close complete`);
+        } catch (err) {
+          this.logger.error(
+            `{${ctx}} [${pumpuangId}] failed to force-close or notify: ${err.message}`,
+          );
+        }
+      }
+    } catch (err) {
+      this.logger.error(`{${ctx}} error: ${err.message}`);
     }
   }
 
   private async updateLocationCache(
     pumpuang: PumpuangDocument,
-    opening: Opening,
-    currentMiniutes: number,
     locationDto: PumpuangLocationDto,
   ): Promise<void> {
     const ctx = `${PumpuangsService.name}-${this.updateLocationCache.name}`;
@@ -986,17 +986,7 @@ export class PumpuangsService implements OnModuleInit {
       this.notifyFirstLocation(pumpuang._id.toString());
     }
 
-    const history = locationData
-      ? locationData.history
-      : Array.from({ length: opening.hours.length }).map(() => []);
-
-    const currentHistoryIndex = opening.hours.findIndex(
-      hour => currentMiniutes >= hour.open && currentMiniutes <= hour.close,
-    );
-
-    if (currentHistoryIndex === -1) {
-      return;
-    }
+    const history: string[][] = locationData ? locationData.history : [[]];
 
     const { longitude, latitude } = locationDto.location.coords;
     const formattedLocation = `${longitude},${latitude}`;
@@ -1011,11 +1001,11 @@ export class PumpuangsService implements OnModuleInit {
       speed: locationDto.location.coords.speed ?? 0,
     };
 
-    if (!history[currentHistoryIndex]) {
-      history[currentHistoryIndex] = [];
+    if (!history[0]) {
+      history[0] = [];
     }
 
-    history[currentHistoryIndex].push(JSON.stringify(formattedHistory));
+    history[0].push(JSON.stringify(formattedHistory));
 
     const updateLocation = {
       _id: pumpuang._id,
