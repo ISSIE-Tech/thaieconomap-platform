@@ -16,6 +16,8 @@ The system SHALL persist a log entry for every FCM notification send attempt. Ea
 - **WHEN** an FCM notification is sent to a topic
 - **THEN** the log entry SHALL have `pumpuangName` as null
 
+## ADDED Requirements
+
 ### Requirement: FCM Logs page displays notification history
 The FCM Logs page SHALL display a "Pumpuang Name" column in the notification log table.
 
