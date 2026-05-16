@@ -15,6 +15,7 @@ async function bootstrap() {
   otelSDK.start();
 
   const app = await NestFactory.create(AppModule);
+  app.enableShutdownHooks();
   const configService = app.get(ConfigService);
   const port = configService.get(GLOBAL_CONFIG.PORT);
   const isDev = configService.get(GLOBAL_CONFIG.IS_DEV);
