@@ -804,7 +804,7 @@ export class PumpuangsService implements OnModuleInit {
           await this.notificationService.sendToPumpuang(
             pumpuangId,
             'ถึงเวลาเปิดร้านแล้ว',
-            'กรุณาเริ่มส่งตำแหน่งรถพุ่มพวง',
+            'โปรดส่งตำแหน่งรถพุ่มพวง',
             undefined,
             'open-time-reminder',
           );
@@ -856,8 +856,8 @@ export class PumpuangsService implements OnModuleInit {
             try {
               await this.notificationService.sendToPumpuang(
                 pumpuangId,
-                'ถึงเวลาเลิกงานแล้ว',
-                'กรุณาปิดการส่งตำแหน่งรถพุ่มพวง',
+                'ถึงเวลาหยุดวิ่งแล้ว',
+                'โปรดปิดการส่งตำแหน่งรถพุ่มพวง',
                 undefined,
                 'close-time-reminder',
               );
@@ -883,8 +883,8 @@ export class PumpuangsService implements OnModuleInit {
             try {
               await this.notificationService.sendToPumpuang(
                 pumpuangId,
-                'เตือนอีกครั้ง',
-                'รถพุ่มพวงยังเปิดอยู่ กรุณาปิดการส่งตำแหน่ง',
+                'แจ้งเตือนเลยเวลาวิ่งรถพุ่มพวง',
+                'กรุณาปิดการส่งตำแหน่งรถพุ่มพวง',
                 undefined,
                 'close-time-reminder-followup',
               );
@@ -1028,7 +1028,7 @@ export class PumpuangsService implements OnModuleInit {
 
   private notifyFirstLocation(pumpuangId: string): void {
     this.notificationService
-      .sendToPumpuang(pumpuangId, 'เริ่มส่งตำแหน่งแล้ว', 'ไรเดอร์เริ่มส่งตำแหน่งของรถพุ่มพวงแล้ว')
+      .sendToPumpuang(pumpuangId, 'เริ่มส่งตำแหน่งแล้ว', 'ท่านเริ่มส่งตำแหน่งรถพุ่มพวงแล้ว')
       .catch(err => this.logger.error(`FCM first-location notification error: ${err.message}`));
   }
 
