@@ -37,6 +37,12 @@ export interface CommercialTinyResponseDto {
   district: string;
   types: { _id: string; name: string }[];
   isFavorite?: boolean;
+  // NOTE: only present on the single-commercial detail route (`GET /:commercialId/tiny`);
+  // the marker-list route projects these away.
+  commercialOwner?: string;
+  phoneNumber?: string;
+  moreInfo?: string;
+  additionalImageUrl?: string[];
 }
 
 export interface PendingCommercialResponseDto {

@@ -195,9 +195,9 @@ function CommercialActionButtons({ commercial, submissionStatus }: CommercialPro
     <Stack direction="row" spacing={3} px={3}>
       {commercial?.phoneNumber && <CallButton phoneNumber={commercial.phoneNumber} highlight />}
 
-      {geolocation && commercial && (
+      {commercial && (
         <DirectionButton
-          srcCoord={geolocation}
+          srcCoord={geolocation ?? null}
           dstCoord={formatCoord(commercial?.location.coordinates)}
         />
       )}

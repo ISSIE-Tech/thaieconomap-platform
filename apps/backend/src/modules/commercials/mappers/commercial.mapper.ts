@@ -53,6 +53,10 @@ export class CommercialMapper {
       district: obj.district?.toString(),
       types: obj.types?.map?.((t: AnyDoc) => typeof t === 'object' ? { _id: t._id?.toString(), name: t.name } : t) ?? obj.types,
       isFavorite: obj.isFavorite,
+      commercialOwner: obj.commercialOwner,
+      phoneNumber: obj.phoneNumber,
+      moreInfo: obj.moreInfo,
+      additionalImageUrl: obj.additionalImageUrl,
     };
   }
 
