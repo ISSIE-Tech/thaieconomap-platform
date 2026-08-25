@@ -29,7 +29,9 @@ export function CallButton({ phoneNumber, highlight = false }: CallButtonProps) 
 // --------------------------------------------------
 
 type DirectionButtonProps = {
-  srcCoord: [number, number];
+  // null when the user hasn't granted geolocation — the button then links to the
+  // destination on Google Maps instead of a turn-by-turn route.
+  srcCoord: [number, number] | null;
   dstCoord: [number, number];
   highlight?: boolean;
 };
