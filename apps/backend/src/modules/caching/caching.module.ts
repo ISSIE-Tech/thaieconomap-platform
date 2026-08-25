@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ScheduleModule } from '@nestjs/schedule';
 
 import { ExternalModule } from '../externals/external.module';
 import { UsersModule } from '../users/users.module';
@@ -15,7 +14,6 @@ import { Base, BaseSchema, Shop, ShopSchema } from './schemas';
       { name: Shop.name, schema: ShopSchema },
       { name: Base.name, schema: BaseSchema },
     ]),
-    ScheduleModule.forRoot(),
     ExternalModule,
     UsersModule,
   ],

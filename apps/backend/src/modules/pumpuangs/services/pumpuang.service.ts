@@ -738,6 +738,8 @@ export class PumpuangsService implements OnModuleInit {
   }
 
   private async deletePumpuangLocationFromCache(pumpuangId: string): Promise<void> {
+    await this.redisClient.del(CACHE_KEY.pumpuang.notifFirstLocation(pumpuangId));
+
     const cacheKey = CACHE_KEY.pumpuang.location(pumpuangId);
     const location = (await this.redisClient.json.get(
       cacheKey,
@@ -767,6 +769,14 @@ export class PumpuangsService implements OnModuleInit {
     await this.redisClient.json.del(cacheKey);
   }
 
+  // Claimed BEFORE sending so concurrent executions (extra replicas, rolling-deploy
+  // overlap, duplicated cron registration) cannot both pass a check-then-send window.
+  private async claimNotificationKey(key: string, ttlSeconds = 86400): Promise<boolean> {
+    const acquired = await this.redisClient.set(key, '1', { NX: true, EX: ttlSeconds });
+
+    return acquired === 'OK';
+  }
+
   @Cron(CronExpression.EVERY_MINUTE)
   async sendOpenTimeNotifications(): Promise<void> {
     const ctx = `${PumpuangsService.name}-${this.sendOpenTimeNotifications.name}`;
@@ -793,9 +803,8 @@ export class PumpuangsService implements OnModuleInit {
 
         const pumpuangId = pumpuang._id.toString();
         const cacheKey = CACHE_KEY.pumpuang.notifOpen(pumpuangId, dateStr);
-        const alreadySent = await this.redisClient.get(cacheKey);
 
-        if (alreadySent) {
+        if (!(await this.claimNotificationKey(cacheKey))) {
           this.logger.verbose(`{${ctx}} [${pumpuangId}] open-time notification already sent today`);
           continue;
         }
@@ -808,7 +817,6 @@ export class PumpuangsService implements OnModuleInit {
             undefined,
             'open-time-reminder',
           );
-          await this.redisClient.set(cacheKey, '1', { EX: 86400 });
           this.logger.debug(`{${ctx}} [${pumpuangId}] open-time notification sent`);
         } catch (err) {
           this.logger.error(
@@ -846,9 +854,8 @@ export class PumpuangsService implements OnModuleInit {
 
         if (currentMinutes === lastCloseTime) {
           const cacheKey = CACHE_KEY.pumpuang.notifClose(pumpuangId, dateStr);
-          const alreadySent = await this.redisClient.get(cacheKey);
 
-          if (alreadySent) {
+          if (!(await this.claimNotificationKey(cacheKey))) {
             this.logger.verbose(
               `{${ctx}} [${pumpuangId}] close-time notification already sent today`,
             );
@@ -861,7 +868,6 @@ export class PumpuangsService implements OnModuleInit {
                 undefined,
                 'close-time-reminder',
               );
-              await this.redisClient.set(cacheKey, '1', { EX: 86400 });
               this.logger.debug(`{${ctx}} [${pumpuangId}] close-time notification sent`);
             } catch (err) {
               this.logger.error(
@@ -873,9 +879,8 @@ export class PumpuangsService implements OnModuleInit {
 
         if (currentMinutes === lastCloseTime + 60) {
           const followupKey = CACHE_KEY.pumpuang.notifCloseFollowup(pumpuangId, dateStr);
-          const alreadySent = await this.redisClient.get(followupKey);
 
-          if (alreadySent) {
+          if (!(await this.claimNotificationKey(followupKey))) {
             this.logger.verbose(
               `{${ctx}} [${pumpuangId}] close-time follow-up notification already sent today`,
             );
@@ -888,7 +893,6 @@ export class PumpuangsService implements OnModuleInit {
                 undefined,
                 'close-time-reminder-followup',
               );
-              await this.redisClient.set(followupKey, '1', { EX: 86400 });
               this.logger.debug(`{${ctx}} [${pumpuangId}] close-time follow-up notification sent`);
             } catch (err) {
               this.logger.error(
@@ -900,9 +904,8 @@ export class PumpuangsService implements OnModuleInit {
 
         if (currentMinutes === lastCloseTime + 120) {
           const followup2Key = CACHE_KEY.pumpuang.notifCloseFollowup2(pumpuangId, dateStr);
-          const alreadySent = await this.redisClient.get(followup2Key);
 
-          if (alreadySent) {
+          if (!(await this.claimNotificationKey(followup2Key))) {
             this.logger.verbose(
               `{${ctx}} [${pumpuangId}] auto-close notification already sent today`,
             );
@@ -917,7 +920,6 @@ export class PumpuangsService implements OnModuleInit {
                 undefined,
                 'close-time-auto-close',
               );
-              await this.redisClient.set(followup2Key, '1', { EX: 86400 });
               this.logger.debug(`{${ctx}} [${pumpuangId}] auto-close notification sent`);
             } catch (err) {
               this.logger.error(
@@ -950,8 +952,15 @@ export class PumpuangsService implements OnModuleInit {
         `{${ctx}} force-closing ${runningPumpuangs.length} running pumpuangs at 23:50`,
       );
 
+      const dateStr = new Date().toISOString().slice(0, 10);
+
       for (const pumpuang of runningPumpuangs) {
         const pumpuangId = pumpuang._id.toString();
+
+        if (!(await this.claimNotificationKey(CACHE_KEY.pumpuang.notifForceClose(pumpuangId, dateStr)))) {
+          this.logger.verbose(`{${ctx}} [${pumpuangId}] daily force-close already handled`);
+          continue;
+        }
 
         try {
           await this.stopPumpuangRiderTracking(pumpuang);
@@ -1027,8 +1036,18 @@ export class PumpuangsService implements OnModuleInit {
   }
 
   private notifyFirstLocation(pumpuangId: string): void {
-    this.notificationService
-      .sendToPumpuang(pumpuangId, 'เริ่มส่งตำแหน่งแล้ว', 'ท่านเริ่มส่งตำแหน่งรถพุ่มพวงแล้ว')
+    // Location updates arrive in bursts, so several calls can race past the empty-cache
+    // check in updateLocationCache; the claim key (released on tracking stop) dedupes them.
+    this.claimNotificationKey(CACHE_KEY.pumpuang.notifFirstLocation(pumpuangId))
+      .then(claimed => {
+        if (!claimed) return;
+
+        return this.notificationService.sendToPumpuang(
+          pumpuangId,
+          'เริ่มส่งตำแหน่งแล้ว',
+          'ท่านเริ่มส่งตำแหน่งรถพุ่มพวงแล้ว',
+        );
+      })
       .catch(err => this.logger.error(`FCM first-location notification error: ${err.message}`));
   }
 

@@ -9,6 +9,9 @@ export const CACHE_KEY = {
       `pumpuang:notif:close-followup:${pumpuangId}:${date}`,
     notifCloseFollowup2: (pumpuangId: string, date: string) =>
       `pumpuang:notif:close-followup-2:${pumpuangId}:${date}`,
+    notifFirstLocation: (pumpuangId: string) => `pumpuang:notif:first-location:${pumpuangId}`,
+    notifForceClose: (pumpuangId: string, date: string) =>
+      `pumpuang:notif:force-close:${pumpuangId}:${date}`,
   },
   commercials: {
     all: 'commercials:*',
