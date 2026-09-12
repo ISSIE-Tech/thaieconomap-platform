@@ -1,6 +1,7 @@
 import { UserResponseDto } from '@thaieconomap/contracts';
 
 import { IUser } from '../../../shared/interfaces';
+import { toRef } from '../../../shared/utils/ref.util';
 
 export class UserMapper {
   static toResponseDto(doc: IUser): UserResponseDto {
@@ -13,7 +14,7 @@ export class UserMapper {
       displayName: doc.displayName,
       profileImageUrl: doc.profileImageUrl,
       roles: doc.roles,
-      districts: doc.districts?.map((d: unknown) => d?.toString()),
+      districts: doc.districts?.map(toRef),
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     };

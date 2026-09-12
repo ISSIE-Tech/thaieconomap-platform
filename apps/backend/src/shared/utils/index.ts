@@ -19,3 +19,5 @@ export * from './string.util';
 export * from './file.util';
 
 export * from './doc-description.util';
+
+export * from './ref.util';

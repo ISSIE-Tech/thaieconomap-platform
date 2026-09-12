@@ -7,6 +7,8 @@ import {
   SubmissionStatus,
 } from '@thaieconomap/contracts';
 
+import { toRef } from '../../../shared/utils/ref.util';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyDoc = any;
 
@@ -17,30 +19,30 @@ export class ShareMapper {
     return {
       _id: obj._id?.toString(),
       name: obj.name,
-      types: obj.types?.map((t: AnyDoc) => t?.toString()),
+      types: obj.types?.map(toRef),
       location: obj.location,
       imageUrl: obj.imageUrl,
-      createdBy: obj.createdBy?.toString(),
+      createdBy: toRef(obj.createdBy),
       address: obj.address,
-      district: obj.district?.toString(),
+      district: toRef(obj.district),
       detail: obj.detail,
       contact: obj.contact,
       amount: obj.amount,
-      shipping: obj.shipping?.toString(),
-      condition: obj.condition?.toString(),
+      shipping: toRef(obj.shipping),
+      condition: toRef(obj.condition),
       moreDetail: obj.moreDetail,
       additionalImageUrl: obj.additionalImageUrl,
       status: obj.status,
       requests: obj.requests?.map((r: AnyDoc) => ({
-        user: r.user?.toString(),
+        user: toRef(r.user),
         status: r.status as SubmissionStatus,
       })),
       submissionStatus: obj.submissionStatus,
       submissionMessage: obj.submissionMessage,
       approvedAt: obj.approvedAt,
-      approvedBy: obj.approvedBy?.toString(),
+      approvedBy: toRef(obj.approvedBy),
       lastModifiedAt: obj.lastModifiedAt,
-      lastModifiedBy: obj.lastModifiedBy?.toString(),
+      lastModifiedBy: toRef(obj.lastModifiedBy),
       createdAt: obj.createdAt,
       updatedAt: obj.updatedAt,
     };
@@ -56,7 +58,7 @@ export class ShareMapper {
       location: obj.location,
       imageUrl: obj.imageUrl,
       address: obj.address,
-      district: obj.district?.toString(),
+      district: toRef(obj.district),
       amount: obj.amount,
       status: obj.status,
       isFavorite: obj.isFavorite,
@@ -69,17 +71,17 @@ export class ShareMapper {
     return {
       _id: obj._id?.toString(),
       name: obj.name,
-      types: obj.types?.map((t: AnyDoc) => t?.toString()),
+      types: obj.types?.map(toRef),
       location: obj.location,
       imageUrl: obj.imageUrl,
-      createdBy: obj.createdBy?.toString(),
+      createdBy: toRef(obj.createdBy),
       address: obj.address,
-      district: obj.district?.toString(),
+      district: toRef(obj.district),
       detail: obj.detail,
       contact: obj.contact,
       amount: obj.amount,
-      shipping: obj.shipping?.toString(),
-      condition: obj.condition?.toString(),
+      shipping: toRef(obj.shipping),
+      condition: toRef(obj.condition),
       moreDetail: obj.moreDetail,
       additionalImageUrl: obj.additionalImageUrl,
       submissionStatus: obj.submissionStatus,
@@ -95,7 +97,7 @@ export class ShareMapper {
 
     return {
       ...base,
-      deletedBy: obj.deletedBy?.toString() ?? '',
+      deletedBy: toRef(obj.deletedBy) ?? '',
       deletedAutoDelete: obj.deletedAutoDelete,
       completelyDeletedAt: obj.completelyDeletedAt,
     };

@@ -7,6 +7,8 @@ import {
   PumpuangTinyResponseDto,
 } from '@thaieconomap/contracts';
 
+import { toRef } from '../../../shared/utils/ref.util';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyDoc = any;
 
@@ -31,10 +33,10 @@ export class PumpuangMapper {
       submissionStatus: obj.submissionStatus,
       submissionMessage: obj.submissionMessage,
       approvedAt: obj.approvedAt,
-      approvedBy: obj.approvedBy?.toString(),
+      approvedBy: toRef(obj.approvedBy),
       lastModifiedAt: obj.lastModifiedAt,
-      lastModifiedBy: obj.lastModifiedBy?.toString(),
-      createdBy: obj.createdBy?.toString(),
+      lastModifiedBy: toRef(obj.lastModifiedBy),
+      createdBy: toRef(obj.createdBy),
       createdAt: obj.createdAt,
       updatedAt: obj.updatedAt,
     };
@@ -67,7 +69,7 @@ export class PumpuangMapper {
       types: obj.types?.map((t: AnyDoc): ProductTypeDto => ({ _id: t?._id?.toString(), name: t?.name })),
       submissionStatus: obj.submissionStatus,
       submissionMessage: obj.submissionMessage,
-      createdBy: obj.createdBy?.toString(),
+      createdBy: toRef(obj.createdBy),
       createdAt: obj.createdAt,
       updatedAt: obj.updatedAt,
     };
@@ -79,7 +81,7 @@ export class PumpuangMapper {
 
     return {
       ...base,
-      deletedBy: obj.deletedBy?.toString() ?? '',
+      deletedBy: toRef(obj.deletedBy) ?? '',
       deletedAutoDelete: obj.deletedAutoDelete,
       completelyDeletedAt: obj.completelyDeletedAt,
     };
