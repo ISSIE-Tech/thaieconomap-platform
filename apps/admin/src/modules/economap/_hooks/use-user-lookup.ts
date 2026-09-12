@@ -32,7 +32,7 @@ export function getUserDisplayName(userLookup: UserLookupMap, userId?: string): 
 }
 
 export function getUserRole(userLookup: UserLookupMap, userId?: string): string {
-  if (!userId) return '-';
+  if (!userId) return '';
 
   const user = userLookup.get(userId);
 
