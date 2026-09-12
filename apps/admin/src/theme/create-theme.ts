@@ -3,7 +3,6 @@ import { createTheme as muiCreateTheme } from '@mui/material/styles';
 
 import type { SettingsState } from 'src/components/settings';
 
-import { setFont } from './styles/utils';
 import { overridesTheme } from './overrides-theme';
 import { shadows, typography, components, colorSchemes, customShadows } from './core';
 import { updateCoreWithSettings, updateComponentsWithSettings } from './with-settings/update-theme';
@@ -18,10 +17,7 @@ export function createTheme(settings: SettingsState): Theme {
     direction: settings.direction,
     shape: { borderRadius: 8 },
     components,
-    typography: {
-      ...typography,
-      fontFamily: setFont(settings.fontFamily),
-    },
+    typography,
     colorSchemeSelector: 'data-mui-color-scheme',
     cssVariables: {
       cssVarPrefix: '',
