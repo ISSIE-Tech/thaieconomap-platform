@@ -1,3 +1,4 @@
+import { CacheTTL } from '@nestjs/cache-manager';
 import {
   Body,
   Controller,
@@ -37,7 +38,6 @@ import {
   CacheClearKeys,
   CurrentUser,
   ExcludeRoles,
-  GlobalResponseCacheTTL,
   ObjectId,
   OptionalAuth,
   ResponseCacheNamespace,
@@ -63,7 +63,7 @@ import { SharesService } from '../services';
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: DOC_DESCRIPTION.INVALID_TOKEN })
 @Controller('shares')
-@GlobalResponseCacheTTL(CONFIG.RESPONSE_CACHE_TTL)
+@CacheTTL(CONFIG.RESPONSE_CACHE_TTL)
 @ResponseCacheNamespace(CACHE_KEY.shares.prefix)
 export class SharesController {
   constructor(private readonly sharesService: SharesService) {}

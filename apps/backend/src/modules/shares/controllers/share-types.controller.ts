@@ -1,3 +1,4 @@
+import { CacheTTL } from '@nestjs/cache-manager';
 import { Body, Controller, Delete, Get, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -14,7 +15,6 @@ import { TypeResponseDto, UserRole } from '@thaieconomap/contracts';
 import {
   CacheClearKeys,
   CurrentUser,
-  GlobalResponseCacheTTL,
   ObjectId,
   ResponseCacheNamespace,
   Roles,
@@ -32,7 +32,7 @@ import { ShareTypesService } from '../services';
 @ApiUnauthorizedResponse({ description: DOC_DESCRIPTION.INVALID_TOKEN })
 @Controller('share-types')
 @ResponseCacheNamespace(CACHE_KEY.shareTypes.prefix)
-@GlobalResponseCacheTTL(CONFIG.LONG_TERM_REPONSE_CACHE_TTL)
+@CacheTTL(CONFIG.LONG_TERM_REPONSE_CACHE_TTL)
 export class ShareTypesController {
   constructor(private shareTypesService: ShareTypesService) {}
 

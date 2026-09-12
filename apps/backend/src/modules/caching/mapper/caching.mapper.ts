@@ -9,7 +9,7 @@ import {
 import {
   transformLatitudeAndLongitudeToGeoJson,
   transformOpeningToDisplayOpening,
-  transfromPhoneNumber,
+  transformPhoneNumber,
 } from '../../../shared/utils';
 
 export class CachingMapper {
@@ -27,7 +27,7 @@ export class CachingMapper {
       imageUrl: data.imgUrl,
       opening: data.opening,
       displayOpening: transformOpeningToDisplayOpening(data.opening),
-      phoneNumber: transfromPhoneNumber(data.profile.phone),
+      phoneNumber: transformPhoneNumber(data.profile.phone),
       commercialOwner: `${data.profile.firstname} ${data.profile.lastname}`,
       type: data.type,
       base: data.base,

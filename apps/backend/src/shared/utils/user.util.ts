@@ -1,4 +1,4 @@
-import { UserRole } from '../enums';
+import { UserRole } from '@thaieconomap/contracts';
 import { IUser } from '../interfaces';
 
 export const isAdminUser = (user: IUser): boolean => {

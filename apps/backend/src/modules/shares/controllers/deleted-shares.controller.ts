@@ -1,3 +1,4 @@
+import { CacheTTL } from '@nestjs/cache-manager';
 import { Controller, Delete, Get, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -21,7 +22,6 @@ import {
   CacheClearKeys,
   CurrentUser,
   ExcludeRoles,
-  GlobalResponseCacheTTL,
   ObjectId,
   ResponseCacheNamespace,
 } from '../../../common/decorators';
@@ -46,7 +46,7 @@ import { DeletedSharesService } from '../services';
 })
 @ExcludeRoles(UserRole.CUSTOMER)
 @UseGuards(AuthGuard, RolesGuard)
-@GlobalResponseCacheTTL(CONFIG.RESPONSE_CACHE_TTL)
+@CacheTTL(CONFIG.RESPONSE_CACHE_TTL)
 @ResponseCacheNamespace(CACHE_KEY.deletedShares.prefix)
 @Controller('deleted-shares')
 export class DeletedSharesController {

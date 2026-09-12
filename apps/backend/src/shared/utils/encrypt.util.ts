@@ -1,9 +1,5 @@
 import * as crypto from 'crypto';
 
-import * as bcrypt from 'bcryptjs';
-
-const SALT_ROUNDS = 10;
-
 export const generateMd5Hash = (data: string): string => {
   return generateHash('md5', data);
 };
@@ -45,12 +41,4 @@ const verifyHash = (hashedData: string, hash: string): boolean => {
     new Uint8Array(Buffer.from(hash)),
     new Uint8Array(Buffer.from(hashedData)),
   );
-};
-
-export const generateBcryptHash = (data: string): string => {
-  return bcrypt.hashSync(data, SALT_ROUNDS);
-};
-
-export const verifyBcryptHash = (data: string, hash: string): boolean => {
-  return bcrypt.compareSync(data, hash);
 };

@@ -1,4 +1,4 @@
-import { HttpMethod } from '../enums';
+import { HttpMethod } from '@thaieconomap/contracts';
 
 export const TAMSANG_TAMSONG_PATH = {
   shops: '/api/v2/openapi/shops',

@@ -1,7 +1,4 @@
 import type { HeaderSectionProps } from './header-section';
-import type { AccountDrawerProps } from '../components/account-drawer';
-import type { ContactsPopoverProps } from '../components/contacts-popover';
-import type { LanguagePopoverProps } from '../components/language-popover';
 import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
 
 import Box from '@mui/material/Box';
@@ -21,10 +18,6 @@ import { MenuButton } from '../components/menu-button';
 import { DarkModeButton } from '../components/dark-mode-button';
 import { UserMenuButton } from '../components/user-menu-button';
 import { WorkspacesPopover } from '../components/workspaces-popover';
-import {
-  NotificationsDrawer,
-  type NotificationsDrawerProps,
-} from '../components/notifications-drawer';
 
 // ----------------------------------------------------------------------
 
@@ -59,11 +52,7 @@ export type HeaderBaseProps = HeaderSectionProps & {
   onOpenNav: () => void;
   data?: {
     nav?: NavSectionProps['data'];
-    account?: AccountDrawerProps['data'];
-    langs?: LanguagePopoverProps['data'];
-    contacts?: ContactsPopoverProps['data'];
     workspaces?: WorkspacesPopoverProps['data'];
-    notifications?: NotificationsDrawerProps['data'];
   };
   slots?: {
     navMobile?: {
@@ -77,12 +66,9 @@ export type HeaderBaseProps = HeaderSectionProps & {
     helpLink?: boolean;
     settings?: boolean;
     purchase?: boolean;
-    contacts?: boolean;
     searchbar?: boolean;
     workspaces?: boolean;
     menuButton?: boolean;
-    localization?: boolean;
-    notifications?: boolean;
   };
 };
 
@@ -99,12 +85,9 @@ export function HeaderBase({
     helpLink = true,
     settings = true,
     purchase = true,
-    contacts = true,
     searchbar = true,
     workspaces = true,
     menuButton = true,
-    localization = true,
-    notifications = false,
   } = {},
   ...other
 }: HeaderBaseProps) {
@@ -169,17 +152,6 @@ export function HeaderBase({
 
               {/* -- Searchbar -- */}
               {searchbar && <Searchbar data-slot="searchbar" data={data?.nav} />}
-
-              {/* -- Language popover -- */}
-              {/* {localization && <LanguagePopover data-slot="localization" data={data?.langs} />} */}
-
-              {/* -- Notifications popover -- */}
-              {notifications && (
-                <NotificationsDrawer data-slot="notifications" data={data?.notifications} />
-              )}
-
-              {/* -- Contacts popover -- */}
-              {/* {contacts && <ContactsPopover data-slot="contacts" data={data?.contacts} />} */}
 
               {/* -- Dark mode toggle -- */}
               {settings && <DarkModeButton data-slot="dark-mode" />}

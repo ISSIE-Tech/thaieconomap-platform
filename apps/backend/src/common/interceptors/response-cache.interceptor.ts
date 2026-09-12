@@ -1,4 +1,4 @@
-import { CACHE_MANAGER, CacheInterceptor } from '@nestjs/cache-manager';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
@@ -14,8 +14,6 @@ import { REDIS_CLIENT } from '../../shared/redis';
 export const REPONSE_CACHE_QUERY_KEY: string = 'REPONSE_CACHE_QUERY_KEY';
 
 export const REPONSE_CLEAR_CACHE_KEYS: string = 'REPONSE_CLEAR_CACHE_KEYS';
-
-export const REPONSE_CACHE_TTL: string = 'cache_module:cache_ttl';
 
 export const REPONSE_CACHE_NAMESPACE: string = 'REPONSE_CACHE_NAMESPACE';
 
@@ -88,11 +86,13 @@ export class ResponseCacheInterceptor extends CacheInterceptor {
     return metadata || [];
   }
 
-  private getReponseCacheNamespace(context: ExecutionContext): string[] {
-    const handler = context.getHandler();
-    const metadata = this.reflector.get(REPONSE_CACHE_NAMESPACE, handler);
-
-    return metadata || 'cache';
+  private getReponseCacheNamespace(context: ExecutionContext): string {
+    return (
+      this.reflector.getAllAndOverride<string>(REPONSE_CACHE_NAMESPACE, [
+        context.getHandler(),
+        context.getClass(),
+      ]) ?? 'cache'
+    );
   }
 }
 

@@ -27,14 +27,8 @@
 * Plugins
 *************************************** */
 
-/* scrollbar */
-@import './shared/components/scrollbar/styles.css';
-
 /* image */
 @import './shared/components/image/styles.css';
-
-/* lightbox */
-@import './shared/components/lightbox/styles.css';
 
 /** **************************************
 * Baseline

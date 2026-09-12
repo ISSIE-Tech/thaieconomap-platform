@@ -1,3 +1,4 @@
+import { CacheTTL } from '@nestjs/cache-manager';
 import { Body, Controller, Delete, Get, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -14,7 +15,6 @@ import { TypeResponseDto, UserRole } from '@thaieconomap/contracts';
 import {
   CacheClearKeys,
   CurrentUser,
-  GlobalResponseCacheTTL,
   ObjectId,
   ResponseCacheNamespace,
   Roles,
@@ -31,7 +31,7 @@ import { BusinessTypesService } from '../services/business-types.service';
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: DOC_DESCRIPTION.INVALID_TOKEN })
 @Controller('business-types')
-@GlobalResponseCacheTTL(CONFIG.LONG_TERM_REPONSE_CACHE_TTL)
+@CacheTTL(CONFIG.LONG_TERM_REPONSE_CACHE_TTL)
 @ResponseCacheNamespace(CACHE_KEY.businessTypes.prefix)
 export class BusinessTypesController {
   constructor(private readonly businessTypesService: BusinessTypesService) {}

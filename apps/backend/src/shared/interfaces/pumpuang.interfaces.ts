@@ -4,7 +4,7 @@ import {
   PendingPumpuangDocument,
   PumpuangDocument,
 } from '../../modules/pumpuangs/schemas';
-import { PumpuangStatus } from '../enums';
+import { PumpuangStatus } from '@thaieconomap/contracts';
 
 import { ICredentials } from './token.interface';
 

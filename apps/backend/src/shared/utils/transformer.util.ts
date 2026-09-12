@@ -1,6 +1,6 @@
 import { DAYS_IN_THAI } from '../constants';
 import { LocationDto } from '../dto';
-import { GeoJsonType } from '../enums';
+import { GeoJsonType } from '@thaieconomap/contracts';
 import { Location } from '../schemas';
 
 export function transfromDayNameFromEnglishToThai(day: string): string {
@@ -35,14 +35,6 @@ export function transformLatitudeAndLongitudeToGeoJson(location: LocationDto): L
     type: GeoJsonType.POINT,
     coordinates: [location.longitude, location.latitude],
   };
-}
-
-export function transfromPhoneNumber(phoneNumber: string): string {
-  if (!phoneNumber) {
-    return undefined;
-  }
-
-  return phoneNumber.replace(/\D/g, '');
 }
 
 export function convertToGeoJsonPointFromCoordinates(location: string): Location {

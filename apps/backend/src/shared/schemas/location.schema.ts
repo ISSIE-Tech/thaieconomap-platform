@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { GeoJsonType } from '../enums';
+import { GeoJsonType } from '@thaieconomap/contracts';
 
 @Schema({
   _id: false,
