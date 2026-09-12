@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsArray, IsBoolean, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 
-import { DayName } from '../enums';
+import { DayName } from '@thaieconomap/contracts';
 
 import { OpeningTimeDto } from './opening-time.dto';
 

@@ -1,5 +1,5 @@
 import { CONFIG } from '../../config';
-import { UserRole } from '../enums';
+import { UserRole } from '@thaieconomap/contracts';
 import { IFilePolicy } from '../interfaces';
 import { buildMultiLineDocDescription } from '../utils';
 

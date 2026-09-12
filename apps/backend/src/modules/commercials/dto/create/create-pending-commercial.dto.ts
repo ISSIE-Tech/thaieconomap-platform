@@ -18,7 +18,7 @@ import {
 import { IsPhoneNumber } from '../../../../common/pipes/';
 import { CONFIG } from '../../../../config';
 import { LocationDto, OpeningDto } from '../../../../shared/dto';
-import { jsonParse, transfromPhoneNumber } from '../../../../shared/utils';
+import { jsonParse, transformPhoneNumber } from '../../../../shared/utils';
 
 export class CreatePendingCommercialDto {
   @ApiProperty({
@@ -69,7 +69,7 @@ export class CreatePendingCommercialDto {
 
   @ApiProperty({ example: '0812345678, 021234567 etc.' })
   @IsNotEmpty()
-  @Transform(({ value }) => transfromPhoneNumber(value))
+  @Transform(({ value }) => transformPhoneNumber(value))
   @IsPhoneNumber()
   phoneNumber: string;
 

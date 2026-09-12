@@ -12,7 +12,3 @@ export const servicePath = {
   thaiEconomap: '/services/thai-economap',
   chialShare: '/services/chial-share',
 };
-
-export const createServiceUserPath = {
-  thaieconomap: '/users',
-};

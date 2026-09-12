@@ -1,3 +1,4 @@
+import { CacheTTL } from '@nestjs/cache-manager';
 import { Controller, Delete, Get, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -21,7 +22,6 @@ import {
   CacheClearKeys,
   CurrentUser,
   ExcludeRoles,
-  GlobalResponseCacheTTL,
   ObjectId,
   ResponseCacheNamespace,
 } from '../../../common/decorators';
@@ -47,7 +47,7 @@ import { DeletedCommercialsService } from '../services/deleted-commercials.servi
 @ExcludeRoles(UserRole.CUSTOMER)
 @UseGuards(AuthGuard, RolesGuard)
 @Controller('deleted-commercials')
-@GlobalResponseCacheTTL(CONFIG.RESPONSE_CACHE_TTL)
+@CacheTTL(CONFIG.RESPONSE_CACHE_TTL)
 @ResponseCacheNamespace(CACHE_KEY.deletedCommercials.prefix)
 export class DeletedCommercialsController {
   constructor(private readonly deletedCommercialsService: DeletedCommercialsService) {}

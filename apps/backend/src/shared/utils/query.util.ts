@@ -1,7 +1,7 @@
 import { AnyBulkWriteOperation, Document, FilterQuery, UpdateQuery } from 'mongoose';
 
 import { EntityRepository } from '../database';
-import { GeoJsonType } from '../enums';
+import { GeoJsonType } from '@thaieconomap/contracts';
 import { IValidEntity } from '../interfaces';
 
 export type IsFavorite = {

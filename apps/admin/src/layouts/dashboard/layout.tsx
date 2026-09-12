@@ -1,12 +1,10 @@
 'use client';
 
 import { useMemo } from 'react';
-import { _contacts, _notifications } from 'src/_mock';
 import { varAlpha, stylesMode } from 'src/theme/styles';
 
 import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
-import { iconButtonClasses } from '@mui/material/IconButton';
 import type { Theme, SxProps, CSSObject, Breakpoint } from '@mui/material/styles';
 
 import { useBoolean } from 'src/hooks/use-boolean';
@@ -21,11 +19,8 @@ import { Main } from './main';
 import { NavMobile } from './nav-mobile';
 import { layoutClasses } from '../classes';
 import { NavVertical } from './nav-vertical';
-import { NavHorizontal } from './nav-horizontal';
-import { _account } from '../config-nav-account';
 import { HeaderBase } from '../core/header-base';
 import { navConfig, filterNavByRole } from '../config-nav-dashboard';
-import { _languages } from '../config-nav-languages';
 import { _workspaces } from '../config-nav-workspace';
 import { LayoutSection } from '../core/layout-section';
 
@@ -63,10 +58,6 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
 
   const isNavMini = settings.navLayout === 'mini';
 
-  const isNavHorizontal = settings.navLayout === 'horizontal';
-
-  const isNavVertical = isNavMini || settings.navLayout === 'vertical';
-
   return (
     <>
       <NavMobile
@@ -83,16 +74,9 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
         headerSection={
           <HeaderBase
             layoutQuery={layoutQuery}
-            disableElevation={isNavVertical}
+            disableElevation
             onOpenNav={mobileNavOpen.onTrue}
-            data={{
-              nav: navData,
-              langs: _languages,
-              account: _account,
-              contacts: _contacts,
-              workspaces: _workspaces,
-              notifications: _notifications,
-            }}
+            data={{ nav: navData, workspaces: _workspaces }}
             slotsDisplay={{
               signIn: false,
               purchase: false,
@@ -104,13 +88,6 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
                   This is an info Alert.
                 </Alert>
               ),
-              bottomArea: isNavHorizontal ? (
-                <NavHorizontal
-                  data={navData}
-                  layoutQuery={layoutQuery}
-                  cssVars={navColorVars.section}
-                />
-              ) : null,
             }}
             slotProps={{
               toolbar: {
@@ -121,33 +98,12 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
                   [`& [data-area="right"]`]: {
                     gap: { xs: 0, sm: 0.75 },
                   },
-                  ...(isNavHorizontal && {
-                    bgcolor: 'var(--layout-nav-bg)',
-                    [`& .${iconButtonClasses.root}`]: {
-                      color: 'var(--layout-nav-text-secondary-color)',
-                    },
-                    [theme.breakpoints.up(layoutQuery)]: {
-                      height: 'var(--layout-nav-horizontal-height)',
-                    },
-                    [`& [data-slot="workspaces"]`]: {
-                      color: 'var(--layout-nav-text-primary-color)',
-                    },
-                    [`& [data-slot="logo"]`]: {
-                      display: 'none',
-                      [theme.breakpoints.up(layoutQuery)]: { display: 'inline-flex' },
-                    },
-                    [`& [data-slot="divider"]`]: {
-                      [theme.breakpoints.up(layoutQuery)]: {
-                        display: 'flex',
-                      },
-                    },
-                  }),
                 },
               },
               container: {
                 maxWidth: false,
                 sx: {
-                  ...(isNavVertical && { px: { [layoutQuery]: 5 } }),
+                  px: { [layoutQuery]: 5 },
                 },
               },
             }}
@@ -157,20 +113,18 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
          * Sidebar
          *************************************** */
         sidebarSection={
-          isNavHorizontal ? null : (
-            <NavVertical
-              data={navData}
-              isNavMini={isNavMini}
-              layoutQuery={layoutQuery}
-              cssVars={navColorVars.section}
-              onToggleNav={() =>
-                settings.onUpdateField(
-                  'navLayout',
-                  settings.navLayout === 'vertical' ? 'mini' : 'vertical'
-                )
-              }
-            />
-          )
+          <NavVertical
+            data={navData}
+            isNavMini={isNavMini}
+            layoutQuery={layoutQuery}
+            cssVars={navColorVars.section}
+            onToggleNav={() =>
+              settings.onUpdateField(
+                'navLayout',
+                settings.navLayout === 'vertical' ? 'mini' : 'vertical'
+              )
+            }
+          />
         }
         /** **************************************
          * Footer
@@ -203,7 +157,7 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
           ...sx,
         }}
       >
-        <Main isNavHorizontal={isNavHorizontal}>{children}</Main>
+        <Main>{children}</Main>
       </LayoutSection>
     </>
   );

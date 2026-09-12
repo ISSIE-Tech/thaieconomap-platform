@@ -1,3 +1,4 @@
+import { CacheTTL } from '@nestjs/cache-manager';
 import {
   Body,
   Controller,
@@ -37,7 +38,6 @@ import {
   CacheClearKeys,
   CurrentUser,
   ExcludeRoles,
-  GlobalResponseCacheTTL,
   ObjectId,
   ResponseCacheNamespace,
 } from '../../../common/decorators';
@@ -62,7 +62,7 @@ import { PendingCommercialsService } from '../services/pending-commercials.servi
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: DOC_DESCRIPTION.INVALID_TOKEN })
 @Controller('pending-commercials')
-@GlobalResponseCacheTTL(CONFIG.RESPONSE_CACHE_TTL)
+@CacheTTL(CONFIG.RESPONSE_CACHE_TTL)
 @ResponseCacheNamespace(CACHE_KEY.pendingCommercials.prefix)
 @UseGuards(AuthGuard)
 export class PendingCommercialsController {

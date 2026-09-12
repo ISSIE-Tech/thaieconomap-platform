@@ -1,3 +1,4 @@
+import { CacheTTL } from '@nestjs/cache-manager';
 import {
   Body,
   Controller,
@@ -38,7 +39,6 @@ import {
   CacheClearKeys,
   CurrentUser,
   ExcludeRoles,
-  GlobalResponseCacheTTL,
   ObjectId,
   OptionalAuth,
   ResponseCacheNamespace,
@@ -69,7 +69,7 @@ import { CommercialsService } from '../services/commercials.service';
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: DOC_DESCRIPTION.INVALID_TOKEN })
 @Controller('commercials')
-@GlobalResponseCacheTTL(CONFIG.RESPONSE_CACHE_TTL)
+@CacheTTL(CONFIG.RESPONSE_CACHE_TTL)
 @ResponseCacheNamespace(CACHE_KEY.commercials.prefix)
 export class CommercialsController {
   constructor(private readonly commercialsService: CommercialsService) {}

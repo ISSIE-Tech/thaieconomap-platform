@@ -1,23 +1,9 @@
 import type { Workspace } from 'src/layouts/config-nav-workspace';
 import type { ThemeDirection, ThemeColorScheme } from 'src/theme/types';
 
-import type { Theme, SxProps } from '@mui/material/styles';
-
 // ----------------------------------------------------------------------
 
 export type SettingsCaches = 'localStorage' | 'cookie';
-
-export type SettingsDrawerProps = {
-  sx?: SxProps<Theme>;
-  hideFont?: boolean;
-  hideCompact?: boolean;
-  hidePresets?: boolean;
-  hideNavColor?: boolean;
-  hideContrast?: boolean;
-  hideDirection?: boolean;
-  hideNavLayout?: boolean;
-  hideColorScheme?: boolean;
-};
 
 export type SettingsState = {
   fontFamily: string;
@@ -26,7 +12,7 @@ export type SettingsState = {
   colorScheme: ThemeColorScheme;
   contrast: 'default' | 'hight';
   navColor: 'integrate' | 'apparent';
-  navLayout: 'vertical' | 'horizontal' | 'mini';
+  navLayout: 'vertical' | 'mini';
   primaryColor: 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red';
   workspace: Workspace;
   language: string;

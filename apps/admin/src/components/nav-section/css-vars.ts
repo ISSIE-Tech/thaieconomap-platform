@@ -9,7 +9,7 @@ export const bulletColor = {
   light: '#EDEFF2',
 };
 
-function colorVars(theme: Theme, variant?: 'vertical' | 'mini' | 'horizontal') {
+function colorVars(theme: Theme, variant?: 'vertical' | 'mini') {
   const {
     vars: { palette },
   } = theme;
@@ -89,31 +89,7 @@ function miniVars(theme: Theme) {
 
 // ----------------------------------------------------------------------
 
-function horizontalVars(theme: Theme) {
-  const { shape, spacing } = theme;
-
-  return {
-    ...colorVars(theme, 'horizontal'),
-    '--nav-item-gap': spacing(0.75),
-    '--nav-height': '56px',
-    '--nav-item-radius': `${Number(shape.borderRadius) * 0.75}px`,
-    // root
-    '--nav-item-root-height': '32px',
-    '--nav-item-root-padding': spacing(0, 0.75),
-    // sub
-    '--nav-item-sub-height': '34px',
-    '--nav-item-sub-padding': spacing(0, 1),
-    // icon
-    '--nav-icon-size': '22px',
-    '--nav-icon-sub-margin': spacing(0, 1, 0, 0),
-    '--nav-icon-root-margin': spacing(0, 1, 0, 0),
-  };
-}
-
-// ----------------------------------------------------------------------
-
 export const navSectionCssVars = {
   mini: miniVars,
   vertical: verticalVars,
-  horizontal: horizontalVars,
 };

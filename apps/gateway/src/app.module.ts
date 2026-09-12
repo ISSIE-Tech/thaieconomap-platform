@@ -4,7 +4,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { configuration } from './config';
 import { AuthModule, ExternalModule, MinioClientModule, ProxyModule, UsersModule } from './modules';
 import { globalConfig } from './shared/constants';
@@ -36,6 +35,5 @@ import { globalConfig } from './shared/constants';
     ProxyModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

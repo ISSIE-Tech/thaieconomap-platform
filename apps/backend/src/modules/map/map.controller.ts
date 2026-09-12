@@ -1,9 +1,10 @@
+import { CacheTTL } from '@nestjs/cache-manager';
 import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { DistrictResponseDto } from '@thaieconomap/contracts';
 
-import { GlobalResponseCacheTTL, ResponseCacheNamespace } from '../../common/decorators';
+import { ResponseCacheNamespace } from '../../common/decorators';
 import { ResponseCacheInterceptor } from '../../common/interceptors';
 import { CONFIG } from '../../config';
 import { CACHE_KEY, DOC_DESCRIPTION } from '../../shared/constants';
@@ -17,7 +18,7 @@ import { DistrictMapper } from './mappers';
 @ApiUnauthorizedResponse({ description: DOC_DESCRIPTION.INVALID_TOKEN })
 @Controller('map')
 @ResponseCacheNamespace(CACHE_KEY.map.prefix)
-@GlobalResponseCacheTTL(CONFIG.LONG_TERM_REPONSE_CACHE_TTL)
+@CacheTTL(CONFIG.LONG_TERM_REPONSE_CACHE_TTL)
 @UseInterceptors(ResponseCacheInterceptor)
 export class MapController {
   constructor(private readonly mapService: MapService) {}

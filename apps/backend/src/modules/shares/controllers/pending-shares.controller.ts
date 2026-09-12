@@ -1,3 +1,4 @@
+import { CacheTTL } from '@nestjs/cache-manager';
 import {
   Body,
   Controller,
@@ -37,7 +38,6 @@ import {
   CacheClearKeys,
   CurrentUser,
   ExcludeRoles,
-  GlobalResponseCacheTTL,
   ObjectId,
   ResponseCacheNamespace,
 } from '../../../common/decorators';
@@ -61,7 +61,7 @@ import { PendingSharesService } from '../services';
 
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: DOC_DESCRIPTION.INVALID_TOKEN })
-@GlobalResponseCacheTTL(CONFIG.RESPONSE_CACHE_TTL)
+@CacheTTL(CONFIG.RESPONSE_CACHE_TTL)
 @ResponseCacheNamespace(CACHE_KEY.pendingShares.prefix)
 @Controller('pending-shares')
 @UseGuards(AuthGuard)

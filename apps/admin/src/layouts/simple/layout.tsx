@@ -37,12 +37,9 @@ export function SimpleLayout({ sx, children, content }: SimpleLayoutProps) {
             signIn: false,
             account: false,
             purchase: false,
-            contacts: false,
             searchbar: false,
             workspaces: false,
             menuButton: false,
-            localization: false,
-            notifications: false,
           }}
           slots={{
             topArea: (
