@@ -1,5 +1,6 @@
 import { AnnouncementResponseDto } from '@thaieconomap/contracts';
 
+import { toRef } from '../../../shared/utils/ref.util';
 import { AnnouncementDocument } from '../schemas/announcement.schema';
 
 export class AnnouncementMapper {
@@ -11,13 +12,13 @@ export class AnnouncementMapper {
       name: obj.name,
       pdfUrl: obj.pdfUrl,
       detail: obj.detail,
-      districts: obj.districts?.map((d: unknown) => d?.toString()),
+      districts: obj.districts?.map(toRef),
       subDistricts: obj.subDistricts,
       startAt: obj.startAt,
       endAt: obj.endAt,
       announcer: obj.announcer,
       phoneNumber: obj.phoneNumber,
-      createdBy: obj.createdBy?.toString(),
+      createdBy: toRef(obj.createdBy),
       expiredAutoDelete: obj.expiredAutoDelete,
       isAvailable: (obj as Record<string, unknown>).isAvailable as boolean | undefined,
       status: (obj as Record<string, unknown>).status as AnnouncementResponseDto['status'],

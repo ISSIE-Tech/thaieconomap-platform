@@ -6,6 +6,8 @@ import {
   PendingCommercialResponseDto,
 } from '@thaieconomap/contracts';
 
+import { toRef } from '../../../shared/utils/ref.util';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyDoc = any;
 
@@ -21,20 +23,20 @@ export class CommercialMapper {
       imageUrl: obj.imageUrl,
       opening: obj.opening,
       displayOpening: obj.displayOpening,
-      district: obj.district?.toString(),
+      district: toRef(obj.district),
       commercialOwner: obj.commercialOwner,
       phoneNumber: obj.phoneNumber,
       moreInfo: obj.moreInfo,
       additionalImageUrl: obj.additionalImageUrl,
-      types: obj.types?.map((t: AnyDoc) => t?.toString()),
+      types: obj.types?.map(toRef),
       typeRefPath: obj.typeRefPath,
       submissionStatus: obj.submissionStatus,
       submissionMessage: obj.submissionMessage,
       approvedAt: obj.approvedAt,
-      approvedBy: obj.approvedBy?.toString(),
+      approvedBy: toRef(obj.approvedBy),
       lastModifiedAt: obj.lastModifiedAt,
-      lastModifiedBy: obj.lastModifiedBy?.toString(),
-      createdBy: obj.createdBy?.toString(),
+      lastModifiedBy: toRef(obj.lastModifiedBy),
+      createdBy: toRef(obj.createdBy),
       createdAt: obj.createdAt,
       updatedAt: obj.updatedAt,
     };
@@ -50,7 +52,7 @@ export class CommercialMapper {
       location: obj.location,
       imageUrl: obj.imageUrl,
       displayOpening: obj.displayOpening,
-      district: obj.district?.toString(),
+      district: toRef(obj.district),
       types: obj.types?.map?.((t: AnyDoc) => typeof t === 'object' ? { _id: t._id?.toString(), name: t.name } : t) ?? obj.types,
       isFavorite: obj.isFavorite,
       commercialOwner: obj.commercialOwner,
@@ -71,15 +73,15 @@ export class CommercialMapper {
       imageUrl: obj.imageUrl,
       opening: obj.opening,
       displayOpening: obj.displayOpening,
-      district: obj.district?.toString(),
+      district: toRef(obj.district),
       commercialOwner: obj.commercialOwner,
       phoneNumber: obj.phoneNumber,
       moreInfo: obj.moreInfo,
       additionalImageUrl: obj.additionalImageUrl,
-      types: obj.types?.map((t: AnyDoc) => t?.toString()),
+      types: obj.types?.map(toRef),
       submissionStatus: obj.submissionStatus,
       submissionMessage: obj.submissionMessage,
-      createdBy: obj.createdBy?.toString(),
+      createdBy: toRef(obj.createdBy),
       createdAt: obj.createdAt,
       updatedAt: obj.updatedAt,
     };
@@ -91,7 +93,7 @@ export class CommercialMapper {
 
     return {
       ...base,
-      deletedBy: obj.deletedBy?.toString() ?? '',
+      deletedBy: toRef(obj.deletedBy) ?? '',
       deletedAutoDelete: obj.deletedAutoDelete,
       completelyDeletedAt: obj.completelyDeletedAt,
     };
