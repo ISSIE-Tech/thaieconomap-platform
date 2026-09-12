@@ -128,11 +128,17 @@ export function CommercialTableRow({ row, selected, onSelectRow, userLookup }: P
           <Typography variant="body2">
             {getUserDisplayName(userLookup, row?.createdBy?._id)}
           </Typography>
+          <Typography variant="caption" color="text.secondary">
+            {getUserRole(userLookup, row?.createdBy?._id)}
+          </Typography>
         </TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
           <Typography variant="body2">
             {getUserDisplayName(userLookup, row?.lastModifiedBy?._id)}
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            {getUserRole(userLookup, row?.lastModifiedBy?._id)}
           </Typography>
         </TableCell>
 
