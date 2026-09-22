@@ -157,19 +157,34 @@ export const economapNavData = [
 
 // ----------------------------------------------------------------------
 
-export const chialShareCarrierNavData = [
+export const chialShareCarrierNavData: NavSection[] = [
   {
-    subheader: 'Overview',
-    items: [{ title: 'One', path: paths.commercial.dashboard.root, icon: ICONS.dashboard }],
+    subheader: 'ผู้ดูแลระบบ',
+    roles: ['ADMIN'],
+    items: [{ title: 'ผู้ใช้งาน', path: paths.csc.dashboard.users, icon: ICONS.user, roles: ['ADMIN'] }],
   },
   {
-    subheader: 'Management',
+    subheader: 'การจัดการ',
     items: [
       {
-        title: 'Jobs',
-        path: paths.commercial.dashboard.root,
-        icon: ICONS.product,
-        children: [{ title: 'Four', path: paths.commercial.dashboard.root }],
+        title: 'งาน',
+        path: paths.csc.dashboard.jobs.root,
+        icon: ICONS.job,
+        children: [
+          { title: 'รายการ', path: paths.csc.dashboard.jobs.list },
+          { title: 'รออนุมัติ', path: paths.csc.dashboard.jobs.pending },
+          { title: 'ลบ', path: paths.csc.dashboard.jobs.deleted },
+          {
+            title: 'ตัวเลือก',
+            path: paths.csc.dashboard.jobs.options.root,
+            roles: ['ADMIN'],
+            children: [
+              { title: 'ประเภทงาน', path: paths.csc.dashboard.jobs.options.categories },
+              { title: 'หน่วยค่าตอบแทน', path: paths.csc.dashboard.jobs.options.wageUnits },
+              { title: '5 อันดับ', path: paths.csc.dashboard.jobs.options.top5 },
+            ],
+          },
+        ],
       },
     ],
   },

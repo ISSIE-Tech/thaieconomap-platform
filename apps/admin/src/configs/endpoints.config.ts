@@ -26,7 +26,49 @@ const authentikAuth = {
 
 // ----------------------------------------------------------------------
 
+const CSC = '/services/chial-share';
+const cscScope = (isAdmin: boolean) => (isAdmin ? 'admin' : 'manager');
+
+const csc = {
+  jobs: {
+    active: {
+      list: (isAdmin: boolean) => `${CSC}/backoffice/job-posts/${cscScope(isAdmin)}`,
+      byId: (id: string) => `${CSC}/backoffice/job-posts/${id}`,
+      recycle: (id: string) => `${CSC}/backoffice/job-posts/${id}/recycle`,
+    },
+    pending: {
+      list: (isAdmin: boolean) => `${CSC}/backoffice/pending-job-posts/${cscScope(isAdmin)}`,
+      byId: (id: string) => `${CSC}/backoffice/pending-job-posts/${id}`,
+      approve: (id: string) => `${CSC}/backoffice/pending-job-posts/${id}/approve`,
+      reject: (id: string) => `${CSC}/backoffice/pending-job-posts/${id}/reject`,
+    },
+    deleted: {
+      list: (_isAdmin: boolean) => `${CSC}/backoffice/deleted-job-posts/all`,
+      byId: (id: string) => `${CSC}/backoffice/deleted-job-posts/${id}`,
+      restore: (id: string) => `${CSC}/backoffice/deleted-job-posts/${id}/restore`,
+    },
+  },
+  jobCategories: {
+    root: `${CSC}/backoffice/job-categories`,
+    arrange: `${CSC}/backoffice/job-categories/arrange`,
+    byId: (id: string) => `${CSC}/backoffice/job-categories/${id}`,
+  },
+  wageUnits: {
+    root: `${CSC}/backoffice/wage-units`,
+    byId: (id: string) => `${CSC}/backoffice/wage-units/${id}`,
+  },
+  users: {
+    root: `${CSC}/backoffice/users`,
+    role: `${CSC}/backoffice/users/role`,
+    districts: (id: string) => `${CSC}/backoffice/users/${id}/districts`,
+  },
+  districts: `${CSC}/districts`,
+};
+
+// ----------------------------------------------------------------------
+
 export const endpoints = {
+  csc,
   auth: {
     line: {
       link: getValueBasedOnEnv(auth.dev.link, auth.prod.link),

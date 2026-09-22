@@ -11,6 +11,8 @@ import MenuItem from '@mui/material/MenuItem';
 import ButtonBase from '@mui/material/ButtonBase';
 import type { ButtonBaseProps } from '@mui/material/ButtonBase';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { Iconify } from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
@@ -28,6 +30,8 @@ export function WorkspacesPopover({ data = [], sx, ...other }: WorkspacesPopover
 
   const mediaQuery = 'sm';
 
+  const router = useRouter();
+
   const settings = useSettingsContext();
 
   const { workspace } = settings;
@@ -36,8 +40,9 @@ export function WorkspacesPopover({ data = [], sx, ...other }: WorkspacesPopover
     (newValue: (typeof data)[0]) => {
       settings.onUpdateField('workspace', newValue);
       popover.onClose();
+      router.push(newValue.home);
     },
-    [popover, settings]
+    [popover, router, settings]
   );
 
   return (

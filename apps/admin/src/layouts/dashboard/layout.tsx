@@ -1,28 +1,32 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { varAlpha, stylesMode } from 'src/theme/styles';
 
 import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 import type { Theme, SxProps, CSSObject, Breakpoint } from '@mui/material/styles';
 
+import { paths } from 'src/routes/paths';
+import { usePathname } from 'src/routes/hooks';
+
 import { useBoolean } from 'src/hooks/use-boolean';
-import { useAuthContext } from 'src/auth/hooks';
 
 import { bulletColor } from 'src/components/nav-section';
 import type { SettingsState } from 'src/components/settings';
 import { useSettingsContext } from 'src/components/settings';
 import type { NavSectionProps } from 'src/components/nav-section';
 
+import { useAuthContext } from 'src/auth/hooks';
+
 import { Main } from './main';
 import { NavMobile } from './nav-mobile';
 import { layoutClasses } from '../classes';
 import { NavVertical } from './nav-vertical';
 import { HeaderBase } from '../core/header-base';
-import { navConfig, filterNavByRole } from '../config-nav-dashboard';
-import { _workspaces } from '../config-nav-workspace';
 import { LayoutSection } from '../core/layout-section';
+import { navConfig, filterNavByRole } from '../config-nav-dashboard';
+import { _workspaces, workspace as workspaceId } from '../config-nav-workspace';
 
 // ----------------------------------------------------------------------
 
@@ -49,7 +53,21 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
 
   const layoutQuery: Breakpoint = 'lg';
 
-  const userRole = user?.role ?? '';
+  // role is per service on the gateway user: TEC (mapped to user.role) or CSC
+  const userRole = (workspace.id === workspaceId.csc ? user?.roles?.CSC : user?.role) ?? '';
+
+  // deep links / refresh: keep the workspace (and its nav) in sync with the URL
+  const pathname = usePathname();
+  const urlWorkspace = _workspaces.find(
+    (item) => (item.id === workspaceId.csc) === pathname.startsWith(paths.csc.dashboard.root)
+  );
+
+  useEffect(() => {
+    if (urlWorkspace && urlWorkspace.id !== workspace.id && !pathname.startsWith(paths.user.dashboard.root)) {
+      settings.onUpdateField('workspace', urlWorkspace);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlWorkspace?.id]);
 
   const navData = useMemo(
     () => filterNavByRole(navConfig[workspace.id], userRole),
