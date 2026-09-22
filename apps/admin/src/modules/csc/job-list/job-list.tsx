@@ -24,7 +24,11 @@ const TABLE_HEAD = [
   { id: 'status', label: 'สถานะ', width: 140 },
   { id: 'applicants', label: 'จำนวนที่รับ', width: 140 },
   { id: 'location', label: 'ที่ทำงาน', width: 100 },
-  { id: '', width: 160 },
+  { id: 'createdAt', label: 'สร้างเมื่อ', width: 160 },
+  { id: 'updatedAt', label: 'แก้ไขเมื่อ', width: 160 },
+  { id: 'createdBy', label: 'สร้างโดย', width: 160 },
+  { id: 'lastModifiedBy', label: 'แก้ไขโดย', width: 160 },
+  { id: '', width: 180 },
 ];
 
 const HEADING: Record<JobKind, string> = {
@@ -97,7 +101,7 @@ export function JobList({ kind }: Props) {
         </Stack>
 
         <Scrollbar>
-          <Table sx={{ minWidth: 800 }}>
+          <Table sx={{ minWidth: 1400 }}>
             <TableHeadCustom headLabel={TABLE_HEAD} />
 
             <TableBody>

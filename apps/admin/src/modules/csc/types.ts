@@ -32,6 +32,8 @@ export type WageUnit = {
   name: string;
 };
 
+export type JobPostActioner = Pick<CscUser, '_id' | 'shortId' | 'name' | 'role'>;
+
 export type JobPost = {
   _id: string;
   title: string;
@@ -52,8 +54,10 @@ export type JobPost = {
     latitude: string;
     longitude: string;
   };
-  createdBy?: Pick<CscUser, '_id' | 'name' | 'phoneNumber'>;
+  createdBy?: JobPostActioner & { phoneNumber?: string };
+  lastModifiedBy?: JobPostActioner;
   createdAt: string;
+  updatedAt?: string;
 };
 
 // active = approved posts, pending = waiting for review, deleted = recycle bin (30d TTL)

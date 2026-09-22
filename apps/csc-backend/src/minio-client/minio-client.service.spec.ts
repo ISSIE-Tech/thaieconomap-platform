@@ -28,6 +28,16 @@ describe('MinioClientService', () => {
     expect(await service.restoreObjectFromRecycleBin(`${RECYCLE_PREFIX}a.webp`)).toBe('a.webp');
   });
 
+  it('maps a presigned url back to the stored object path', () => {
+    expect(service.toObjectPath('https://s3/b/a.webp?X-Amz-Signature=xyz')).toBe('a.webp');
+    expect(service.toObjectPath(`https://s3/b/${RECYCLE_PREFIX}a.webp?sig=1`)).toBe(
+      `${RECYCLE_PREFIX}a.webp`
+    );
+    // already a path, or a url that was never ours
+    expect(service.toObjectPath('a.webp')).toBe('a.webp');
+    expect(service.toObjectPath('https://line.me/x.png')).toBe('x.png');
+  });
+
   it('presigns a path for GET on the private bucket', async () => {
     expect(await service.getFileUrl('a.webp')).toBe('https://s3/b/a.webp?sig');
     expect(presignedUrl).toHaveBeenCalledWith('GET', 'b', 'a.webp', 7 * 24 * 60 * 60);

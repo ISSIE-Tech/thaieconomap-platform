@@ -89,6 +89,9 @@ export class JobPost {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   reviewedBy?: User;
 
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  lastModifiedBy?: User;
+
   @Prop({ type: Date, default: null, expires: '30d' })
   deletedAt: Date;
 

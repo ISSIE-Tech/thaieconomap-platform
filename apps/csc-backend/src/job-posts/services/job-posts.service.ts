@@ -9,12 +9,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { JobPost, JobPostDocument } from '../schemas/job-post.schema';
 import { Model, ObjectId, SortOrder } from 'mongoose';
 import { User, UserDocument } from 'src/users/schemas/user.schema';
+import { UserRole } from 'src/users/schemas/user-role.enum';
 import {
   JobCategory,
   JobCategoryDocument,
 } from '../schemas/job-category.schema';
 import { JobPostSubmissionStatus } from '../schemas/job-post-submission-status.enum';
 import { GetJobPostsFilterDto } from '../dtos/get-job-posts-filter.dto';
+import { UpdateBackofficeJobPostDto } from '../dtos/update-backoffice-job-post.dto';
 import {
   Submission,
   SubmissionDocument,
@@ -39,6 +41,26 @@ import { JobPostLocation } from '../schemas/job-post-location.schema';
 import { GeoJsonType } from '../../common/enum/geo-json-type.enum';
 import { transformLatitudeAndLongitudeToGeoJson } from 'src/common/utils/transfrom';
 import { ITecJobPostMark } from '../interfaces/tec-job-post-mark.interface';
+
+/**
+ * An admin may edit any post; a manager only posts in a district they are
+ * responsible for. Customers never reach the backoffice controller.
+ */
+export const canEditJobPost = (
+  user: Pick<UserDocument, 'role' | 'districts'>,
+  jobPost: { location?: { address?: { district?: unknown } } },
+): boolean => {
+  if (user.role === UserRole.Admin) return true;
+
+  const district = jobPost.location?.address?.district;
+
+  if (!district) return false;
+
+  return (user.districts ?? []).some(
+    (item) => String(item) === String(district),
+  );
+};
+
 
 @Injectable()
 export class JobPostsService {
@@ -203,7 +225,7 @@ export class JobPostsService {
       .populate([
         {
           path: 'createdBy',
-          select: 'name phoneNumber',
+          select: 'shortId name phoneNumber role',
         },
         {
           path: 'category',
@@ -211,6 +233,10 @@ export class JobPostsService {
         {
           path: 'reviewedBy',
           select: 'shortId name phoneNumber',
+        },
+        {
+          path: 'lastModifiedBy',
+          select: 'shortId name phoneNumber role',
         },
       ]);
 
@@ -250,7 +276,7 @@ export class JobPostsService {
       .populate([
         {
           path: 'createdBy',
-          select: 'name phoneNumber',
+          select: 'shortId name phoneNumber role',
         },
         {
           path: 'category',
@@ -258,6 +284,10 @@ export class JobPostsService {
         {
           path: 'reviewedBy',
           select: 'shortId name phoneNumber',
+        },
+        {
+          path: 'lastModifiedBy',
+          select: 'shortId name phoneNumber role',
         },
       ]);
 
@@ -609,6 +639,70 @@ export class JobPostsService {
     }
 
     return JobPostAcceptanceStatus.Available;
+  }
+
+  /**
+   * Backoffice edit. Unlike updateJobPostById this is not owner-scoped: an admin
+   * may edit any post, a manager only posts in a district they are responsible
+   * for. Images are optional - leaving them out keeps the existing ones.
+   */
+  async updateJobPostByBackoffice(
+    user: UserDocument,
+    jobPostId: string,
+    updateJobPostDto: UpdateBackofficeJobPostDto,
+    images?: BufferedFile[],
+  ) {
+    const jobPost = await this.getJobPostByIdAllSubmissionStatus(jobPostId);
+
+    if (!canEditJobPost(user, jobPost)) {
+      throw new ForbiddenException();
+    }
+
+    const update: Record<string, unknown> = {
+      ...updateJobPostDto,
+      lastModifiedBy: user._id,
+    };
+
+    if (updateJobPostDto.applicants) {
+      update['applicants.number'] = updateJobPostDto.applicants.number;
+      delete update.applicants;
+    }
+
+    const { keepImages } = updateJobPostDto;
+
+    delete update.keepImages;
+
+    if (keepImages || images?.length) {
+      const existing = jobPost.imageUrls ?? [];
+      // omitting keepImages keeps everything, so an image-less edit is not destructive
+      const kept = keepImages
+        ? keepImages.map((image) => this.minioClientService.toObjectPath(image))
+        : existing;
+
+      await Promise.all(
+        existing
+          .filter((path) => !kept.includes(path))
+          .map((path) => this.minioClientService.delete(path)),
+      );
+
+      const uploaded = await Promise.all(
+        (images ?? []).map((image) => this.minioClientService.uploadFile(image)),
+      );
+
+      update.imageUrls = [...kept, ...uploaded];
+    }
+
+    return this.jobPostModel
+      .findOneAndUpdate({ _id: jobPostId }, update, { new: true })
+      .populate([
+        { path: 'createdBy', select: 'shortId name phoneNumber role' },
+        { path: 'category' },
+        { path: 'lastModifiedBy', select: 'shortId name phoneNumber role' },
+      ]);
+  }
+
+  private isInUserDistricts(user: UserDocument, jobPost: JobPostDocument): boolean {
+    return canEditJobPost(user, jobPost);
   }
 
   async updateJobPostById(
