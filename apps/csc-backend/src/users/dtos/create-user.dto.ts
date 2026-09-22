@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { ObjectId } from 'mongodb';
+import { Types } from 'mongoose';
 import { UserRole } from '../schemas/user-role.enum';
 
 export class CreateUserDto {

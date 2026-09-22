@@ -5,7 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
-import { Model, QueryOptions } from 'mongoose';
+import type { FilterQuery } from 'mongoose';
+import { Model } from 'mongoose';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { BufferedFile } from 'src/minio-client/file.interface';
@@ -52,7 +53,7 @@ export class UsersService {
     return await this.getUserByFilters({ name });
   }
 
-  private async getUserByFilters(filters: QueryOptions<User>, isThrow = false) {
+  private async getUserByFilters(filters: FilterQuery<User>, isThrow = false) {
     const user = await this.userModel.findOne(filters);
 
     if (!user && isThrow) throw new NotFoundException('the user not found');

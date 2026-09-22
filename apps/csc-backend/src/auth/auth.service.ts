@@ -120,7 +120,9 @@ export class AuthService {
       const profile: ILineProfile = response.data;
 
       return profile;
-    } catch ({ error, error_description }) {
+    } catch (cause) {
+      const { error } = (cause as { error?: string }) ?? {};
+
       throw new ConflictException(error);
     }
   }

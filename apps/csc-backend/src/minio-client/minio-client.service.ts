@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { MinioService } from 'nestjs-minio-client';
 import { createCopyConditions } from 'nestjs-minio-client/dist/utils';
 import * as crypto from 'crypto';
-import * as sharp from 'sharp';
+import sharp from 'sharp';
 import { BufferedFile } from './file.interface';
 
 // one bucket; soft-deleted objects live under this prefix instead of a second bucket

@@ -79,7 +79,7 @@ export class DeletedJobPostsService {
         },
       ]);
 
-    const count = await this.jobPostModel.count(query);
+    const count = await this.jobPostModel.countDocuments(query);
 
     if (!paginator.isPageNumberValid(count))
       throw new BadRequestException('Invalid page');

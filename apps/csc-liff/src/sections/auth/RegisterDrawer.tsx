@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as yup from 'yup';
-import { useForm } from 'react-hook-form';
+import { useForm, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Image from 'next/image';
 import { BackDrawerButton } from '@/components/button';
@@ -50,8 +50,12 @@ export default function RegisterDrawer() {
 
   // ----------------------------------------------------------------------
 
-  const methods = useForm({
-    resolver: yupResolver(RegisterValidationSchema),
+  type FormValues = typeof defaultValues;
+
+  // text inputs submit strings and yup casts them (number/date); keep the form's
+  // value type as the defaults so nothing about the submitted payload changes
+  const methods = useForm<FormValues>({
+    resolver: yupResolver(RegisterValidationSchema) as unknown as Resolver<FormValues>,
     defaultValues,
     // mode: 'onBlur',
   });

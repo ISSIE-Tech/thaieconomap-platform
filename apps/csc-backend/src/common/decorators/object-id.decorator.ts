@@ -9,7 +9,7 @@ import mongoose from 'mongoose';
 export const ObjectId = createParamDecorator(
   (key: string, context: ExecutionContext) => {
     const req: Request = context.switchToHttp().getRequest();
-    const id = req.params[key];
+    const id = String(req.params[key] ?? '');
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new NotFoundException(`resource with id ${id} not found`);
     }
