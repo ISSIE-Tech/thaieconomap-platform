@@ -14,6 +14,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { useTable, TableNoData, TableHeadCustom, TablePaginationCustom } from 'src/components/table';
 
 import { useGetJobs } from '../_hooks/use-csc-jobs';
+import { QueryAlert } from '../_components/query-alert';
 import { JobTableRow } from './components/job-table-row';
 import { useGetJobCategories } from '../_hooks/use-csc-options';
 
@@ -38,7 +39,7 @@ type Props = {
 
 export function JobList({ kind }: Props) {
   const table = useTable();
-  const { data: jobs = [], isLoading } = useGetJobs(kind);
+  const { data: jobs = [], isLoading, error } = useGetJobs(kind);
   const { data: categories = [] } = useGetJobCategories();
 
   const [name, setName] = useState('');
@@ -61,6 +62,8 @@ export function JobList({ kind }: Props) {
         links={[{ name: 'งาน', href: paths.csc.dashboard.jobs.root }, { name: HEADING[kind] }]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
+
+      <QueryAlert error={error} />
 
       <Card>
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ p: 2.5 }}>

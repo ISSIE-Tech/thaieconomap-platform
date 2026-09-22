@@ -164,14 +164,20 @@ export class JobPostsService {
       paginator.calculateSkipAndLimit();
 
     const query = {
-      $and: this.calculateBaseQuery(getJobPostsFilterDto),
+      // $and must be an array; calculateBaseQuery returns a single condition object
+      $and: [this.calculateBaseQuery(getJobPostsFilterDto)],
     } as {};
 
-    query['$or'] = user.districts.map((district) => {
-      return {
-        'location.address.district': district,
-      };
-    });
+    // a manager with no districts matches nothing; `$or: []` makes mongo throw
+    if (user.districts.length) {
+      query['$or'] = user.districts.map((district) => {
+        return {
+          'location.address.district': district,
+        };
+      });
+    } else {
+      query['$and'].push({ _id: null });
+    }
 
     if (district) {
       //@ts-ignore

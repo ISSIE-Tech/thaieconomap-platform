@@ -221,11 +221,16 @@ export class PendingJobPostsService {
       $and: [this.calculateBaseQuery(getPendingJobPostsFilterDto)],
     } as {};
 
-    query['$or'] = user.districts.map((district) => {
-      return {
-        'location.address.district': district,
-      };
-    });
+    // a manager with no districts matches nothing; `$or: []` makes mongo throw
+    if (user.districts.length) {
+      query['$or'] = user.districts.map((district) => {
+        return {
+          'location.address.district': district,
+        };
+      });
+    } else {
+      query['$and'].push({ _id: null });
+    }
 
     if (district) {
       //@ts-ignore
