@@ -9,6 +9,11 @@ const nextConfig = {
   images: {
     // category icons and job photos are served as presigned urls from the bucket
     remotePatterns: [{ protocol: 'https', hostname: 's3.issie.dev' }],
+    // category icons are svg, which the optimiser refuses by default. Icons are
+    // uploaded by admins, so the csp below neutralises anything scriptable.
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 }
 

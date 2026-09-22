@@ -25,6 +25,26 @@ describe('MinioClientService', () => {
     expect((await sharp(body).metadata()).format).toBe('webp');
   });
 
+  it('keeps an svg icon as svg instead of rasterising it', async () => {
+    put.mockClear();
+
+    const svg = Buffer.from(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'
+    );
+    const path = await service.uploadFile({
+      buffer: svg,
+      originalname: 'icon.svg',
+      mimetype: 'image/svg+xml',
+    } as any);
+
+    expect(path).toMatch(/^[0-9a-f-]{36}\.svg$/);
+
+    const [, key, body, , meta] = put.mock.calls[0];
+    expect(key).toBe(path);
+    expect(meta['Content-Type']).toBe('image/svg+xml');
+    expect(body.toString()).toBe(svg.toString());
+  });
+
   it('recycles under a prefix in the same bucket and restores from it', async () => {
     expect(await service.moveObjectToRecycleBin('a.webp')).toBe(`${RECYCLE_PREFIX}a.webp`);
     expect(copy).toHaveBeenCalledWith('b', `${RECYCLE_PREFIX}a.webp`, '/b/a.webp', expect.anything());

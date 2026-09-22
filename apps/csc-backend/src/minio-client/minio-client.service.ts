@@ -22,6 +22,7 @@ export const RECYCLE_PREFIX = 'recycle/';
 export const isExternalFileValue = (value: string): boolean =>
   value.startsWith('http') || /^[\w.-]+\.[a-z]{2,}\//i.test(value);
 const WEBP_QUALITY = 80;
+const SVG_MIME = 'image/svg+xml';
 const SEVEN_DAYS_IN_SECONDS = 7 * 24 * 60 * 60;
 
 @Injectable()
@@ -56,16 +57,24 @@ export class MinioClientService {
     return this.client.presignedUrl('GET', this.bucket, path, SEVEN_DAYS_IN_SECONDS);
   }
 
-  /** every image is stored as webp, whatever was uploaded; returns the object path */
+  /**
+   * Photos are stored as webp whatever was uploaded. SVG is kept verbatim -
+   * rasterising an icon would throw away the only reason to use one - so
+   * category icons stay scalable. Returns the object path.
+   */
   async uploadFile(file: BufferedFile): Promise<string> {
-    const objectName = `${crypto.randomUUID()}.webp`;
+    const isSvg = file.mimetype === SVG_MIME;
+    const objectName = `${crypto.randomUUID()}.${isSvg ? 'svg' : 'webp'}`;
     try {
-      const webp = await sharp(file.buffer)
-        .rotate() // apply EXIF orientation before it is stripped
-        .webp({ quality: WEBP_QUALITY })
-        .toBuffer();
-      await this.client.putObject(this.bucket, objectName, webp, webp.length, {
-        'Content-Type': 'image/webp',
+      const body = isSvg
+        ? Buffer.from(file.buffer as Buffer)
+        : await sharp(file.buffer)
+            .rotate() // apply EXIF orientation before it is stripped
+            .webp({ quality: WEBP_QUALITY })
+            .toBuffer();
+
+      await this.client.putObject(this.bucket, objectName, body, body.length, {
+        'Content-Type': isSvg ? SVG_MIME : 'image/webp',
       });
       this.logger.log(`File ${objectName} uploaded successfully`);
     } catch (error) {
