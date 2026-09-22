@@ -25,6 +25,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { useTable, TableNoData, TableHeadCustom, TablePaginationCustom } from 'src/components/table';
 
 import { CSC_ROLE_TRANSLATIONS } from '../types';
+import { QueryAlert } from '../_components/query-alert';
 import { useGetCscUsers } from '../_hooks/use-csc-users';
 import { UserEditDialog } from './components/user-edit-dialog';
 
@@ -40,7 +41,7 @@ const ROLE_ORDER: CscUserRole[] = ['ADMIN', 'MANAGER', 'CUSTOMER'];
 
 export function UserList() {
   const table = useTable();
-  const { data: users = [], isLoading } = useGetCscUsers();
+  const { data: users = [], isLoading, error } = useGetCscUsers();
 
   const [name, setName] = useState('');
   const [role, setRole] = useState('all');
@@ -61,6 +62,8 @@ export function UserList() {
   return (
     <DashboardContent maxWidth="xl">
       <CustomBreadcrumbs heading="รายชื่อผู้ใช้งาน" links={[{ name: 'ผู้ดูแลระบบ' }, { name: 'ผู้ใช้งาน' }]} sx={{ mb: { xs: 3, md: 5 } }} />
+
+      <QueryAlert error={error} />
 
       <Card>
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ p: 2.5 }}>
