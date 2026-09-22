@@ -60,8 +60,14 @@ async function bootstrap() {
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useGlobalInterceptors(new FileUrlInterceptor(app.get(MinioClientService)));
+  // CLIENT_URL is a comma-separated allowlist: the LIFF client talks to this
+  // service directly, the admin reaches it through the thaieconomap gateway
   app.enableCors({
-    origin: configService.get<string>('CLIENT_URL'),
+    origin: configService
+      .get<string>('CLIENT_URL')
+      .split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean),
     credentials: true,
   });
 
