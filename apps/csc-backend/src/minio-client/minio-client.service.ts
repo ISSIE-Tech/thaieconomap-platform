@@ -12,6 +12,15 @@ import { BufferedFile } from './file.interface';
 
 // one bucket; soft-deleted objects live under this prefix instead of a second bucket
 export const RECYCLE_PREFIX = 'recycle/';
+
+/**
+ * Values we own are bare object paths (`<uuid>.webp`, `recycle/<uuid>.webp`).
+ * Anything with a scheme, or a leading `host.tld/`, predates this bucket - most
+ * job posts still point at the retired storage host - so it must not be moved,
+ * copied or deleted as if it lived here.
+ */
+export const isExternalFileValue = (value: string): boolean =>
+  value.startsWith('http') || /^[\w.-]+\.[a-z]{2,}\//i.test(value);
 const WEBP_QUALITY = 80;
 const SEVEN_DAYS_IN_SECONDS = 7 * 24 * 60 * 60;
 
@@ -68,11 +77,15 @@ export class MinioClientService {
     return objectName;
   }
 
-  moveObjectToRecycleBin(path: string): Promise<string> {
+  async moveObjectToRecycleBin(path: string): Promise<string> {
+    if (isExternalFileValue(path)) return path;
+
     return this.moveObject(path, RECYCLE_PREFIX + path);
   }
 
-  restoreObjectFromRecycleBin(path: string): Promise<string> {
+  async restoreObjectFromRecycleBin(path: string): Promise<string> {
+    if (isExternalFileValue(path)) return path;
+
     return this.moveObject(path, path.replace(RECYCLE_PREFIX, ''));
   }
 
@@ -88,14 +101,18 @@ export class MinioClientService {
   }
 
   async delete(objectName: string) {
+    if (isExternalFileValue(objectName)) {
+      this.logger.log(`File ${objectName} is not stored here, nothing to delete`);
+
+      return;
+    }
+
     try {
       await this.client.removeObject(this.bucket, objectName);
       this.logger.log(`File ${objectName}, deleted successfully`);
     } catch (error) {
+      // losing a job post because its image is already gone helps nobody
       this.logger.error(`Error deleting file ${objectName}`, error);
-      throw new InternalServerErrorException(
-        'Something went wrong in the delete-file process',
-      );
     }
   }
 }

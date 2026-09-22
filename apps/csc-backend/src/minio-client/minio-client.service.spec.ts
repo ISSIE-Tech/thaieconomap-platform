@@ -1,6 +1,10 @@
 import { ConfigService } from '@nestjs/config';
 import sharp from 'sharp';
-import { MinioClientService, RECYCLE_PREFIX } from './minio-client.service';
+import {
+  MinioClientService,
+  RECYCLE_PREFIX,
+  isExternalFileValue,
+} from './minio-client.service';
 
 describe('MinioClientService', () => {
   const put = jest.fn(), copy = jest.fn(), remove = jest.fn();
@@ -26,6 +30,32 @@ describe('MinioClientService', () => {
     expect(copy).toHaveBeenCalledWith('b', `${RECYCLE_PREFIX}a.webp`, '/b/a.webp', expect.anything());
     expect(remove).toHaveBeenCalledWith('b', 'a.webp');
     expect(await service.restoreObjectFromRecycleBin(`${RECYCLE_PREFIX}a.webp`)).toBe('a.webp');
+  });
+
+  it('leaves values that are not ours alone', async () => {
+    // job posts seeded before this bucket still point at the retired storage host
+    const legacy = 'storage.thaieconomap.com/chial-share-dev/old.jpg';
+
+    expect(isExternalFileValue(legacy)).toBe(true);
+    expect(isExternalFileValue('https://line.me/x.png')).toBe(true);
+    expect(isExternalFileValue('a.webp')).toBe(false);
+    expect(isExternalFileValue(`${RECYCLE_PREFIX}a.webp`)).toBe(false);
+
+    copy.mockClear();
+    remove.mockClear();
+
+    expect(await service.moveObjectToRecycleBin(legacy)).toBe(legacy);
+    expect(await service.restoreObjectFromRecycleBin(legacy)).toBe(legacy);
+    await service.delete(legacy);
+
+    expect(copy).not.toHaveBeenCalled();
+    expect(remove).not.toHaveBeenCalled();
+  });
+
+  it('does not fail a delete when the object is already gone', async () => {
+    remove.mockRejectedValueOnce(new Error('Key not found'));
+
+    await expect(service.delete('missing.webp')).resolves.toBeUndefined();
   });
 
   it('maps a presigned url back to the stored object path', () => {
