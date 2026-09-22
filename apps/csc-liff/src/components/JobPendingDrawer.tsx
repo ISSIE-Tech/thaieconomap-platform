@@ -103,7 +103,7 @@ export default function JobPendingDrawer({ post }: Props) {
               <div key={url} className="relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={'https://' + url}
+                  src={url}
                   alt={`uploaded image ${index}`}
                   className="w-20 h-20 object-cover object-top"
                 />

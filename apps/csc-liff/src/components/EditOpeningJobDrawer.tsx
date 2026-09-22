@@ -111,7 +111,7 @@ export default function EditOpeningJobDrawer({
     const bolbImages: File[] = [];
 
     const fetchBlob = async (url: string) => {
-      const response = await fetch('https://' + url);
+      const response = await fetch(url);
       const blob = await response.blob();
       const name = url.split('/').pop()?.split('.')[0] || 'image.jpg';
       const file = new File([blob], name, { type: 'image/jpeg' });
