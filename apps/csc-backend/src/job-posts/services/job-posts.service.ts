@@ -98,7 +98,7 @@ export class JobPostsService {
     .lean()
     .exec();
 
-    return jobPost.map((post: JobPostDocument) => {
+    return jobPost.map((post) => {
       const { _id, location } = post;
       const geoLocation = transformLatitudeAndLongitudeToGeoJson(location);
       const jobPostMark: ITecJobPostMark = {
@@ -143,7 +143,7 @@ export class JobPostsService {
         },
       ]);
 
-    const count = await this.jobPostModel.count(query);
+    const count = await this.jobPostModel.countDocuments(query);
 
     if (!paginator.isPageNumberValid(count))
       throw new BadRequestException('Invalid page');
@@ -214,7 +214,7 @@ export class JobPostsService {
         },
       ]);
 
-    const count = await this.jobPostModel.count(query);
+    const count = await this.jobPostModel.countDocuments(query);
 
     if (!paginator.isPageNumberValid(count))
       throw new BadRequestException('Invalid page');
@@ -261,7 +261,7 @@ export class JobPostsService {
         },
       ]);
 
-    const count = await this.jobPostModel.count(query);
+    const count = await this.jobPostModel.countDocuments(query);
 
     if (!paginator.isPageNumberValid(count))
       throw new BadRequestException('Invalid page');

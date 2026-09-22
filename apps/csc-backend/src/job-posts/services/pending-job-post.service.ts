@@ -20,7 +20,7 @@ import { RejectPendingJobPostDto } from '../dtos/reject-pending-job-post.dto';
 import { GetJobPostsFilterDto } from '../dtos/get-job-posts-filter.dto';
 import { PaginationProcesser } from 'src/common/utils/pagination';
 import { IBaseQueryJobPostsFilter } from '../interfaces/base-query-filters.interface';
-import { OnCloseJobPost } from '../schemas/on-close-job-post.schema';
+import { OnCloseJobPost, OnCloseJobPostDocument } from '../schemas/on-close-job-post.schema';
 
 @Injectable()
 export class PendingJobPostsService {
@@ -31,7 +31,7 @@ export class PendingJobPostsService {
     @InjectModel(JobCategory.name)
     private readonly jobCategoryModel: Model<JobCategoryDocument>,
     @InjectModel(OnCloseJobPost.name)
-    private readonly onCloseJobPostModel: Model<OnCloseJobPost>,
+    private readonly onCloseJobPostModel: Model<OnCloseJobPostDocument>,
   ) {}
 
   private readonly baseProjections = {
@@ -197,7 +197,7 @@ export class PendingJobPostsService {
         },
       ]);
 
-    const count = await this.jobPostModel.count(query);
+    const count = await this.jobPostModel.countDocuments(query);
 
     if (!paginator.isPageNumberValid(count))
       throw new BadRequestException('Invalid page');
@@ -264,7 +264,7 @@ export class PendingJobPostsService {
         },
       ]);
 
-    const count = await this.jobPostModel.count(query);
+    const count = await this.jobPostModel.countDocuments(query);
 
     if (!paginator.isPageNumberValid(count))
       throw new BadRequestException('Invalid page');

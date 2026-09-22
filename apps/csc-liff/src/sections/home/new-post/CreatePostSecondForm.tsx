@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import Image from 'next/image';
 
-import { useForm } from 'react-hook-form';
+import { useForm, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
@@ -75,9 +75,13 @@ const CreatePostPostSecondForm = ({ open, setOpen, onSubmit }: Props) => {
 
   // ----------------------------------------------------------------------
 
-  const methods = useForm({
+  type FormValues = typeof defaultValues;
+
+  // text inputs submit strings and yup casts them (number/date); keep the form's
+  // value type as the defaults so nothing about the submitted payload changes
+  const methods = useForm<FormValues>({
     defaultValues,
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as unknown as Resolver<FormValues>,
   });
 
   const {

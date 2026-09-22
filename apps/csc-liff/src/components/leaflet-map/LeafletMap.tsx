@@ -26,7 +26,7 @@ const LeafletMap = ({
   borderRadius = '0px',
   zoom = 14,
 }: PropsWithChildren<Props>) => {
-  const tileRef = useRef<any>();
+  const tileRef = useRef<any>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
   useEffect(() => {

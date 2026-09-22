@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Submission } from './schemas/submission.schema';
-import { Model, UpdateQuery } from 'mongoose';
+import { Submission, SubmissionDocument } from './schemas/submission.schema';
+import { Model, Types, UpdateQuery } from 'mongoose';
 import { User, UserDocument } from 'src/users/schemas/user.schema';
 import { JobSubmissionStatus } from './schemas/job-submission-status-enum';
 
@@ -22,7 +22,7 @@ export class SubmissionsService {
     additionalInformation: string,
   ) {
     const submission = await this.submissionModel.findOne({
-      jobPost: jobPostId,
+      jobPost: new Types.ObjectId(jobPostId),
       candidate: user._id,
     });
 
@@ -56,7 +56,7 @@ export class SubmissionsService {
   async getSubmisssionsByJobPostId(jobPostId: string) {
     const submissions = await this.submissionModel
       .find({
-        jobPost: jobPostId,
+        jobPost: new Types.ObjectId(jobPostId),
       })
       .populate(
         'candidate',
@@ -71,8 +71,8 @@ export class SubmissionsService {
     candidateId: string,
   ) {
     const submission = await this.submissionModel.findOne({
-      jobPost: jobPostId,
-      candidate: candidateId,
+      jobPost: new Types.ObjectId(jobPostId),
+      candidate: new Types.ObjectId(candidateId),
     });
 
     if (!submission) throw new NotFoundException('submission not found');
@@ -118,8 +118,8 @@ export class SubmissionsService {
 
   async cancel(user: UserDocument, submissionId: string) {
     const submission = await this.submissionModel.findOne({
-      _id: submissionId,
-      candidate: user._id.toString(),
+      _id: new Types.ObjectId(submissionId),
+      candidate: user._id,
     });
 
     if (
@@ -161,7 +161,7 @@ export class SubmissionsService {
   async getUserSubmissions(user: UserDocument) {
     const submissions = await this.submissionModel
       .find({
-        candidate: user._id.toString(),
+        candidate: user._id,
       })
       .populate({
         path: 'jobPost',

@@ -1,15 +1,13 @@
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { NodeSDK } from '@opentelemetry/sdk-node';
-import * as process from 'process';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
-import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
-import { Resource } from '@opentelemetry/resources';
+import { resourceFromAttributes } from '@opentelemetry/resources';
 
 const exporterOptions = {
-  // url: 'http://10.100.0.23:4318/v1/traces',
-  url: 'http://10.100.0.23:4318/v1/traces',
+  url: process.env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT,
 };
 
 const traceExporter = new OTLPTraceExporter(exporterOptions);
@@ -21,8 +19,8 @@ export const otelSDK = new NodeSDK({
     new ExpressInstrumentation(),
     new NestInstrumentation(),
   ],
-  resource: new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: 'csc-backend-dev',
+  resource: resourceFromAttributes({
+    [ATTR_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME ?? 'csc-backend',
   }),
 });
 

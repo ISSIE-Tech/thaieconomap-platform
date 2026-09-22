@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import * as sharp from 'sharp';
+import sharp from 'sharp';
 import { MinioClientService, RECYCLE_PREFIX } from './minio-client.service';
 
 describe('MinioClientService', () => {

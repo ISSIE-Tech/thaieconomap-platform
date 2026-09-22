@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import Image from 'next/image';
 
-import { useForm } from 'react-hook-form';
+import { useForm, Resolver } from 'react-hook-form';
 
 import {
   FromProvider,
@@ -258,9 +258,11 @@ function EditBasicInformation() {
       .required('ยังไม่ได้เลือกประเภทงาน'),
   });
 
-  const methods = useForm({
+  // text inputs submit strings and yup casts them (number/date); keep the form's
+  // value type as the defaults so nothing about the submitted payload changes
+  const methods = useForm<typeof defaultValues>({
     defaultValues,
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as unknown as Resolver<typeof defaultValues>,
   });
 
   const {
@@ -376,9 +378,11 @@ function EditDetailedInformation() {
       .required('ยังไม่ได้เลือกหน่วย'),
   });
 
-  const methods = useForm({
+  // text inputs submit strings and yup casts them (number/date); keep the form's
+  // value type as the defaults so nothing about the submitted payload changes
+  const methods = useForm<typeof defaultValues>({
     defaultValues,
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as unknown as Resolver<typeof defaultValues>,
   });
 
   const {
@@ -482,9 +486,11 @@ function EditWorkplace() {
     address: yup.string().required('ยังไม่ได้ดรอกชื่ออาคาร'),
   });
 
-  const methods = useForm({
+  // text inputs submit strings and yup casts them (number/date); keep the form's
+  // value type as the defaults so nothing about the submitted payload changes
+  const methods = useForm<typeof defaultValues>({
     defaultValues,
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as unknown as Resolver<typeof defaultValues>,
   });
 
   const {
