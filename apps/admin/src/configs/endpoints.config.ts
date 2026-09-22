@@ -53,6 +53,7 @@ const csc = {
     root: `${CSC}/backoffice/job-categories`,
     arrange: `${CSC}/backoffice/job-categories/arrange`,
     byId: (id: string) => `${CSC}/backoffice/job-categories/${id}`,
+    update: (id: string) => `${CSC}/backoffice/job-categories/${id}`,
   },
   wageUnits: {
     root: `${CSC}/backoffice/wage-units`,

@@ -81,6 +81,27 @@ export class BackofficeController {
 
   @UseGuards(JwtAccessGuard, RolesGuard)
   @Roles(UserRole.Admin)
+  @Patch('job-categories/:jobCategoryId')
+  @UseInterceptors(FileInterceptor('iconImage'))
+  async updateJobCategory(
+    @ObjectId('jobCategoryId') jobCategoryId: string,
+    @Body() body: { name?: string },
+    @UploadedFile() iconImage?: BufferedFile,
+  ) {
+    const jobCategory = await this.jobPostsService.updateJobCategory(
+      jobCategoryId,
+      body?.name,
+      iconImage,
+    );
+
+    return {
+      statusCode: 200,
+      message: 'update the job category successfully',
+      jobCategory,
+    };
+  }
+
+  @Roles(UserRole.Admin)
   @Delete('job-categories/:jobCategoryId')
   async deleteJobCategory(@ObjectId('jobCategoryId') jobCategoryId: string) {
     const jobCategory = await this.jobPostsService.deleteJobCategory(

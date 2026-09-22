@@ -24,6 +24,8 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { TableNoData, TableHeadCustom } from 'src/components/table';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
+import { OptionEditDialog } from './components/option-edit-dialog';
+
 type Option = { _id: string; name: string; iconUrl?: string };
 
 type Props = {
@@ -32,15 +34,25 @@ type Props = {
   withIcon?: boolean;
   onCreate: (name: string, icon: File | null) => Promise<unknown>;
   onDelete: (id: string) => Promise<unknown>;
+  /** omitted where the API has no update endpoint (wage units), which hides the edit action */
+  onUpdate?: (id: string, name: string, icon: File | null) => Promise<unknown>;
 };
 
 const onError = (error: any) => toast.error(error?.response?.data?.message ?? 'เกิดข้อผิดพลาด');
 
 // shared by job categories (name + icon) and wage units (name only)
-export function OptionList({ heading, options = [], withIcon = false, onCreate, onDelete }: Props) {
+export function OptionList({
+  heading,
+  options = [],
+  withIcon = false,
+  onCreate,
+  onDelete,
+  onUpdate,
+}: Props) {
   const [name, setName] = useState('');
   const [icon, setIcon] = useState<File | null>(null);
   const [deleting, setDeleting] = useState<Option | null>(null);
+  const [editing, setEditing] = useState<Option | null>(null);
 
   const handleCreate = () =>
     onCreate(name.trim(), icon)
@@ -82,7 +94,7 @@ export function OptionList({ heading, options = [], withIcon = false, onCreate, 
 
         <Table>
           <TableHeadCustom
-            headLabel={[...(withIcon ? [{ id: 'icon', label: 'ไอคอน', width: 80 }] : []), { id: 'name', label: 'ชื่อ' }, { id: '', width: 80 }]}
+            headLabel={[...(withIcon ? [{ id: 'icon', label: 'ไอคอน', width: 80 }] : []), { id: 'name', label: 'ชื่อ' }, { id: '', width: onUpdate ? 120 : 80 }]}
           />
 
           <TableBody>
@@ -94,7 +106,13 @@ export function OptionList({ heading, options = [], withIcon = false, onCreate, 
                   </TableCell>
                 )}
                 <TableCell>{option.name}</TableCell>
-                <TableCell align="right">
+                <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
+                  {onUpdate && (
+                    <IconButton onClick={() => setEditing(option)}>
+                      <Iconify icon="solar:pen-bold" />
+                    </IconButton>
+                  )}
+
                   <IconButton onClick={() => setDeleting(option)}>
                     <Iconify icon="solar:trash-bin-minimalistic-bold" sx={{ color: 'error.main' }} />
                   </IconButton>
@@ -106,6 +124,15 @@ export function OptionList({ heading, options = [], withIcon = false, onCreate, 
           </TableBody>
         </Table>
       </Card>
+
+      {onUpdate && (
+        <OptionEditDialog
+          option={editing}
+          withIcon={withIcon}
+          onClose={() => setEditing(null)}
+          onSave={onUpdate}
+        />
+      )}
 
       <ConfirmDialog
         open={!!deleting}

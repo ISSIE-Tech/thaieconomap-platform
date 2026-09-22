@@ -148,7 +148,7 @@ export default function JobPostDrawer({ post }: Props) {
               {post?.imageUrls?.map((url, index) => (
                 <img
                   key={url}
-                  src={`https://${url}`}
+                  src={url}
                   alt={`index ${index}`}
                   className="h-[120px] object-cover object-top bg-blue-300"
                 />

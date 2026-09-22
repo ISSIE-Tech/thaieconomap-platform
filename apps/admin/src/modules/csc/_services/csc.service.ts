@@ -52,6 +52,9 @@ export const createJobCategory = (params: FormData) =>
 
 export const deleteJobCategory = (id: string) => axios.delete(endpoints.csc.jobCategories.byId(id));
 
+export const updateJobCategory = (id: string, params: FormData) =>
+  axios.patch(endpoints.csc.jobCategories.update(id), params);
+
 export const arrangeJobCategories = (jobCategories: string[]) =>
   axios.patch(endpoints.csc.jobCategories.arrange, { jobCategories });
 

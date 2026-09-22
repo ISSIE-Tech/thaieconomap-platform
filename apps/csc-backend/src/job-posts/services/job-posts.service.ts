@@ -416,6 +416,37 @@ export class JobPostsService {
     return jobCategory;
   }
 
+  /** Rename a category and/or replace its icon. The old icon is removed. */
+  async updateJobCategory(
+    jobCategoryId: string,
+    name?: string,
+    iconImage?: BufferedFile,
+  ) {
+    const jobCategory = await this.jobCategoryModel.findById(jobCategoryId);
+
+    if (!jobCategory) {
+      throw new NotFoundException('the job category not found');
+    }
+
+    if (name) {
+      jobCategory.name = name;
+    }
+
+    if (iconImage) {
+      const previousIcon = jobCategory.iconUrl;
+
+      jobCategory.iconUrl = await this.minioClientService.uploadFile(iconImage);
+
+      if (previousIcon) {
+        await this.minioClientService.delete(previousIcon);
+      }
+    }
+
+    await jobCategory.save();
+
+    return jobCategory;
+  }
+
   async deleteJobCategory(jobCategoryId: string) {
     try {
       await this.jobCategoryModel.findByIdAndDelete(jobCategoryId);

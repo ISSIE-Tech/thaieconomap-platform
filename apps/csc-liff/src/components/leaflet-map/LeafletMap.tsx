@@ -51,7 +51,7 @@ const LeafletMap = ({
     >
       <TileLayer
         ref={tileRef}
-        url="https://api-maptile.thaieconomap.com/tile/{z}/{x}/{y}.png"
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       />
 

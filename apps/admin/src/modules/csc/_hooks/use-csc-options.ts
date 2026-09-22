@@ -6,6 +6,7 @@ import {
   createWageUnit,
   deleteWageUnit,
   getJobCategories,
+  updateJobCategory,
   createJobCategory,
   deleteJobCategory,
   arrangeJobCategories,
@@ -31,6 +32,11 @@ export const useCreateJobCategory = () =>
 
 export const useDeleteJobCategory = () =>
   useOptionMutation(CSC_QUERY_KEYS.JOB_CATEGORIES, deleteJobCategory);
+
+export const useUpdateJobCategory = () =>
+  useOptionMutation(CSC_QUERY_KEYS.JOB_CATEGORIES, ({ id, params }: { id: string; params: FormData }) =>
+    updateJobCategory(id, params)
+  );
 
 export const useArrangeJobCategories = () =>
   useOptionMutation(CSC_QUERY_KEYS.JOB_CATEGORIES, arrangeJobCategories);
