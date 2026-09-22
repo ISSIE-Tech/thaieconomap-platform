@@ -11,6 +11,7 @@ const ROOTS = {
   PUMPURANG: '/pumpuang',
   FCM_LOGS: '/fcm-logs',
   OTP_LOGS: '/otp-logs',
+  CSC: '/csc',
 };
 
 // ----------------------------------------------------------------------
@@ -21,6 +22,27 @@ export const paths = {
   // AUTH
   auth: {
     login: `${ROOTS.AUTH}/line`,
+  },
+  // CHIAL SHARE CARRIER
+  csc: {
+    dashboard: {
+      root: `${ROOTS.DASHBOARD}${ROOTS.CSC}`,
+      jobs: {
+        root: `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs`,
+        list: `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs/list`,
+        pending: `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs/pending`,
+        deleted: `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs/deleted`,
+        view: (kind: 'active' | 'pending' | 'deleted', id: string) =>
+          `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs/${kind}/${id}`,
+        options: {
+          root: `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs/options`,
+          categories: `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs/options/categories`,
+          wageUnits: `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs/options/wage-units`,
+          top5: `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs/options/top5`,
+        },
+      },
+      users: `${ROOTS.DASHBOARD}${ROOTS.CSC}/users`,
+    },
   },
   // DASHBOARD
   user: {
