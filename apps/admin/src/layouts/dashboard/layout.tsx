@@ -8,7 +8,7 @@ import { useTheme } from '@mui/material/styles';
 import type { Theme, SxProps, CSSObject, Breakpoint } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
-import { usePathname } from 'src/routes/hooks';
+import { useRouter, usePathname } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
@@ -27,6 +27,7 @@ import { HeaderBase } from '../core/header-base';
 import { LayoutSection } from '../core/layout-section';
 import { navConfig, filterNavByRole } from '../config-nav-dashboard';
 import { _workspaces, workspace as workspaceId } from '../config-nav-workspace';
+import { useAllowedWorkspaces } from '../use-allowed-workspaces';
 
 // ----------------------------------------------------------------------
 
@@ -56,8 +57,11 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
   // role is per service on the gateway user: TEC (mapped to user.role) or CSC
   const userRole = (workspace.id === workspaceId.csc ? user?.roles?.CSC : user?.role) ?? '';
 
+  const allowedWorkspaces = useAllowedWorkspaces();
+
   // deep links / refresh: keep the workspace (and its nav) in sync with the URL
   const pathname = usePathname();
+  const router = useRouter();
   const urlWorkspace = _workspaces.find(
     (item) => (item.id === workspaceId.csc) === pathname.startsWith(paths.csc.dashboard.root)
   );
@@ -68,6 +72,16 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlWorkspace?.id]);
+
+  // a stored workspace the user has no role for (or a CSC-only user landing on the
+  // thaieconomap default) would otherwise render an empty nav
+  useEffect(() => {
+    if (!allowedWorkspaces.some((item) => item.id === workspace.id)) {
+      settings.onUpdateField('workspace', allowedWorkspaces[0]);
+      router.replace(allowedWorkspaces[0].home);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allowedWorkspaces, workspace.id]);
 
   const navData = useMemo(
     () => filterNavByRole(navConfig[workspace.id], userRole),
@@ -94,7 +108,7 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
             layoutQuery={layoutQuery}
             disableElevation
             onOpenNav={mobileNavOpen.onTrue}
-            data={{ nav: navData, workspaces: _workspaces }}
+            data={{ nav: navData, workspaces: allowedWorkspaces }}
             slotsDisplay={{
               signIn: false,
               purchase: false,

@@ -99,7 +99,8 @@ export function AuthProvider({ children }: Props) {
       user: state.user
         ? {
             ...state.user,
-            role: state.user?.roles?.TEC ?? 'MANAGER',
+            // no TEC group means no thaieconomap access at all; don't invent one
+            role: state.user?.roles?.TEC,
           }
         : null,
       checkUserSession,
