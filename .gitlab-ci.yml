@@ -90,3 +90,37 @@ trigger-admin:
       changes:
         - apps/admin/**/*
         - packages/contracts/**/*
+
+# ──────────────────────────────────────────────
+# CSC Backend
+# ──────────────────────────────────────────────
+trigger-csc-backend:
+  stage: trigger
+  trigger:
+    include:
+      - local: apps/csc-backend/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - apps/csc-backend/**/*
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - apps/csc-backend/**/*
+
+# ──────────────────────────────────────────────
+# CSC LIFF
+# ──────────────────────────────────────────────
+trigger-csc-liff:
+  stage: trigger
+  trigger:
+    include:
+      - local: apps/csc-liff/.gitlab-ci.yml
+    strategy: depend
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - apps/csc-liff/**/*
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - apps/csc-liff/**/*
