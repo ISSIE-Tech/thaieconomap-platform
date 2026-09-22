@@ -72,11 +72,11 @@ export class AuthService {
 
     const payload = await this.authentikOauthService.verifyAuthorizationCode(authorizationCode);
     const profile = await this.authentikOauthService.getProfile(payload);
-    // getDeterminedRole reads and clears the role stored during getProfile
-    const role = this.authentikOauthService.getDeterminedRole(profile.oauthSub);
+    // getDeterminedRoles reads and clears the roles stored during getProfile
+    const roles = this.authentikOauthService.getDeterminedRoles(profile.oauthSub);
 
     this.logger.verbose(
-      `{${ctx}} (authentik profile) ${prettyObjectString({ ...profile, role })}`,
+      `{${ctx}} (authentik profile) ${prettyObjectString({ ...profile, ...roles })}`,
     );
 
     let user = await this.userService.findUserByOauthSub(
@@ -108,10 +108,11 @@ export class AuthService {
       );
     }
 
-    // Auto-assign role from OIDC groups on every login
+    // Auto-assign roles from OIDC groups on every login; a service the user has no
+    // group for is unset, so losing a group also removes access to that service
     user = await this.userService.findOneAndUpdate(
       { _id: user._id },
-      { 'roles.TEC': role },
+      { roles: { TEC: roles.TEC, CSC: roles.CSC } },
       { projection: { refreshToken: 0 } },
     );
 

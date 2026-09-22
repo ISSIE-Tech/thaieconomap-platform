@@ -7,10 +7,25 @@ import { firstValueFrom } from 'rxjs';
 import { ErrorException } from '../../../common/exceptions';
 import { CODES, globalConfig } from '../../../shared/constants';
 import { UserRole } from '../../../shared/enums';
-import { IAuthentikPayload, IAuthentikUserInfo, IOauthProfile } from '../../../shared/interfaces';
+import {
+  IAuthentikPayload,
+  IAuthentikUserInfo,
+  IOauthProfile,
+  IServiceRoles,
+} from '../../../shared/interfaces';
 import { generateRandomString, generateUrlWithQuery, prettyObjectString } from '../../../shared/utils';
 
 import { AbstractBaseOauthService } from './abstract-base-oauth.service';
+
+const GROUP_ROLES: [string, UserRole][] = [
+  ['dev', UserRole.DEVELOPER],
+  ['admin', UserRole.ADMIN],
+  ['manager', UserRole.MANAGER],
+];
+
+/** `<prefix>-dev|admin|manager` -> role, most privileged wins; undefined when absent */
+export const roleFromGroups = (groups: string[], prefix: string): UserRole | undefined =>
+  GROUP_ROLES.find(([suffix]) => groups.includes(`${prefix}-${suffix}`))?.[1];
 
 @Injectable()
 export class AuthentikOauthService extends AbstractBaseOauthService {
@@ -19,7 +34,7 @@ export class AuthentikOauthService extends AbstractBaseOauthService {
   private clientId: string;
   private clientSecret: string;
   private redirectUri: string;
-  private readonly determinedRoles: Map<string, UserRole> = new Map();
+  private readonly determinedRoles: Map<string, IServiceRoles> = new Map();
   private readonly logger: Logger = new Logger(AuthentikOauthService.name);
 
   constructor(
@@ -129,18 +144,16 @@ export class AuthentikOauthService extends AbstractBaseOauthService {
       })}`,
     );
 
-    // Determine role from OIDC groups
+    // Determine per-service roles from OIDC groups: <service>-<role>
     const groups = userInfo.groups ?? [];
 
-    let role: UserRole;
+    const roles: IServiceRoles = {
+      TEC: roleFromGroups(groups, 'thaieconomap'),
+      CSC: roleFromGroups(groups, 'csc'),
+    };
 
-    if (groups.includes('thaieconomap-dev')) {
-      role = UserRole.DEVELOPER;
-    } else if (groups.includes('thaieconomap-admin')) {
-      role = UserRole.ADMIN;
-    } else if (groups.includes('thaieconomap-manager')) {
-      role = UserRole.MANAGER;
-    } else {
+    // a user needs a group for at least one service; they then only see that service
+    if (!roles.TEC && !roles.CSC) {
       this.logger.warn(
         `{${AuthentikOauthService.name}} User ${userInfo.sub} has no valid group. Groups: ${groups.join(', ')}`,
       );
@@ -148,8 +161,8 @@ export class AuthentikOauthService extends AbstractBaseOauthService {
       throw new ErrorException(CODES.AGW_003);
     }
 
-    // Store determined role for later retrieval by auth service
-    this.determinedRoles.set(userInfo.sub, role);
+    // Store determined roles for later retrieval by auth service
+    this.determinedRoles.set(userInfo.sub, roles);
 
     return {
       oauthSub: userInfo.sub,
@@ -159,11 +172,11 @@ export class AuthentikOauthService extends AbstractBaseOauthService {
     };
   }
 
-  getDeterminedRole(oauthSub: string): UserRole {
-    const role = this.determinedRoles.get(oauthSub);
+  getDeterminedRoles(oauthSub: string): IServiceRoles {
+    const roles = this.determinedRoles.get(oauthSub);
 
     this.determinedRoles.delete(oauthSub);
 
-    return role ?? UserRole.MANAGER;
+    return roles ?? {};
   }
 }

@@ -72,7 +72,7 @@ export function UserMenuButton() {
           </Typography>
 
           <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-            {user.role}
+            {user.role ?? user.roles?.CSC}
           </Typography>
         </Box>
 
