@@ -77,8 +77,13 @@ export function OptionList({
 
           {withIcon && (
             <Button component="label" variant="outlined" sx={{ flexShrink: 0 }}>
-              {icon?.name ?? 'เลือกไอคอน'}
-              <input hidden type="file" accept="image/*" onChange={(event) => setIcon(event.target.files?.[0] ?? null)} />
+              {icon?.name ?? 'เลือกไอคอน (.svg)'}
+              <input
+                hidden
+                type="file"
+                accept=".svg,image/svg+xml"
+                onChange={(event) => setIcon(event.target.files?.[0] ?? null)}
+              />
             </Button>
           )}
 

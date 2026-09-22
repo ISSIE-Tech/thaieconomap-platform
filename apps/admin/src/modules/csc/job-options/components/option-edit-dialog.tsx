@@ -62,11 +62,11 @@ export function OptionEditDialog({ option, withIcon, onClose, onSave }: Props) {
               <Avatar src={preview} variant="rounded" sx={{ width: 56, height: 56 }} />
 
               <Button component="label" variant="outlined">
-                {icon ? icon.name : 'เปลี่ยนไอคอน'}
+                {icon ? icon.name : 'เปลี่ยนไอคอน (.svg)'}
                 <input
                   hidden
                   type="file"
-                  accept="image/*"
+                  accept=".svg,image/svg+xml"
                   onChange={(event) => setIcon(event.target.files?.[0] ?? null)}
                 />
               </Button>
