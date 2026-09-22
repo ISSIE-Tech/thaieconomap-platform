@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn {
+    @apply py-3 px-5 rounded-xl text-lg font-bold shadow-[1px_1px_3px_rgba(0,0,0,0.1)];
+  }
+
+  .btn-solid {
+    @apply bg-main-orange;
+  }
+
+  .btn-outline {
+    @apply bg-white border border-main-orange;
+  }
+}
+
+* {
+  font-family: 'Noto Sans Thai', sans-serif !important;
+}
+
+/* Map Leaflet */
+
+.leaflet-tooltip {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  font-weight: 700;
+  /* text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff,
+    1px 1px 0 #fff; */
+  /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; */
+  top: -10px;
+  left: 10px;
+  color: #fa961e !important;
+  font-size: 1.05rem;
+}
+
+.leaflet-tooltip-right::before {
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+}
+
+/* Mui Loading Button */
+
+.MuiLoadingButton-root {
+  background-color: #fa961e !important;
+  width: 100%;
+  padding: 12px 0 !important;
+  margin-top: 1.5rem !important;
+  font-family: 'Noto Sans Thai', sans-serif !important;
+  font-weight: bold !important;
+  letter-spacing: 0 !important;
+  font-size: 1.25rem !important;
+  text-transform: none !important;
+}

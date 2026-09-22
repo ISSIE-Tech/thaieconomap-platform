@@ -45,7 +45,8 @@ deploy-dev:
     - git config user.email "ci@gitlab.com"
     - git add .
     - git commit -m "Deploy $CI_COMMIT_SHORT_SHA to DEV"
-    - git push origin main
+    # several app pipelines deploy at once; rebase on whatever landed in between and retry
+    - for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin main && break; sleep $((RANDOM % 5 + 1)); done
   needs:
     - build-push-dev
   rules:
@@ -90,7 +91,8 @@ deploy-prod:
     - git config user.email "ci@gitlab.com"
     - git add .
     - git commit -m "Deploy $CI_COMMIT_SHORT_SHA to PROD"
-    - git push origin main
+    # several app pipelines deploy at once; rebase on whatever landed in between and retry
+    - for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin main && break; sleep $((RANDOM % 5 + 1)); done
   needs:
     - build-push-prod
   allow_failure: true

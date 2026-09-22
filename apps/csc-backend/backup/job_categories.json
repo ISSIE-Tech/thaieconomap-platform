@@ -1,0 +1,69 @@
+[{
+  "_id": {
+    "$oid": "63e3ad554690da1e802313bf"
+  },
+  "name": "วิชาการ",
+  "iconUrl": "https://api-storage.thaieconomap.com/chial-share/AcademicType.svg",
+  "isMain": true,
+  "index": 4
+},{
+  "_id": {
+    "$oid": "63e3ad554690da1e802313c0"
+  },
+  "name": "ศิลปะ",
+  "iconUrl": "https://api-storage.thaieconomap.com/chial-share/ArtType.svg",
+  "isMain": false
+},{
+  "_id": {
+    "$oid": "63e3ad554690da1e802313c1"
+  },
+  "name": "สื่อสาร",
+  "iconUrl": "https://api-storage.thaieconomap.com/chial-share/CommunicateType.svg",
+  "isMain:": false
+},{
+  "_id": {
+    "$oid": "63e3ad554690da1e802313c3"
+  },
+  "name": "การแพทย์",
+  "iconUrl": "https://api-storage.thaieconomap.com/chial-share/MedicalType.svg",
+  "isMain": false
+},{
+  "_id": {
+    "$oid": "63e3ad554690da1e802313c4"
+  },
+  "name": "บริการ",
+  "iconUrl": "https://api-storage.thaieconomap.com/chial-share/ServiceType.svg",
+  "isMain": true,
+  "index": 1
+},{
+  "_id": {
+    "$oid": "63e4b0c36697e034b43a555b"
+  },
+  "name": "การตลาด",
+  "iconUrl": "https://api-storage.thaieconomap.com/chial-share/Marketing2Type.svg",
+  "isMain": false
+},{
+  "_id": {
+    "$oid": "63e675b8ec6cbce76fd5c45f"
+  },
+  "name": "รับจ้าง",
+  "iconUrl": "https://api-storage.thaieconomap.com/chial-share/HireType.svg",
+  "isMain": true,
+  "index": 0
+},{
+  "_id": {
+    "$oid": "63e675ebec6cbce76fd5c460"
+  },
+  "name": "งานช่าง",
+  "iconUrl": "https://api-storage.thaieconomap.com/chial-share/WrenchType.svg",
+  "isMain": true,
+  "index": 2
+},{
+  "_id": {
+    "$oid": "63e67613ec6cbce76fd5c461"
+  },
+  "name": "ขนส่ง",
+  "iconUrl": "https://api-storage.thaieconomap.com/chial-share/TruckType.svg",
+  "isMain": true,
+  "index": 3
+}]
