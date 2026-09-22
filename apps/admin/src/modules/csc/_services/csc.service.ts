@@ -86,3 +86,8 @@ export const getCscDistricts = async (): Promise<CscDistrict[]> => {
 
   return res.data.districts;
 };
+
+// ----------------------------------------------------------------------
+
+export const updateJob = (id: string, params: FormData) =>
+  axios.patch(endpoints.csc.jobs.active.update(id), params);

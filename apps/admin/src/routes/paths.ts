@@ -34,6 +34,7 @@ export const paths = {
         deleted: `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs/deleted`,
         view: (kind: 'active' | 'pending' | 'deleted', id: string) =>
           `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs/${kind}/${id}`,
+        edit: (id: string) => `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs/edit/${id}`,
         options: {
           root: `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs/options`,
           categories: `${ROOTS.DASHBOARD}${ROOTS.CSC}/jobs/options/categories`,

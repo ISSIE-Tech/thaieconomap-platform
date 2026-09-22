@@ -34,6 +34,7 @@ const csc = {
     active: {
       list: (isAdmin: boolean) => `${CSC}/backoffice/job-posts/${cscScope(isAdmin)}`,
       byId: (id: string) => `${CSC}/backoffice/job-posts/${id}`,
+      update: (id: string) => `${CSC}/backoffice/job-posts/${id}`,
       recycle: (id: string) => `${CSC}/backoffice/job-posts/${id}/recycle`,
     },
     pending: {

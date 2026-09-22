@@ -4,13 +4,15 @@ import type { JobKind } from '../types';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { Box, Card, Stack, Typography } from '@mui/material';
+import { Box, Card, Stack, Button, Typography } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
 
-import { fDate } from 'src/utils/format-time';
+import { fDate, fDateTime } from 'src/utils/format-time';
 
+import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { useGetJobById } from '../_hooks/use-csc-jobs';
@@ -52,7 +54,10 @@ export function JobViewPage({ kind, id }: Props) {
     ['พิกัด', `${job.location?.latitude}, ${job.location?.longitude}`],
     ['ชื่อผู้ประกาศ', job.createdBy?.name],
     ['เบอร์โทรศัพท์', job.createdBy?.phoneNumber],
-    ['ประกาศเมื่อ', fDate(job.createdAt)],
+    ['ประกาศเมื่อ', fDateTime(job.createdAt)],
+    ['แก้ไขล่าสุดเมื่อ', job.updatedAt ? fDateTime(job.updatedAt) : '-'],
+    ['สร้างโดย', job.createdBy?.name],
+    ['แก้ไขโดย', job.lastModifiedBy?.name],
     ...(job.rejectMessage ? ([['เหตุผลที่ปฏิเสธ', job.rejectMessage]] as [string, string][]) : []),
   ];
 
@@ -63,6 +68,17 @@ export function JobViewPage({ kind, id }: Props) {
         links={[{ name: 'งาน', href: paths.csc.dashboard.jobs.root }, BACK[kind], { name: job.title }]}
         action={
           <Stack direction="row" spacing={1}>
+            {kind === 'active' && (
+              <Button
+                variant="outlined"
+                component={RouterLink}
+                href={paths.csc.dashboard.jobs.edit(id)}
+                startIcon={<Iconify icon="solar:pen-bold" />}
+              >
+                แก้ไข
+              </Button>
+            )}
+
             <JobActions kind={kind} id={id} variant="button" onDone={() => router.push(BACK[kind].href)} />
           </Stack>
         }

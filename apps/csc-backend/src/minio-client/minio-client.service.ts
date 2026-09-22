@@ -29,6 +29,19 @@ export class MinioClientService {
     return this.minioService.client;
   }
 
+  /**
+   * The admin sends back the presigned URLs it is still showing; map each to the
+   * stored object path. A value that is already a path passes through.
+   */
+  toObjectPath(value: string): string {
+    if (!value.includes('://')) return value;
+
+    const { pathname } = new URL(value);
+    const path = decodeURIComponent(pathname).replace(/^\//, '');
+
+    return path.startsWith(`${this.bucket}/`) ? path.slice(this.bucket.length + 1) : path;
+  }
+
   /** the bucket is private: the DB stores object paths, this turns one into a temporary URL */
   getFileUrl(path: string): Promise<string> {
     return this.client.presignedUrl('GET', this.bucket, path, SEVEN_DAYS_IN_SECONDS);
