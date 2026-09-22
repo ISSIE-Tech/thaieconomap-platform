@@ -6,15 +6,14 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MinioClientService } from 'src/minio-client/minio-client.service';
 
 // response fields that hold object paths in the DB and must go out as presigned URLs
 export const FILE_FIELDS = new Set(['imageUrls', 'iconUrl']);
 
-// legacy rows hold a host-qualified value with no scheme ("storage.thaieconomap.com/x.png");
-// our own paths are "<uuid>.webp" or "recycle/<uuid>.webp", which never look like "host.tld/"
-const isHostLike = (v: string) => /^[\w.-]+\.[a-z]{2,}\//i.test(v);
-const isExternal = (v: string) => v.startsWith('http') || isHostLike(v);
+import {
+  MinioClientService,
+  isExternalFileValue as isExternal,
+} from 'src/minio-client/minio-client.service';
 const withScheme = (v: string) => (v.startsWith('http') ? v : `https://${v}`);
 
 /**
