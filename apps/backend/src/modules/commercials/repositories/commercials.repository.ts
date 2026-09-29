@@ -213,44 +213,7 @@ export class CommercialsRepository extends EntityRepository<CommercialDocument> 
                 if: {
                   $eq: ['$$opening.enable', true],
                 },
-                then: {
-                  $reduce: {
-                    input: '$$opening.hours',
-                    initialValue: CommercialWorkingStatus.CLOSED,
-                    in: {
-                      $cond: {
-                        if: {
-                          // Check if the current time is between the open and close time => OPEN
-                          $and: [
-                            { $gte: ['$$currentTime', '$$this.open'] },
-                            { $lte: ['$$currentTime', '$$this.close'] },
-                          ],
-                        },
-                        then: CommercialWorkingStatus.OPEN,
-                        else: {
-                          $cond: {
-                            if: {
-                              // Check if the current time is between the open time - NEAR_OPEN_DURATION_MINUTES and the open time => NEAR_OPEN
-                              $and: [
-                                {
-                                  $gte: [
-                                    '$$currentTime',
-                                    {
-                                      $subtract: ['$$this.open', CONFIG.NEAR_OPEN_DURATION_MINUTES],
-                                    },
-                                  ],
-                                },
-                                { $lte: ['$$currentTime', '$$this.open'] },
-                              ],
-                            },
-                            then: CommercialWorkingStatus.NEAR_OPEN,
-                            else: CommercialWorkingStatus.CLOSED,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
+                then: this.buildOpeningHoursWorkingStatus(),
                 else: CommercialWorkingStatus.CLOSED,
               },
             },
@@ -258,6 +221,61 @@ export class CommercialsRepository extends EntityRepository<CommercialDocument> 
         },
       },
     });
+  }
+
+  /**
+   * A day can hold more than one opening window - an overnight window from the previous
+   * day is carried in as its own entry - so the reduce keeps the best result it has
+   * seen so far: OPEN beats NEAR_OPEN beats CLOSED.
+   */
+  @Span('Build Opening Hours Working Status')
+  private buildOpeningHoursWorkingStatus(): Record<string, unknown> {
+    return {
+      $reduce: {
+        input: '$$opening.hours',
+        initialValue: CommercialWorkingStatus.CLOSED,
+        in: {
+          $switch: {
+            branches: [
+              {
+                case: { $eq: ['$$value', CommercialWorkingStatus.OPEN] },
+                then: CommercialWorkingStatus.OPEN,
+              },
+              {
+                // Check if the current time is between the open and close time => OPEN
+                case: {
+                  $and: [
+                    { $gte: ['$$currentTime', '$$this.open'] },
+                    { $lte: ['$$currentTime', '$$this.close'] },
+                  ],
+                },
+                then: CommercialWorkingStatus.OPEN,
+              },
+              {
+                case: { $eq: ['$$value', CommercialWorkingStatus.NEAR_OPEN] },
+                then: CommercialWorkingStatus.NEAR_OPEN,
+              },
+              {
+                // Check if the current time is between the open time - NEAR_OPEN_DURATION_MINUTES and the open time => NEAR_OPEN
+                case: {
+                  $and: [
+                    {
+                      $gte: [
+                        '$$currentTime',
+                        { $subtract: ['$$this.open', CONFIG.NEAR_OPEN_DURATION_MINUTES] },
+                      ],
+                    },
+                    { $lte: ['$$currentTime', '$$this.open'] },
+                  ],
+                },
+                then: CommercialWorkingStatus.NEAR_OPEN,
+              },
+            ],
+            default: CommercialWorkingStatus.CLOSED,
+          },
+        },
+      },
+    };
   }
 
   @Span('Add Is Newly Opened')

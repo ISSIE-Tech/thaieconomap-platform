@@ -11,3 +11,5 @@ export * from './shop-display-opening.schema';
 export * from './shop-display-opening-time.schema';
 
 export * from './shop-opening-time.schema';
+
+export * from './sync-log.schema';

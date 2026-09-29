@@ -43,6 +43,17 @@ export interface CommercialTinyResponseDto {
   phoneNumber?: string;
   moreInfo?: string;
   additionalImageUrl?: string[];
+  // Only shops carry a node. The client opens the node's LINE OA from botInfo.basicId;
+  // botInfo is absent when the node has no LINE channel configured.
+  base?: {
+    _id: string;
+    name?: string;
+    botInfo?: {
+      basicId: string;
+      displayName: string;
+      lineImageUrl: string;
+    };
+  };
 }
 
 export interface PendingCommercialResponseDto {

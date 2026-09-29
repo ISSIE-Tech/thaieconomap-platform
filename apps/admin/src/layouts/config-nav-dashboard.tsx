@@ -101,7 +101,7 @@ export const economapNavData = [
       {
         title: 'ช่วยเหลือแบ่งปัน',
         path: paths['social-sharing'].dashboard.root,
-        icon: ICONS.ecommerce,
+        icon: ICONS.product,
         children: [
           { title: 'รายการ', path: paths['social-sharing'].dashboard.list },
           { title: 'สร้างรายการใหม่', path: paths['social-sharing'].dashboard.new },
@@ -115,9 +115,15 @@ export const economapNavData = [
         ],
       },
       {
+        title: 'ร้านค้าจากตามสั่งตามส่ง',
+        path: paths['tamsang-shops'].dashboard.root,
+        icon: ICONS.order,
+        roles: ['ADMIN'],
+      },
+      {
         title: 'ประกาศ',
         path: paths.announcements.dashboard.root,
-        icon: ICONS.ecommerce,
+        icon: ICONS.blog,
         children: [
           { title: 'รายการ', path: paths.announcements.dashboard.list },
           { title: 'สร้างรายการใหม่', path: paths.announcements.dashboard.new },
@@ -126,7 +132,7 @@ export const economapNavData = [
       {
         title: 'รถพุ่มพวง',
         path: paths.pumpuang.dashboard.root,
-        icon: ICONS.ecommerce,
+        icon: ICONS.tour,
         children: [
           { title: 'รายการ', path: paths.pumpuang.dashboard.list },
           { title: 'สร้างรายการใหม่', path: paths.pumpuang.dashboard.new },

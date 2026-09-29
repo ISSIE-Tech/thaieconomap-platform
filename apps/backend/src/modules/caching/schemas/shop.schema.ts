@@ -17,6 +17,9 @@ export type ShopDocument = HydratedDocument<Shop>;
   versionKey: false,
 })
 export class Shop {
+  @Prop({ required: true, index: true })
+  sourceId: string;
+
   @Prop({ required: true })
   name: string;
 
@@ -30,16 +33,19 @@ export class Shop {
   })
   location: Location;
 
-  @Prop({ required: true })
+  // empty string when the owner never uploaded a photo
+  @Prop()
   imageUrl: string;
 
-  @Prop({ required: true })
+  // nullable upstream
+  @Prop()
   address: string;
 
   @Prop({ required: true })
   commercialOwner: string;
 
-  @Prop({ required: true })
+  // nullable upstream - a shop without a phone is still a real shop
+  @Prop()
   phoneNumber: string;
 
   @Prop({

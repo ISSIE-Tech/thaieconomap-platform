@@ -12,6 +12,7 @@ const ROOTS = {
   FCM_LOGS: '/fcm-logs',
   OTP_LOGS: '/otp-logs',
   CSC: '/csc',
+  TAMSANG_SHOPS: '/tamsang-shops',
 };
 
 // ----------------------------------------------------------------------
@@ -96,6 +97,11 @@ export const paths = {
     dashboard: {
       root: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.FCM_LOGS}`,
       list: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.FCM_LOGS}/list`,
+    },
+  },
+  'tamsang-shops': {
+    dashboard: {
+      root: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.TAMSANG_SHOPS}`,
     },
   },
   'otp-logs': {

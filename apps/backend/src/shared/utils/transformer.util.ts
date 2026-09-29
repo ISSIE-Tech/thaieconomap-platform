@@ -1,3 +1,7 @@
+import { createHash } from 'crypto';
+
+import { Types } from 'mongoose';
+
 import { DAYS_IN_THAI } from '../constants';
 import { LocationDto } from '../dto';
 import { GeoJsonType } from '@thaieconomap/contracts';
@@ -67,4 +71,14 @@ export function convertToGeoJsonLineStringFromCoordinates(
 
 export function convertBytesToMB(bytes: number): number {
   return bytes / 1048576; // 1MB = 1048576 bytes
+}
+
+/**
+ * tamsang-tamsong identifies shops and nodes by uuid, while every id that travels
+ * through this codebase (favorites.targetId, the shops/commercials $unionWith,
+ * findShopsAndCommercialsById) is a mongo ObjectId. Hashing the uuid gives a stable
+ * ObjectId for the same shop on every sync, so nothing downstream has to change.
+ */
+export function transformUuidToObjectId(uuid: string): Types.ObjectId {
+  return new Types.ObjectId(createHash('sha256').update(uuid).digest('hex').slice(0, 24));
 }

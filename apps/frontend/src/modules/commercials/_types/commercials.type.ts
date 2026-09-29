@@ -34,13 +34,14 @@ export type Commercial = {
   types: CommercialType[];
   isNewlyOpened: boolean;
   workingStatus: keyof typeof CommercialWorkingStatus;
-  base: {
+  base?: {
     _id: string;
-    name: string;
-    botInfo: {
+    name?: string;
+    // null until the node has a tamsang-tamsong LINE channel configured
+    botInfo?: {
       basicId: string;
       displayName: string;
-      pictureUrl: string;
+      lineImageUrl: string;
     };
   };
   isFavorite: boolean;

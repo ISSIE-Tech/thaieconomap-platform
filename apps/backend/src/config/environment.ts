@@ -5,6 +5,7 @@ import * as Joi from 'joi';
 export const configuration = Joi.object({
   MONGO_URI: Joi.string().required(),
   TAMSANG_TAMSONG_API: Joi.string().required(),
+  TAMSANG_TAMSONG_SECRET: Joi.string().required(),
   PORT: Joi.number().required(),
   NODE_ENV: Joi.string()
     .valid(...Object.values(Environment))
