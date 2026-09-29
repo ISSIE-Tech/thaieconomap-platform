@@ -13,13 +13,15 @@ export type BaseDocument = HydratedDocument<Base>;
   versionKey: false,
 })
 export class Base {
-  @Prop({ required: true })
+  @Prop({ required: true, index: true })
+  sourceId: string;
+
+  // nullable upstream
+  @Prop()
   name: string;
 
-  @Prop({
-    required: true,
-    type: BotInfoSchema,
-  })
+  // null until the node has a tamsang_tamsong LINE channel configured
+  @Prop({ type: BotInfoSchema })
   botInfo: BotInfo;
 }
 

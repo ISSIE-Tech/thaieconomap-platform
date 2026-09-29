@@ -101,6 +101,7 @@ export class BackofficeController {
     };
   }
 
+  @UseGuards(JwtAccessGuard, RolesGuard)
   @Roles(UserRole.Admin)
   @Delete('job-categories/:jobCategoryId')
   async deleteJobCategory(@ObjectId('jobCategoryId') jobCategoryId: string) {

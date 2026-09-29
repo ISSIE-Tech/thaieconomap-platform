@@ -16,14 +16,15 @@ import { TamsangTamsongService } from '../externals/services';
 import { FavoriteService } from '../users/services';
 
 import { CachingMapper } from './mapper';
-import { BaseRepository, ShopRepository } from './repositories';
-import { ShopDocument } from './schemas';
+import { BaseRepository, ShopRepository, SyncLogRepository } from './repositories';
+import { ShopDocument, SyncStatus, SyncTrigger } from './schemas';
 
 @Injectable()
 export class CachingService {
   constructor(
     private readonly shopRepository: ShopRepository,
     private readonly baseRepository: BaseRepository,
+    private readonly syncLogRepository: SyncLogRepository,
     private readonly tamsangTamsongService: TamsangTamsongService,
     private readonly favoriteService: FavoriteService,
   ) {}
@@ -35,9 +36,17 @@ export class CachingService {
     [CommercialCategory.BUSINESS, FavoriteType.BUSINESSES],
   ]);
 
-  @Span('Update Shop And Base Cache')
+  // Kept separate because the cron library passes its own argument to the tick handler.
   @Cron(CronExpression.EVERY_DAY_AT_1AM)
-  async updateShopAndBaseCache(): Promise<void> {
+  async scheduledShopAndBaseCacheSync(): Promise<void> {
+    await this.updateShopAndBaseCache(SyncTrigger.CRON, null);
+  }
+
+  @Span('Update Shop And Base Cache')
+  async updateShopAndBaseCache(trigger: SyncTrigger, triggeredBy: string | null): Promise<void> {
+    const startedAt = Date.now();
+    const counts = { shopsReceived: 0, shopsSaved: 0, basesSaved: 0 };
+
     try {
       const ctx = `${CachingService.name}-[${getSpanName()}]`;
 
@@ -55,6 +64,8 @@ export class CachingService {
         })}`,
       );
 
+      counts.shopsReceived = shops.length;
+
       if (bases.length > 0) {
         const mapBasesData = this.mapBaseDataToUpdateOneQuery(bases);
 
@@ -63,6 +74,7 @@ export class CachingService {
         );
 
         await this.updateBaseCacheData(mapBasesData);
+        counts.basesSaved = mapBasesData.size;
       }
 
       if (shops.length > 0) {
@@ -73,11 +85,47 @@ export class CachingService {
         );
 
         await this.updateShopCacheData(cleanShopsData);
+        counts.shopsSaved = cleanShopsData.size;
       }
 
       this.logger.log('Caching data updated successfully');
-    } catch (_error) {
+
+      await this.recordSync(trigger, triggeredBy, SyncStatus.SUCCESS, startedAt, counts);
+    } catch (error) {
+      await this.recordSync(trigger, triggeredBy, SyncStatus.FAILURE, startedAt, counts, error);
+
       throw new ErrorException(CODES.TEC_004);
+    }
+  }
+
+  async listShops(search: string | undefined, page: number, limit: number) {
+    return this.shopRepository.findPaginated(search, page, limit);
+  }
+
+  async listSyncLogs(page: number, limit: number) {
+    return this.syncLogRepository.findPaginated(page, limit);
+  }
+
+  // A failed history write must not mask the sync result, so it is only logged.
+  private async recordSync(
+    trigger: SyncTrigger,
+    triggeredBy: string | null,
+    status: SyncStatus,
+    startedAt: number,
+    counts: { shopsReceived: number; shopsSaved: number; basesSaved: number },
+    error?: unknown,
+  ): Promise<void> {
+    try {
+      await this.syncLogRepository.create({
+        trigger,
+        triggeredBy,
+        status,
+        ...counts,
+        durationMs: Date.now() - startedAt,
+        errorMessage: error ? (error instanceof Error ? error.message : String(error)) : null,
+      });
+    } catch (logError) {
+      this.logger.error(`Failed to record sync log: ${logError}`);
     }
   }
 
@@ -169,7 +217,10 @@ export class CachingService {
       if (this.isValidShopData(shop)) {
         const transformedShop = CachingMapper.transformTamsangTamsongShopToShop(shop);
 
-        shopMap.set(shop.id, updateOneQuery({ _id: shop.id }, { $set: transformedShop }));
+        shopMap.set(
+          String(transformedShop._id),
+          updateOneQuery({ _id: transformedShop._id }, { $set: transformedShop }),
+        );
       }
     }
 
@@ -185,25 +236,20 @@ export class CachingService {
       })}`,
     );
 
-    const { id, name, location, imgUrl, opening, profile, base, group, openDay, type } = shop;
-    const { address, latitude, longitude } = location;
-    const { firstname, lastname, phone } = profile;
+    const { id, name, latitude, longitude, baseId, type, ownerUser, hours } = shop;
 
+    // imageUrl, locationAddress and ownerUser.phone are all optional upstream.
+    // Dropping a shop over any of them would delete a real shop from the cache.
     return Boolean(
       id &&
       name &&
-      address &&
       latitude &&
       longitude &&
-      imgUrl &&
-      openDay &&
-      opening &&
-      firstname &&
-      lastname &&
-      phone &&
-      base &&
-      group &&
-      type,
+      baseId &&
+      type &&
+      hours &&
+      ownerUser?.firstname &&
+      ownerUser?.lastname,
     );
   }
 
@@ -223,7 +269,10 @@ export class CachingService {
     for (const base of bases) {
       const transformedBase = CachingMapper.transformTamsangTamsongBaseShopToBase(base);
 
-      baseMap.set(base.id, updateOneQuery({ _id: base.id }, { $set: transformedBase }));
+      baseMap.set(
+        String(transformedBase._id),
+        updateOneQuery({ _id: transformedBase._id }, { $set: transformedBase }),
+      );
     }
 
     return baseMap;

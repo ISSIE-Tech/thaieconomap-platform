@@ -1,8 +1,12 @@
+import { Types } from 'mongoose';
+
 import { ShopDisplayOpening, ShopOpening } from '../../modules/caching/schemas';
 import { Location } from '../schemas';
 
 export interface IBase {
-  _id: string;
+  _id: Types.ObjectId;
+  /** The node id as tamsang-tamsong knows it (uuid). */
+  sourceId: string;
   name: string;
   botInfo: IBotInfo;
 }
@@ -10,11 +14,13 @@ export interface IBase {
 interface IBotInfo {
   basicId: string;
   displayName: string;
-  pictureUrl: string;
+  lineImageUrl: string;
 }
 
 export interface IShop {
-  _id: string;
+  _id: Types.ObjectId;
+  /** The shop id as tamsang-tamsong knows it (uuid). */
+  sourceId: string;
   name: string;
   type: string;
   location: Location;
@@ -22,7 +28,7 @@ export interface IShop {
   address: string;
   commercialOwner: string;
   phoneNumber: string;
-  base: string;
+  base: Types.ObjectId;
   category: string;
   opening: ShopOpening[];
   displayOpening: ShopDisplayOpening[];

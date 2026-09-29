@@ -25,4 +25,5 @@ export const COLLECTION_NAME = {
   deviceTokens: 'device_tokens',
   fcmNotificationLogs: 'fcm_notification_logs',
   otpLogs: 'otp_logs',
+  syncLogs: 'sync_logs',
 };

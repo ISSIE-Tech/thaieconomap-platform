@@ -12,7 +12,7 @@ export class BotInfo {
   displayName: string;
 
   @Prop()
-  pictureUrl: string;
+  lineImageUrl: string;
 }
 
 export const BotInfoSchema = SchemaFactory.createForClass(BotInfo);

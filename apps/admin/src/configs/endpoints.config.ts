@@ -135,6 +135,11 @@ export const endpoints = {
   otp: {
     logs: '/services/thai-economap/otp/logs',
   },
+  caching: {
+    sync: '/services/thai-economap/caching/sync',
+    shops: '/services/thai-economap/caching/shops',
+    syncLogs: '/services/thai-economap/caching/sync-logs',
+  },
   notifications: {
     logs: '/services/thai-economap/notifications/logs',
     tokenCounts: '/services/thai-economap/notifications/token-counts',

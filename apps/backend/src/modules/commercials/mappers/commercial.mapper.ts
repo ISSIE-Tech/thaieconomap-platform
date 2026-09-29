@@ -59,6 +59,14 @@ export class CommercialMapper {
       phoneNumber: obj.phoneNumber,
       moreInfo: obj.moreInfo,
       additionalImageUrl: obj.additionalImageUrl,
+      // Shops only. Without this the client cannot offer the node's LINE OA.
+      base: obj.base
+        ? {
+            _id: obj.base._id?.toString(),
+            name: obj.base.name,
+            botInfo: obj.base.botInfo,
+          }
+        : undefined,
     };
   }
 

@@ -1,82 +1,67 @@
-export interface ITamsangTamsongMetaData {
-  statusCode: string;
-  count: number;
-  currentPage: number;
-  perPage: number;
-  nextPage: number;
-  prevPage: number;
-  lastPage: number;
+import { DayName, TamsangTamsongCommercialType } from '@thaieconomap/contracts';
+
+export interface ITamsangTamsongPaginationMetaData {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
-export interface ITamsangTamsongResponse<T> extends ITamsangTamsongMetaData {
-  data: T[];
+export interface ITamsangTamsongResponse<T> extends ITamsangTamsongPaginationMetaData {
+  items: T[];
 }
+
+export interface ITamsangTamsongShopResponse {
+  id: string;
+  name: string;
+  type: TamsangTamsongCommercialType;
+  baseId: string;
+  /** Empty string when the owner never uploaded a photo. */
+  imageUrl: string;
+  locationAddress: string | null;
+  latitude: number;
+  longitude: number;
+  ownerUser: IShopOwner;
+  hours: IShopHours[];
+}
+
+interface IShopOwner {
+  id: string;
+  firstname: string;
+  lastname: string;
+  /** Null when the owner has no phone on file. Never a reason to drop the shop. */
+  phone: string | null;
+}
+
+export interface IShopHours {
+  day: TamsangTamsongDayName;
+  enabled: boolean;
+  /** Minutes since midnight, Asia/Bangkok. 08:00 => 480. */
+  openTime: number;
+  /** Minutes since midnight. 1440 is end of day. <= openTime means it closes the FOLLOWING day. */
+  closeTime: number;
+}
+
+export type TamsangTamsongDayName = Lowercase<keyof typeof DayName>;
 
 export interface ITamsangTamsongBaseShopResponse {
-  name: string;
   id: string;
-  botInfo: IBotInfo;
+  name: string | null;
+  signature: string;
+  tamsangEnabled: boolean;
+  tamsongPassengerEnabled: boolean;
+  tamsongParcelEnabled: boolean;
+  latitude: number | null;
+  longitude: number | null;
+  serviceRadiusKm: number;
+  locationAddress: string | null;
+  adminPhone: string | null;
+  /** Null when the node has no tamsang_tamsong LINE channel configured yet. */
+  botInfo: IBotInfo | null;
 }
 
 interface IBotInfo {
   basicId: string;
   displayName: string;
-  pictureUrl: string;
-}
-
-export interface ITamsangTamsongShopResponse {
-  location: IShopLocation;
-  active: boolean;
-  imgUrl: string;
-  _id: string;
-  base: string;
-  name: string;
-  type: string;
-  opening: IShopOpening[];
-  group: string;
-  isOpen: boolean;
-  openDay: string;
-  time: IShopTime;
-  id: string;
-  profile: IShopProfile;
-}
-
-interface IShopOpening {
-  enable: boolean;
-  hours: IShopOpeningHour[];
-  _id: string;
-  day: string;
-}
-
-interface IShopOpeningHour {
-  open: number;
-  close: number;
-}
-
-interface IShopTime {
-  open: string;
-  close: string;
-}
-
-interface IShopLocation {
-  address: string;
-  latitude: number;
-  longitude: number;
-}
-
-interface ILineProfile {
-  userId: string;
-  displayName: string;
-  pictureUrl: string;
-  statusMessage: string;
-}
-
-interface IShopProfile {
-  firstname: string;
-  lastname: string;
-  phone: string;
-  description: string;
-  picture: string;
-  _id: string;
-  lineProfile: ILineProfile;
+  lineImageUrl: string;
 }
