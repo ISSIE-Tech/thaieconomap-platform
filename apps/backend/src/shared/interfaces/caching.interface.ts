@@ -9,6 +9,8 @@ export interface IBase {
   sourceId: string;
   name: string;
   botInfo: IBotInfo;
+  location: Location | null;
+  serviceRadiusKm: number;
 }
 
 interface IBotInfo {

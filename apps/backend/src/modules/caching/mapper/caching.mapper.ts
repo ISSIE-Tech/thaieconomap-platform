@@ -78,6 +78,14 @@ export class CachingMapper {
       sourceId: data.id,
       name: data.name ?? undefined,
       botInfo: data.botInfo ?? undefined,
+      location:
+        data.latitude != null && data.longitude != null
+          ? transformLatitudeAndLongitudeToGeoJson({
+              latitude: data.latitude,
+              longitude: data.longitude,
+            })
+          : null,
+      serviceRadiusKm: data.serviceRadiusKm,
     };
   }
 

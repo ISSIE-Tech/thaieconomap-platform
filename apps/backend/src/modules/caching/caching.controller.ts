@@ -79,6 +79,16 @@ export class CachingController {
     return this.cachingService.listShops(dto.search, Number(dto.page ?? 1), Number(dto.limit ?? 20));
   }
 
+  // All cached nodes; there are few enough that the admin pages through them client-side.
+  @ApiOkResponse({ description: 'Bases cached from tamsang-tamsong.' })
+  @ApiForbiddenResponse({ description: DOC_DESCRIPTION.INCLUDE_ROLES(UserRole.ADMIN) })
+  @Post('bases')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  async listBases() {
+    return this.cachingService.listBases();
+  }
+
   // Hides a tamsang shop from the public map without touching tamsang itself.
   @ApiOkResponse({ description: 'Shop visibility updated.' })
   @ApiBadRequestResponse({ description: DOC_DESCRIPTION.MUST_BE_MONGOID('shopId') })

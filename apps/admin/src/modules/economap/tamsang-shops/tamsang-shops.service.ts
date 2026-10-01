@@ -21,6 +21,15 @@ export type TamsangShop = {
   hidden?: boolean;
 };
 
+export type TamsangBase = {
+  _id: string;
+  sourceId: string;
+  name?: string;
+  botInfo?: { basicId: string; displayName: string; lineImageUrl: string };
+  location?: { coordinates: [number, number] } | null;
+  serviceRadiusKm?: number;
+};
+
 type Paginated<T> = { data: T[]; total: number };
 
 type ListParams = { page: string; limit: string; search?: string };
@@ -36,6 +45,13 @@ export const useGetTamsangShops = (params: ListParams) =>
       (await axios.post<ApiResponse<Paginated<TamsangShop>>>(endpoints.caching.shops, params)).data
         .data,
     placeholderData: keepPreviousData,
+  });
+
+export const useGetTamsangBases = () =>
+  useQuery({
+    queryKey: [TAMSANG_SHOPS_QUERY_KEY, 'bases'],
+    queryFn: async () =>
+      (await axios.post<ApiResponse<TamsangBase[]>>(endpoints.caching.bases)).data.data,
   });
 
 export const useSetTamsangShopHidden = () => {
