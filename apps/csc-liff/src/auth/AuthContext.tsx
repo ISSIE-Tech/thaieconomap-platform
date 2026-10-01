@@ -135,6 +135,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const liff = (await import('@line/liff')).default;
       await liff.init({ liffId: LIFF_ID });
 
+      // LIFF hands back its cached ID token even after it expires, and the
+      // backend rejects that; log in again to get a fresh one
+      const idToken = liff.getDecodedIDToken();
+      if (!idToken?.exp || idToken.exp * 1000 <= Date.now()) {
+        if (liff.isLoggedIn()) liff.logout();
+        liff.login({ redirectUri: window.location.href });
+        return;
+      }
+
       const config = {
         route: '/auth/authenticate',
         tokenId: liff.getIDToken(),

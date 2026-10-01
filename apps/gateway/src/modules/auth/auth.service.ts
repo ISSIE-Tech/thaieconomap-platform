@@ -134,7 +134,7 @@ export class AuthService {
     return this.oauthLogin(authorizationCode, this.facebookOauthService, OauthProvider.FACEBOOK);
   }
 
-  async generateCredential(sub: string): Promise<ICredentials> {
+  async generateCredential(sub: string, replacedRefreshToken?: string): Promise<ICredentials> {
     this.logger.debug(
       `{${AuthService.name}-${this.generateCredential.name}} (called)\
       \n[param] ${prettyObjectString({
@@ -144,7 +144,7 @@ export class AuthService {
 
     return {
       accessToken: this.generateAccessToken(sub),
-      refreshToken: await this.generateRefreshToken(sub),
+      refreshToken: await this.generateRefreshToken(sub, replacedRefreshToken),
     };
   }
 
@@ -286,7 +286,7 @@ export class AuthService {
     });
   }
 
-  private async generateRefreshToken(userId: string): Promise<string> {
+  private async generateRefreshToken(userId: string, replacedRefreshToken?: string): Promise<string> {
     this.logger.debug(`{${AuthService.name}-${this.generateRefreshToken.name}} (called)`);
 
     const payload: ITokenPayload = {
@@ -298,7 +298,7 @@ export class AuthService {
       expiresIn: this.configService.get<string>(globalConfig.JWT_REFRESH_TOKEN_EXPIRATION_TIME) as any,
     });
 
-    await this.userService.updateRefreshToken(userId, token);
+    await this.userService.updateRefreshToken(userId, token, replacedRefreshToken);
 
     return token;
   }

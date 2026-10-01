@@ -6,6 +6,8 @@ import { useMemo, useEffect, useCallback } from 'react';
 
 import { useSetState } from 'src/hooks/use-set-state';
 
+import { refreshAccessToken } from 'src/utils/axios';
+
 import { useLingLogin } from 'src/auth/hooks/use-line-login';
 import { useAuthentikLogin } from 'src/auth/hooks/use-authentik-login';
 import { useGetUserProfile } from 'src/auth/hooks/use-get-user-profile';
@@ -66,15 +68,21 @@ export function AuthProvider({ children }: Props) {
 
   const checkUserSession = useCallback(async () => {
     try {
-      const accessToken = localStorage.getItem(STORAGE_KEY);
+      let accessToken = localStorage.getItem(STORAGE_KEY);
 
-      if (accessToken && isValidToken(accessToken)) {
+      if (accessToken && !isValidToken(accessToken)) {
+        // expired access token: stay signed in while the refresh token is still good
+        accessToken = await refreshAccessToken().catch(() => null);
+      }
+
+      if (accessToken) {
         setSession(accessToken);
 
         const user = await getUserProfile.mutateAsync();
 
         setState({ user: { ...user.data, accessToken }, loading: false });
       } else {
+        await setSession(null);
         setState({ user: null, loading: false });
       }
     } catch (error) {

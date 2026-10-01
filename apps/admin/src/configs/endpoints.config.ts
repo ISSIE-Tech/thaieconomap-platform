@@ -80,7 +80,7 @@ export const endpoints = {
       link: getValueBasedOnEnv(authentikAuth.dev.link, authentikAuth.prod.link),
       login: getValueBasedOnEnv(authentikAuth.dev.login, authentikAuth.prod.login),
     },
-    refresh: getValueBasedOnEnv('vDev/auth/refresh', '/auth/refresh'),
+    refresh: 'auth/refresh', // gateway route is version-neutral
     profile: '/users/profile',
   },
   manager: {

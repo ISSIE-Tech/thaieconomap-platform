@@ -19,6 +19,8 @@ import {
 import { OauthRepository, UsersRepository } from './repositories';
 import { UserDocument } from './schemas';
 
+const MAX_REFRESH_TOKENS = 10;
+
 @Injectable()
 export class UsersService {
   private readonly baseProjection = { refreshToken: 0 };
@@ -162,12 +164,36 @@ export class UsersService {
     return updatedUser;
   }
 
-  async updateRefreshToken(userId: string, refreshToken: string): Promise<UserDocument> {
-    const hashedToken = await generateSha256Hash(refreshToken);
+  // One refresh token hash per signed-in device, so signing in elsewhere doesn't
+  // sign the others out. A refresh swaps out only the token it used; the oldest
+  // sessions drop off past MAX_REFRESH_TOKENS.
+  async updateRefreshToken(
+    userId: string,
+    refreshToken: string,
+    replacedRefreshToken?: string,
+  ): Promise<UserDocument> {
+    const hashedToken = generateSha256Hash(refreshToken);
+    const replacedHash = replacedRefreshToken ? generateSha256Hash(replacedRefreshToken) : null;
+    // pipeline update so it stays atomic and also converts the legacy single-string value
+    const current = {
+      $cond: [
+        { $isArray: '$refreshToken' },
+        '$refreshToken',
+        { $cond: [{ $eq: [{ $type: '$refreshToken' }, 'string'] }, ['$refreshToken'], []] },
+      ],
+    };
+
+    const kept = { $filter: { input: current, cond: { $ne: ['$$this', replacedHash] } } };
 
     return this.usersRepository.findByIdAndUpdate(
       userId,
-      { refreshToken: hashedToken },
+      [
+        {
+          $set: {
+            refreshToken: { $slice: [{ $concatArrays: [kept, [hashedToken]] }, -MAX_REFRESH_TOKENS] },
+          },
+        },
+      ] as UpdateQuery<unknown>,
       { projection: this.baseProjection },
     );
   }

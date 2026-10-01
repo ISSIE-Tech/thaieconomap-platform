@@ -168,8 +168,11 @@ export class AuthController {
   })
   @Post('refresh')
   @UseGuards(JwtRefreshGuard)
-  async refreshAccessToken(@CurrentUser('_id') userId: string): Promise<ICredentials> {
-    return this.authService.generateCredential(userId);
+  async refreshAccessToken(
+    @CurrentUser('_id') userId: string,
+    @Body('refreshToken') refreshToken: string,
+  ): Promise<ICredentials> {
+    return this.authService.generateCredential(userId, refreshToken);
   }
 
   @ApiResponse({ status: 200, description: 'Revoked user credentials.' })

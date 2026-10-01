@@ -3,6 +3,7 @@
 import type { AuthState } from '../_types/auth.type';
 
 import { toast } from 'src/shared/components/snackbar';
+import { refreshAccessToken } from 'src/shared/utils/axios';
 import { useSetState } from 'src/shared/hooks/use-set-state';
 import { useMemo, useEffect, useCallback, type PropsWithChildren } from 'react';
 
@@ -56,15 +57,21 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 
   const checkUserSession = useCallback(async () => {
     try {
-      const accessToken = localStorage.getItem(STORAGE_KEY);
+      let accessToken = localStorage.getItem(STORAGE_KEY);
 
-      if (accessToken && isValidToken(accessToken)) {
+      if (accessToken && !isValidToken(accessToken)) {
+        // expired access token: stay signed in while the refresh token is still good
+        accessToken = await refreshAccessToken().catch(() => null);
+      }
+
+      if (accessToken) {
         setSession(accessToken);
 
         const user = await getUserProfile();
 
         setState({ user: { ...user }, loading: false });
       } else {
+        await setSession(null);
         setState({ user: null, loading: false });
       }
     } catch (error) {
