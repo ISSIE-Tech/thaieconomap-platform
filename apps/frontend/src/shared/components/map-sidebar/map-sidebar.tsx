@@ -273,6 +273,8 @@ type ResultRowProps = {
   imageUrl?: string;
   fallbackIcon: string;
   isNew?: boolean;
+  // extra marker after the name, e.g. a partner logo
+  badge?: ReactNode;
   subtitle?: string;
   status?: { label: string; tone: StatusTone };
   meta?: string;
@@ -286,6 +288,7 @@ export function ResultRow({
   imageUrl,
   fallbackIcon,
   isNew,
+  badge,
   subtitle,
   status,
   meta,
@@ -317,6 +320,7 @@ export function ResultRow({
             {name}
           </Typography>
           {isNew && <NewBadge />}
+          {badge}
         </Stack>
         {subtitle && (
           <Typography fontSize={13} fontWeight={500} color="primary.dark" noWrap>
@@ -572,8 +576,8 @@ export function DetailLine({ k, v }: { k?: string; v: ReactNode }) {
 
 /**
  * Locate (every screen size) + zoom (desktop; phones pinch), bottom-right over the map.
- * Locate asks the browser for a fresh position, so it also works when permission was
- * refused at page load and re-prompts where the browser allows it.
+ * Locate asks the browser for a fresh position, so it re-prompts whenever the browser still
+ * allows a prompt (e.g. the page-load prompt was dismissed rather than blocked).
  */
 export function MapControls({ map, zoom = true }: { map: LeafletMap | null; zoom?: boolean }) {
   const setGeolocation = useGeolocationStore((state) => state.setGeolocation);
@@ -593,11 +597,28 @@ export function MapControls({ map, zoom = true }: { map: LeafletMap | null; zoom
         map?.flyTo(position, Math.max(map.getZoom(), 16));
         setLocating(false);
       },
-      () => {
-        toast.warning('ไม่สามารถระบุตำแหน่งของคุณได้', {
-          description: 'กรุณาอนุญาตการเข้าถึงตำแหน่งในการตั้งค่าเบราว์เซอร์',
-        });
+      (error) => {
         setLocating(false);
+
+        if (error.code !== error.PERMISSION_DENIED) {
+          toast.warning('ไม่สามารถระบุตำแหน่งของคุณได้', { description: 'กรุณาลองใหม่อีกครั้ง' });
+          return;
+        }
+
+        // Browsers never re-prompt once the user blocked it - only the site settings can undo it.
+        // Locate as soon as they flip it back on, so they don't have to tap again.
+        toast.warning('ยังไม่ได้อนุญาตให้เข้าถึงตำแหน่ง', {
+          description:
+            'กดไอคอนแม่กุญแจหรือการตั้งค่าข้างช่อง URL แล้วเปิด "ตำแหน่ง" ระบบจะระบุตำแหน่งให้อัตโนมัติ',
+        });
+        navigator.permissions
+          ?.query({ name: 'geolocation' })
+          .then((status) => {
+            status.onchange = () => {
+              if (status.state === 'granted') locate();
+            };
+          })
+          .catch(() => {});
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );

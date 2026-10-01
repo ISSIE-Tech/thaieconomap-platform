@@ -184,6 +184,8 @@ export class CommercialsRepository extends EntityRepository<CommercialDocument> 
     const unionPipeline = [];
 
     this.buildPipeline(unionPipeline, filterQuery);
+    // After buildPipeline: $geoNear has to stay the first stage.
+    this.appendMatchStage(unionPipeline, { hidden: { $ne: true } });
     this.appendLookupStage(unionPipeline, COLLECTION_NAME.bases, 'base', '_id', 'base');
     this.appendUnwindStage(unionPipeline, '$base');
 

@@ -69,6 +69,10 @@ export class Shop {
     type: [ShopDisplayOpeningSchema],
   })
   displayOpening: ShopDisplayOpening[];
+
+  // Set by an admin, never by the sync - the sync only $sets upstream fields, so this survives it.
+  @Prop({ default: false })
+  hidden: boolean;
 }
 
 export const ShopSchema = SchemaFactory.createForClass(Shop);

@@ -26,6 +26,7 @@ import {
   ResultsHeader,
 } from 'src/shared/components/map-sidebar';
 
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
@@ -37,6 +38,7 @@ import { PumpuangSidebar } from '../pumpuangs/pumpuang-sidebar';
 import { CommercialActionButtons } from './commercial-detail-drawer';
 import { useTinyCommercialsFromUrl } from './_hooks/use-tiny-commercials-from-url';
 import {
+  isOrderable,
   getIsDefault,
   commercialFilter,
   CommercialCategory,
@@ -50,6 +52,16 @@ export const STATUS_TONE = { OPEN: 'success', CLOSED: 'error', NEAR_OPEN: 'warni
 
 export const commercialIcon = (category: keyof typeof CommercialCategory) =>
   category === 'RESTAURANT' ? 'fluent:food-24-filled' : 'solar:shop-2-bold';
+
+const TamsangBadge = () => (
+  <Box
+    component="img"
+    src="/assets/images/logo-tamsang-tamsong.png"
+    alt="สั่งผ่านตามสั่งตามส่งได้"
+    title="สั่งผ่านตามสั่งตามส่งได้"
+    sx={{ height: 22, width: 'auto', flexShrink: 0 }}
+  />
+);
 
 export function CommercialSidebar() {
   const pathname = usePathname();
@@ -106,11 +118,14 @@ function CommercialResults({ category }: { category: keyof typeof CommercialCate
   const workingHour = searchParams.get('workingHour') || commercialFilterDefault.workingHour;
   const location = searchParams.get('location') || commercialFilterDefault.location;
   const types = searchParams.get('types') ?? '';
-  const filterDirty = onlyNew || !getIsDefault(workingHour as never, location as never, types);
+  const orderable = searchParams.get('orderable');
+  const filterDirty =
+    onlyNew || !getIsDefault(workingHour as never, location as never, types, orderable);
 
   const setParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams);
-    params.set(key, value);
+    if (value) params.set(key, value);
+    else params.delete(key);
     router.replace(`${pathname}?${params.toString()}`);
   };
 
@@ -161,6 +176,11 @@ function CommercialResults({ category }: { category: keyof typeof CommercialCate
             onClick={() => setParam('location', location === 'NEAR_ME' ? 'ANYWHERE' : 'NEAR_ME')}
           />
           <QuickChip label="ร้านใหม่แกะกล่อง" selected={onlyNew} onClick={() => setOnlyNew(!onlyNew)} />
+          <QuickChip
+            label="สั่งผ่านตามสั่งตามส่ง"
+            selected={!!orderable}
+            onClick={() => setParam('orderable', orderable ? '' : '1')}
+          />
         </Stack>
       </Stack>
 
@@ -174,6 +194,7 @@ function CommercialResults({ category }: { category: keyof typeof CommercialCate
             imageUrl={c.imageUrl}
             fallbackIcon={commercialIcon(c.category)}
             isNew={c.isNewlyOpened}
+            badge={isOrderable(c) && <TamsangBadge />}
             subtitle={c.types?.map((t) => t.name).join(', ')}
             status={
               c.workingStatus && {

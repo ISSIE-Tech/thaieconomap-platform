@@ -40,7 +40,8 @@ export interface CommercialTinyResponseDto {
   // computed by the aggregation from `opening` / `approvedAt`
   workingStatus?: CommercialWorkingStatus;
   isNewlyOpened?: boolean;
-  // NOTE: only present on the single-commercial detail route (`GET /:commercialId/tiny`);
+  // NOTE: the marker-list route also carries base.botInfo.basicId (orderable marker);
+  // the rest is only present on the single-commercial detail route (`GET /:commercialId/tiny`);
   // the marker-list route projects these away.
   commercialOwner?: string;
   phoneNumber?: string;

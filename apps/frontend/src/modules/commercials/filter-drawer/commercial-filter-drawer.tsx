@@ -14,7 +14,7 @@ import Divider from '@mui/material/Divider';
 import { FilterHeader } from './filter-header';
 import useGetBusinessTypes from '../_hooks/use-get-business-types';
 import useGetRestaurantTypes from '../_hooks/use-get-restaurant-types';
-import { TypeTags, LocationTags, WorkingHourTags } from './filter-tags';
+import { TypeTags, TagsSection, LocationTags, WorkingHourTags } from './filter-tags';
 import {
   type LocationFilter,
   type WorkingHourFilter,
@@ -25,6 +25,8 @@ type Props = {
   controller: UseBooleanReturn;
 };
 
+const ORDERABLE_FILTER = { ALL: 'ร้านทั้งหมด', ORDERABLE: 'สั่งผ่านตามสั่งตามส่งได้' };
+
 export function CommercialFilterDrawer({ controller }: Props) {
   const pathname = usePathname();
 
@@ -33,6 +35,7 @@ export function CommercialFilterDrawer({ controller }: Props) {
     commercialFilterDefault.workingHour
   );
   const [location, setLocation] = useState<LocationFilter>(commercialFilterDefault.location);
+  const [orderable, setOrderable] = useState(false);
 
   const { data: restaurantTypes } = useGetRestaurantTypes();
   const { data: businessTypes } = useGetBusinessTypes();
@@ -66,6 +69,7 @@ export function CommercialFilterDrawer({ controller }: Props) {
   const commercialWorkingHour = searchParams.get('workingHour');
   const commercialLocation = searchParams.get('location');
   const commercialSavedTypes = searchParams.get('types');
+  const commercialOrderable = searchParams.get('orderable');
 
   const handleConfirmClick = useCallback(() => {
     const params = new URLSearchParams(searchParams);
@@ -75,12 +79,14 @@ export function CommercialFilterDrawer({ controller }: Props) {
     if (workingHour) params.set('workingHour', workingHour);
     if (location) params.set('location', location);
     if (types) params.set('types', selectedTypes.join(','));
+    if (orderable) params.set('orderable', '1');
+    else params.delete('orderable');
 
     controller.onFalse();
     replace(`${pathname}?${params.toString()}`);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workingHour, location, types]);
+  }, [workingHour, location, types, orderable]);
 
   // Set the initial value of filter
   useEffect(() => {
@@ -94,6 +100,7 @@ export function CommercialFilterDrawer({ controller }: Props) {
       (commercialWorkingHour as WorkingHourFilter) || commercialFilterDefault.workingHour
     );
     setLocation((commercialLocation as LocationFilter) || commercialFilterDefault.location);
+    setOrderable(!!commercialOrderable);
 
     if (pathname === paths.commercials.restaurants) {
       commercialTypes = restaurantTypes;
@@ -113,6 +120,7 @@ export function CommercialFilterDrawer({ controller }: Props) {
   }, [
     businessTypes,
     commercialLocation,
+    commercialOrderable,
     commercialSavedTypes,
     commercialWorkingHour,
     controller.value,
@@ -139,6 +147,15 @@ export function CommercialFilterDrawer({ controller }: Props) {
         <WorkingHourTags workingHour={workingHour} setWorkingHour={setWorkingHour} />
 
         <LocationTags location={location} setLocation={setLocation} />
+
+        <TagsSection
+          title="ตามสั่งตามส่ง"
+          filter={ORDERABLE_FILTER}
+          selectedTag={orderable ? 'ORDERABLE' : 'ALL'}
+          setSelectedTag={(tag) => setOrderable(tag === 'ORDERABLE')}
+        />
+
+        <Divider />
 
         <TypeTags types={types} setTypes={setTypes} typeNames={commercialTypeNames} />
 

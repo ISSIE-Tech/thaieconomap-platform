@@ -18,6 +18,7 @@ export type TamsangShop = {
   commercialOwner: string;
   phoneNumber?: string;
   base?: { _id: string; name?: string } | null;
+  hidden?: boolean;
 };
 
 export type SyncLogEntry = {
@@ -73,5 +74,15 @@ export const useSyncTamsangShops = () => {
         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SHOPS] }),
         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SYNC_LOGS] }),
       ]),
+  });
+};
+
+export const useSetTamsangShopHidden = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, hidden }: { id: string; hidden: boolean }) =>
+      axios.patch(endpoints.caching.shopHidden(id), { hidden }),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SHOPS] }),
   });
 };
