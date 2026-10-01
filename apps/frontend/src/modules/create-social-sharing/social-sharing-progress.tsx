@@ -4,6 +4,14 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+/** Short step names for the desktop stepper. */
+export const SHARING_STEP_TITLES = [
+  'ข้อมูลสิ่งของ',
+  'ข้อมูลผู้แบ่งปัน',
+  'ตำแหน่งสิ่งของ',
+  'รูปภาพสิ่งของ',
+];
+
 type Props = {
   progressPercentage: number;
   step: number;

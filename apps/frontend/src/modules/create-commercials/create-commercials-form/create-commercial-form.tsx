@@ -5,17 +5,18 @@ import type { FormSteps, CommercialType } from '../_types/create-commercials.typ
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { FormActions } from 'src/modules/form-wizard';
 import { Form } from 'src/shared/components/hook-form';
 import { toast } from 'src/shared/components/snackbar';
 
 import { reformatFormData } from '../reformat-data';
 import { formSchema, defaultValue } from './form-validators';
 import useCreateAdditionalImage from '../_hooks/use-create-additional-images';
-import FormButton from '../../../shared/components/custom-buttons/form-button';
 import useCreatePendingCommercials from '../_hooks/use-create-pending-commercials';
 
 type Props = {
   handleNextFormProgress: () => void;
+  handleBackFormProgress: () => void;
   progressStep: number;
   commercialType: CommercialType;
   loading: UseBooleanReturn;
@@ -24,6 +25,7 @@ type Props = {
 
 const CreateCommercialForm = ({
   handleNextFormProgress,
+  handleBackFormProgress,
   progressStep,
   commercialType,
   loading,
@@ -72,7 +74,12 @@ const CreateCommercialForm = ({
   return (
     <Form methods={methods}>
       <FormComponent />
-      <FormButton onClick={buttonOnClick} label={buttonLabel} loading={loading.value} />
+      <FormActions
+        label={buttonLabel}
+        onNext={buttonOnClick}
+        onBack={handleBackFormProgress}
+        loading={loading.value}
+      />
     </Form>
   );
 };

@@ -28,6 +28,20 @@ export default function AccountMenu() {
 
         <Stack spacing={1}>
           <NavigateLink
+            text="ร้านค้าของฉัน"
+            onClick={() => router.push(paths.account['my-shops'])}
+          />
+
+          <Divider />
+
+          <NavigateLink
+            text="สิ่งของที่ฉันแบ่งปัน"
+            onClick={() => router.push(paths.account['my-sharings'])}
+          />
+
+          <Divider />
+
+          <NavigateLink
             text="รายการโปรดของฉัน"
             onClick={() => router.push(paths.account.favorites)}
           />

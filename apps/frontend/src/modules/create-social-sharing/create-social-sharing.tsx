@@ -7,18 +7,16 @@ import { useRouter } from 'next/navigation';
 import { paths } from 'src/shared/routes/paths.config';
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-
+import { FormWizardShell } from '../form-wizard';
 import RegisterSuccessful from './register-successful';
 import SocialSharingHeader from './social-sharing-header';
 import useGetConditions from './_hooks/use-get-conditions';
 import useGetShareTypes from './_hooks/use-get-share-types';
-import SocialSharingProgress from './social-sharing-progress';
 import ImageForm from './create-social-sharing-form/image-form';
 import ContactForm from './create-social-sharing-form/contact-form';
 import LocationForm from './create-social-sharing-form/location-form';
 import InformationForm from './create-social-sharing-form/information-form';
+import SocialSharingProgress, { SHARING_STEP_TITLES } from './social-sharing-progress';
 import { ownerForm, informationForm } from './create-social-sharing-form/form-validators';
 import CreateSocialSharingForm from './create-social-sharing-form/create-social-sharing-form';
 
@@ -89,25 +87,29 @@ const CreateSocialShaing = () => {
   // ----------------------------------------------------------------------------------------------------------------
 
   return (
-    <Stack sx={{ height: '100vh' }}>
-      {isSuccess.value ? (
-        <RegisterSuccessful handleFormSuccessful={handleFormSuccessful} />
-      ) : (
+    <FormWizardShell
+      title="แบ่งปันสิ่งของ"
+      illustration="/assets/illustrations/social-sharing-register-header.svg"
+      steps={SHARING_STEP_TITLES}
+      step={progressStep}
+      mobileHeader={
         <>
           <SocialSharingHeader handleBackFromProgress={handleBackFormProgress} />
           <SocialSharingProgress progressPercentage={progressPercentage} step={progressStep} />
-
-          <Box sx={{ flexGrow: 1, margin: '20px', paddingBottom: '100px' }}>
-            <CreateSocialSharingForm
-              progressStep={progressStep}
-              handleNextFormProgress={handleNextFormProgress}
-              loading={loading}
-              formSteps={formSteps}
-            />
-          </Box>
         </>
-      )}
-    </Stack>
+      }
+      success={
+        isSuccess.value && <RegisterSuccessful handleFormSuccessful={handleFormSuccessful} />
+      }
+    >
+      <CreateSocialSharingForm
+        progressStep={progressStep}
+        handleNextFormProgress={handleNextFormProgress}
+        handleBackFormProgress={handleBackFormProgress}
+        loading={loading}
+        formSteps={formSteps}
+      />
+    </FormWizardShell>
   );
 };
 

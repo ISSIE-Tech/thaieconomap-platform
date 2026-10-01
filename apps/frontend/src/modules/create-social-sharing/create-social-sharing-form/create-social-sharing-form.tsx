@@ -5,10 +5,10 @@ import type { FormSteps } from '../_types/create-social-sharing.type';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { FormActions } from 'src/modules/form-wizard';
 import { Form } from 'src/shared/components/hook-form';
 import { toast } from 'src/shared/components/snackbar';
 
-import FormButton from './form-button';
 import { reformatFormData } from '../reformat-data';
 import { formSchema, defaultValue } from './form-validators';
 import useCreatePendingShares from '../_hooks/use-create-pending-shares';
@@ -16,6 +16,7 @@ import useCreateAdditionalImage from '../_hooks/use-create-additional-image';
 
 type Props = {
   handleNextFormProgress: () => void;
+  handleBackFormProgress: () => void;
   progressStep: number;
   loading: UseBooleanReturn;
   formSteps: FormSteps[];
@@ -23,6 +24,7 @@ type Props = {
 
 const CreateSocialSharingForm = ({
   handleNextFormProgress,
+  handleBackFormProgress,
   progressStep,
   loading,
   formSteps,
@@ -66,7 +68,12 @@ const CreateSocialSharingForm = ({
   return (
     <Form methods={methods}>
       <FormComponent />
-      <FormButton onClick={buttonOnClick} label={buttonLabel} loading={loading.value} />
+      <FormActions
+        label={buttonLabel}
+        onNext={buttonOnClick}
+        onBack={handleBackFormProgress}
+        loading={loading.value}
+      />
     </Form>
   );
 };

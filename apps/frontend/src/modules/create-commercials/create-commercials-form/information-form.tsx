@@ -4,9 +4,10 @@ import type { CommercialType, CommercialOptions } from '../_types/create-commerc
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { RHFTextField, RHFAutocomplete } from 'src/shared/components/hook-form';
+import { fullRowSx, fieldGridSx, mobileHeadingSx } from 'src/modules/form-wizard';
 
+import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 type Props = {
@@ -44,15 +45,16 @@ const InformationForm = ({ commercialType, districts, types }: Props) => {
   }, [province, setValue]);
 
   return (
-    <Stack spacing={2}>
-      <Typography variant="body1" fontWeight="bold">
+    <Box sx={fieldGridSx}>
+      <Typography variant="body1" fontWeight="bold" sx={mobileHeadingSx}>
         {`กรอกข้อมูล${commercialType}`}
       </Typography>
-      <RHFTextField name="name" label={`ชื่อ${commercialType}`} />
+      <RHFTextField name="name" label={`ชื่อ${commercialType}`} sx={fullRowSx} />
 
       <RHFAutocomplete
         name="types"
         label={`ประเภท${commercialType}`}
+        sx={fullRowSx}
         multiple
         freeSolo
         options={types}
@@ -118,8 +120,14 @@ const InformationForm = ({ commercialType, districts, types }: Props) => {
         }}
       />
 
-      <RHFTextField name="moreInfo" label="ข้อมูลเพิ่มเติม เช่น สถานที่จอดรถ" multiline rows={4} />
-    </Stack>
+      <RHFTextField
+        name="moreInfo"
+        label="ข้อมูลเพิ่มเติม เช่น สถานที่จอดรถ"
+        multiline
+        rows={4}
+        sx={fullRowSx}
+      />
+    </Box>
   );
 };
 

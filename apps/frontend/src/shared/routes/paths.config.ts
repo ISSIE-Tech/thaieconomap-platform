@@ -45,6 +45,8 @@ export const paths = {
     profile: `/${PATH.ACCOUNT}/profile`,
     'form-history': `/${PATH.ACCOUNT}/form-history`,
     favorites: `/${PATH.ACCOUNT}/favorites`,
+    'my-shops': `/${PATH.ACCOUNT}/my-shops`,
+    'my-sharings': `/${PATH.ACCOUNT}/my-sharings`,
     'our-services': `/${PATH.ACCOUNT}/our-services`,
   },
   commercials: {

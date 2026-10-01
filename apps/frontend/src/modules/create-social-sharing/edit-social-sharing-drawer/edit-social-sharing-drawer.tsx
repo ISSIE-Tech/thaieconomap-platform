@@ -11,20 +11,19 @@ import CancelModal from 'src/modules/create-commercials/edit-commercial-drawer/c
 import EditSuccessful from 'src/modules/create-commercials/edit-commercial-drawer/edit-successful';
 import { FormLoading } from 'src/shared/components/hook-form/custom-form-loading/edit-form-loading';
 
-import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 
+import { FormWizardShell } from '../../form-wizard';
 import { reformatDefaultValues } from './form-validators';
 import SocialSharingHeader from '../social-sharing-header';
 import useGetConditions from '../_hooks/use-get-conditions';
 import useGetShareTypes from '../_hooks/use-get-share-types';
-import SocialSharingProgress from '../social-sharing-progress';
 import EditSocialSharingForm from './edit-social-sharing-form';
 import ImageForm from '../create-social-sharing-form/image-form';
 import ContactForm from '../create-social-sharing-form/contact-form';
 import LocationForm from '../create-social-sharing-form/location-form';
 import InformationForm from '../create-social-sharing-form/information-form';
+import SocialSharingProgress, { SHARING_STEP_TITLES } from '../social-sharing-progress';
 import { ownerForm, informationForm } from '../create-social-sharing-form/form-validators';
 
 type Props = {
@@ -118,59 +117,44 @@ const EditSocialSharingDrawer = ({ sharing, openDrawer }: Props) => {
       onClose={openDrawer.onFalse}
       PaperProps={{
         sx: {
-          width: { xs: '100vw', md: 480 },
+          width: '100vw',
           overflowX: 'hidden',
-          overflowY: 'scroll',
-          pb: 8,
+          overflowY: { xs: 'scroll', md: 'hidden' },
+          pb: { xs: 8, md: 0 },
         },
       }}
       anchor="right"
     >
-      {isSuccess.value ? (
-        <EditSuccessful />
-      ) : (
-        <>
-          <SocialSharingHeader handleBackFromProgress={handleBackFormProgress} />
-          <SocialSharingProgress progressPercentage={progressPercentage} step={progressStep} />
+      <FormWizardShell
+        title="แก้ไขสิ่งของที่แบ่งปัน"
+        illustration="/assets/illustrations/social-sharing-register-header.svg"
+        steps={SHARING_STEP_TITLES}
+        step={progressStep}
+        mobileHeader={
+          <>
+            <SocialSharingHeader handleBackFromProgress={handleBackFormProgress} />
+            <SocialSharingProgress progressPercentage={progressPercentage} step={progressStep} />
+          </>
+        }
+        success={isSuccess.value && <EditSuccessful />}
+      >
+        {types && conditions && sharing && defaultValue ? (
+          <EditSocialSharingForm
+            handleNextFormProgress={handleNextFormProgress}
+            handleBackFormProgress={handleBackFormProgress}
+            onCancel={openCancelModal.onTrue}
+            sharing={sharing}
+            progressStep={progressStep}
+            loading={loading}
+            defaultValue={defaultValue}
+            formSteps={formSteps}
+          />
+        ) : (
+          <FormLoading />
+        )}
+      </FormWizardShell>
 
-          {types && conditions && sharing && defaultValue ? (
-            <Box sx={{ flexGrow: 1, margin: '20px' }}>
-              <EditSocialSharingForm
-                handleNextFormProgress={handleNextFormProgress}
-                sharing={sharing}
-                progressStep={progressStep}
-                loading={loading}
-                defaultValue={defaultValue}
-                formSteps={formSteps}
-              />
-              <Button
-                variant="contained"
-                sx={{
-                  width: '100%',
-                  marginTop: '20px',
-                  py: 1.5,
-                  px: 2.5,
-                  borderRadius: 4,
-                  justifyContent: 'center',
-                  color: (theme) => theme.palette.error.main,
-                  '&:disabled': {
-                    color: (theme) => theme.palette.error.main,
-                    backgroundColor: (theme) => theme.palette.common.background,
-                  },
-                }}
-                onClick={openCancelModal.onTrue}
-                disabled={loading.value}
-              >
-                ยกเลิก
-              </Button>
-            </Box>
-          ) : (
-            <FormLoading />
-          )}
-
-          <CancelModal openModal={openCancelModal} handleCloseDrawer={handleCloseDrawer} />
-        </>
-      )}
+      <CancelModal openModal={openCancelModal} handleCloseDrawer={handleCloseDrawer} />
     </Drawer>
   );
 };

@@ -12,12 +12,11 @@ import useGetBusinessTypes from 'src/modules/commercials/_hooks/use-get-business
 import useGetRestaurantTypes from 'src/modules/commercials/_hooks/use-get-restaurant-types';
 import { FormLoading } from 'src/shared/components/hook-form/custom-form-loading/edit-form-loading';
 
-import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 
 import CancelModal from './cancel-modal';
 import EditSuccessful from './edit-successful';
+import { FormWizardShell } from '../../form-wizard';
 import EditCommercialForm from './edit-commercial-form';
 import { reformatDefaultValues } from './form-validators';
 import CommercialFormHeader from '../commercial-form-header';
@@ -25,9 +24,9 @@ import ImageForm from '../create-commercials-form/image-form';
 import { CommercialType } from '../_types/create-commercials.type';
 import LocationForm from '../create-commercials-form/location-form';
 import DateTimeForm from '../create-commercials-form/date-time-form';
-import CommercialFormProgressBar from '../commercial-form-progress-bar';
 import InformationForm from '../create-commercials-form/information-form';
 import { informationForm } from '../create-commercials-form/form-validators';
+import CommercialFormProgressBar, { commercialStepTitles } from '../commercial-form-progress-bar';
 
 type Props = {
   openDrawer: UseBooleanReturn;
@@ -154,64 +153,49 @@ export const EditCommercialDrawer = ({ openDrawer, commercial }: Props) => {
       onClose={openDrawer.onFalse}
       PaperProps={{
         sx: {
-          width: { xs: '100vw', md: 480 },
+          width: '100vw',
           overflowX: 'hidden',
-          overflowY: 'scroll',
-          pb: 8,
+          overflowY: { xs: 'scroll', md: 'hidden' },
+          pb: { xs: 8, md: 0 },
         },
       }}
       anchor="right"
     >
-      {isSuccess.value ? (
-        <EditSuccessful />
-      ) : (
-        <>
-          <CommercialFormHeader handleBackFormProgress={handleBackFormProgress} />
-          <CommercialFormProgressBar
-            progressPercentage={progressPercentage}
-            step={progressStep}
+      <FormWizardShell
+        title={`แก้ไขข้อมูล${commercialType()}`}
+        illustration="/assets/illustrations/create-header.svg"
+        steps={commercialStepTitles(commercialType())}
+        step={progressStep}
+        mobileHeader={
+          <>
+            <CommercialFormHeader handleBackFormProgress={handleBackFormProgress} />
+            <CommercialFormProgressBar
+              progressPercentage={progressPercentage}
+              step={progressStep}
+              commercialType={commercialType()}
+            />
+          </>
+        }
+        success={isSuccess.value && <EditSuccessful />}
+      >
+        {commercial && defaultValue && districts && types ? (
+          <EditCommercialForm
+            commercial={commercial}
             commercialType={commercialType()}
+            progressStep={progressStep}
+            handleNextFormProgress={handleNextFormProgress}
+            handleBackFormProgress={handleBackFormProgress}
+            onCancel={openCancelModal.onTrue}
+            loading={loading}
+            defaultValue={defaultValue}
+            formSteps={formSteps}
           />
+        ) : (
+          <FormLoading />
+        )}
+      </FormWizardShell>
 
-          {commercial && defaultValue && districts && types ? (
-            <Box sx={{ margin: '20px' }}>
-              <EditCommercialForm
-                commercial={commercial}
-                commercialType={commercialType()}
-                progressStep={progressStep}
-                handleNextFormProgress={handleNextFormProgress}
-                loading={loading}
-                defaultValue={defaultValue}
-                formSteps={formSteps}
-              />
-              <Button
-                variant="contained"
-                sx={{
-                  width: '100%',
-                  marginTop: '20px',
-                  py: 1.5,
-                  px: 2.5,
-                  borderRadius: 4,
-                  justifyContent: 'center',
-                  color: (theme) => theme.palette.error.main,
-                  '&:disabled': {
-                    color: (theme) => theme.palette.error.main,
-                    backgroundColor: (theme) => theme.palette.common.background,
-                  },
-                }}
-                onClick={openCancelModal.onTrue}
-                disabled={loading.value}
-              >
-                ยกเลิก
-              </Button>
-            </Box>
-          ) : (
-            <FormLoading />
-          )}
-
-          <CancelModal openModal={openCancelModal} handleCloseDrawer={handleCloseDrawer} />
-        </>
-      )}
+      <CancelModal openModal={openCancelModal} handleCloseDrawer={handleCloseDrawer} />
     </Drawer>
   );
 };

@@ -33,8 +33,7 @@ const RegisterSuccessful = ({ commercialType, handleFormSuccessful }: Props) => 
       direction="column"
       alignItems="center"
       justifyContent="center"
-      width="100vw"
-      height="100vh"
+      sx={{ width: { xs: '100vw', md: '100%' }, height: { xs: '100vh', md: 'auto' } }}
       spacing={4}
     >
       <Image
@@ -52,7 +51,7 @@ const RegisterSuccessful = ({ commercialType, handleFormSuccessful }: Props) => 
         </Typography>
       </Stack>
 
-      <Box sx={{ width: '50%' }}>
+      <Box sx={{ width: { xs: '50%', md: 280 } }}>
         <FormButton onClick={handleFormSuccessful} label="กลับสู่หน้าหลัก" />
       </Box>
     </Stack>

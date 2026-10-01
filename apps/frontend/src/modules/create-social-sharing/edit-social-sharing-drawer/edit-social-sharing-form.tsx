@@ -7,12 +7,12 @@ import type { Sharing } from 'src/modules/sharings/_types/sharing.type';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { FormActions } from 'src/modules/form-wizard';
 import { Form } from 'src/shared/components/hook-form';
 import { toast } from 'src/shared/components/snackbar';
 
 import { reformatFormData } from '../reformat-data';
 import useUpdateSocialSharing from '../_hooks/use-update-sharing';
-import FormButton from '../create-social-sharing-form/form-button';
 import { formSchema } from '../create-social-sharing-form/form-validators';
 import useCreateAdditionalImage from '../_hooks/use-create-additional-image';
 
@@ -20,6 +20,8 @@ type Props = {
   sharing: Sharing;
   progressStep: number;
   handleNextFormProgress: () => void;
+  handleBackFormProgress: () => void;
+  onCancel: () => void;
   loading: UseBooleanReturn;
   defaultValue: FormValues;
   formSteps: FormSteps[];
@@ -29,6 +31,8 @@ const EditSocialSharingForm = ({
   sharing,
   progressStep,
   handleNextFormProgress,
+  handleBackFormProgress,
+  onCancel,
   loading,
   defaultValue,
   formSteps,
@@ -78,7 +82,13 @@ const EditSocialSharingForm = ({
   return (
     <Form methods={methods}>
       <FormComponent />
-      <FormButton onClick={buttonOnClick} label={buttonLabel} loading={loading.value} />
+      <FormActions
+        label={buttonLabel}
+        onNext={buttonOnClick}
+        onBack={handleBackFormProgress}
+        onCancel={onCancel}
+        loading={loading.value}
+      />
     </Form>
   );
 };

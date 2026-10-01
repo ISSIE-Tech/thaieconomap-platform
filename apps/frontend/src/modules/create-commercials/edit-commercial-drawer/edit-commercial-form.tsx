@@ -7,9 +7,9 @@ import type { FormSteps, CommercialType } from '../_types/create-commercials.typ
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { FormActions } from 'src/modules/form-wizard';
 import { toast } from 'src/shared/components/snackbar';
 import { Form } from 'src/shared/components/hook-form/form-provider';
-import FormButton from 'src/shared/components/custom-buttons/form-button';
 
 import { reformatFormData } from '../reformat-data';
 import useUpdateCommercial from '../_hooks/use-update-commercial';
@@ -21,6 +21,8 @@ type Props = {
   commercialType: CommercialType;
   progressStep: number;
   handleNextFormProgress: () => void;
+  handleBackFormProgress: () => void;
+  onCancel: () => void;
   loading: UseBooleanReturn;
   defaultValue: FormValues;
   formSteps: FormSteps[];
@@ -31,6 +33,8 @@ const EditCommercialForm = ({
   commercialType,
   progressStep,
   handleNextFormProgress,
+  handleBackFormProgress,
+  onCancel,
   loading,
   defaultValue,
   formSteps,
@@ -83,7 +87,13 @@ const EditCommercialForm = ({
   return (
     <Form methods={methods}>
       <FormComponent />
-      <FormButton onClick={buttonOnClick} label={buttonLabel} loading={loading.value} />
+      <FormActions
+        label={buttonLabel}
+        onNext={buttonOnClick}
+        onBack={handleBackFormProgress}
+        onCancel={onCancel}
+        loading={loading.value}
+      />
     </Form>
   );
 };

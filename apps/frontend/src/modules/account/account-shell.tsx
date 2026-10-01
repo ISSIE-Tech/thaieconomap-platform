@@ -7,8 +7,8 @@ import { useEffect } from 'react';
 import { paths } from 'src/shared/routes/paths.config';
 import { Iconify } from 'src/shared/components/iconify';
 import { useRouter, usePathname } from 'next/navigation';
-import { EconomapHeader } from 'src/modules/economap-headers';
 import { useIsDesktop } from 'src/shared/hooks/use-is-desktop';
+import { SiteFooter, EconomapHeader } from 'src/modules/economap-headers';
 import { useAuthContext } from 'src/modules/auth/_hooks/use-auth-context';
 
 import Box from '@mui/material/Box';
@@ -21,15 +21,26 @@ import Typography from '@mui/material/Typography';
 const card = { bgcolor: 'common.white', borderRadius: 2, boxShadow: '0px 1px 10px 1px #4876D31A' };
 
 const MENU = [
-  { title: 'บัญชีของฉัน', items: [
-    { label: 'รายการโปรดของฉัน', href: paths.account.favorites },
-    { label: 'ประวัติการทำรายการ', href: paths.account['form-history'] },
-  ] },
-  { title: 'การเชื่อมต่อ', items: [{ label: 'บริการอื่นๆของเรา', href: paths.account['our-services'] }] },
-  { title: 'ข้อกำหนดและนโยบาย', items: [
-    { label: 'ข้อกำหนดการใช้งาน', href: paths.legal.terms },
-    { label: 'นโยบายความเป็นส่วนตัว', href: paths.legal.privacy },
-  ] },
+  {
+    title: 'บัญชีของฉัน',
+    items: [
+      { label: 'ร้านค้าของฉัน', href: paths.account['my-shops'] },
+      { label: 'สิ่งของที่ฉันแบ่งปัน', href: paths.account['my-sharings'] },
+      { label: 'รายการโปรดของฉัน', href: paths.account.favorites },
+      { label: 'ประวัติการทำรายการ', href: paths.account['form-history'] },
+    ],
+  },
+  {
+    title: 'การเชื่อมต่อ',
+    items: [{ label: 'บริการอื่นๆของเรา', href: paths.account['our-services'] }],
+  },
+  {
+    title: 'ข้อกำหนดและนโยบาย',
+    items: [
+      { label: 'ข้อกำหนดการใช้งาน', href: paths.legal.terms },
+      { label: 'นโยบายความเป็นส่วนตัว', href: paths.legal.privacy },
+    ],
+  },
 ];
 
 /** Desktop (md+): header + nav card | content card. Mobile: pages render their own full-screen UI. */
@@ -50,9 +61,10 @@ export function AccountShell({ children }: { children: ReactNode }) {
     <Stack height="100vh" overflow="hidden">
       <EconomapHeader title="จัดการบัญชี" />
 
-      <Box sx={{ flex: 1, minHeight: 0, overflowY: 'auto', bgcolor: '#F5FBFF' }}>
+      <Stack sx={{ flex: 1, minHeight: 0, overflowY: 'auto', bgcolor: '#F5FBFF' }}>
         <Box
           sx={{
+            width: '100%',
             maxWidth: 1120,
             mx: 'auto',
             px: 5,
@@ -136,7 +148,9 @@ export function AccountShell({ children }: { children: ReactNode }) {
             {children}
           </Stack>
         </Box>
-      </Box>
+
+        <SiteFooter />
+      </Stack>
     </Stack>
   );
 }

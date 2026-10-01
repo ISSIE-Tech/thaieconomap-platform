@@ -3,9 +3,10 @@
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import useGetDistricts from 'src/shared/hooks/use-get-districts';
+import { fieldGridSx, mobileHeadingSx } from 'src/modules/form-wizard';
 import { RHFTextField, RHFAutocomplete } from 'src/shared/components/hook-form';
 
-import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 const ContactForm = () => {
@@ -32,8 +33,8 @@ const ContactForm = () => {
   }, [province, setValue]);
 
   return (
-    <Stack spacing={2}>
-      <Typography variant="body1" fontWeight="bold">
+    <Box sx={fieldGridSx}>
+      <Typography variant="body1" fontWeight="bold" sx={mobileHeadingSx}>
         กรอกข้อมูลสิ่งของ
       </Typography>
       <RHFTextField name="ownerName" label="ชื่อ - นามสกุล" />
@@ -67,7 +68,7 @@ const ContactForm = () => {
           setValue('district', newValue?._id.toString(), { shouldValidate: true });
         }}
       />
-    </Stack>
+    </Box>
   );
 };
 

@@ -8,21 +8,19 @@ import { paths } from 'src/shared/routes/paths.config';
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import useGetDistricts from 'src/shared/hooks/use-get-districts';
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-
+import { FormWizardShell } from '../form-wizard';
 import RegisterSuccessful from './register-successful';
 import CommercialFormHeader from './commercial-form-header';
 import ImageForm from './create-commercials-form/image-form';
 import { CommercialType } from './_types/create-commercials.type';
 import LocationForm from './create-commercials-form/location-form';
 import DateTimeForm from './create-commercials-form/date-time-form';
-import CommercialFormProgressBar from './commercial-form-progress-bar';
 import InformationForm from './create-commercials-form/information-form';
 import { informationForm } from './create-commercials-form/form-validators';
 import useGetBusinessTypes from '../commercials/_hooks/use-get-business-types';
 import useGetRestaurantTypes from '../commercials/_hooks/use-get-restaurant-types';
 import CreateCommercialForm from './create-commercials-form/create-commercial-form';
+import CommercialFormProgressBar, { commercialStepTitles } from './commercial-form-progress-bar';
 
 type Props = {
   commercialType: CommercialType;
@@ -121,13 +119,12 @@ export const CreateCommercials = ({ commercialType }: Props) => {
   // ------------------------------------------------------------------------------------------------
 
   return (
-    <Stack sx={{ height: '100vh' }}>
-      {isSuccess.value ? (
-        <RegisterSuccessful
-          commercialType={commercialType}
-          handleFormSuccessful={handleFormSuccessful}
-        />
-      ) : (
+    <FormWizardShell
+      title={`ลงทะเบียน${commercialType}`}
+      illustration="/assets/illustrations/create-header.svg"
+      steps={commercialStepTitles(commercialType)}
+      step={progressStep}
+      mobileHeader={
         <>
           <CommercialFormHeader handleBackFormProgress={handleBackFormProgress} />
           <CommercialFormProgressBar
@@ -135,18 +132,25 @@ export const CreateCommercials = ({ commercialType }: Props) => {
             step={progressStep}
             commercialType={commercialType}
           />
-
-          <Box sx={{ flexGrow: 1, margin: '20px', paddingBottom: '100px' }}>
-            <CreateCommercialForm
-              handleNextFormProgress={handleNextFormProgress}
-              progressStep={progressStep}
-              commercialType={commercialType}
-              loading={loading}
-              formSteps={formSteps}
-            />
-          </Box>
         </>
-      )}
-    </Stack>
+      }
+      success={
+        isSuccess.value && (
+          <RegisterSuccessful
+            commercialType={commercialType}
+            handleFormSuccessful={handleFormSuccessful}
+          />
+        )
+      }
+    >
+      <CreateCommercialForm
+        handleNextFormProgress={handleNextFormProgress}
+        handleBackFormProgress={handleBackFormProgress}
+        progressStep={progressStep}
+        commercialType={commercialType}
+        loading={loading}
+        formSteps={formSteps}
+      />
+    </FormWizardShell>
   );
 };
