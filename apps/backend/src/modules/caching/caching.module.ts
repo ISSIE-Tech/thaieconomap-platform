@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ExternalModule } from '../externals/external.module';
 import { UsersModule } from '../users/users.module';
 
+import { BasesController } from './bases.controller';
 import { CachingController } from './caching.controller';
 import { CachingService } from './caching.service';
 import { CscJobsController } from './csc-jobs.controller';
@@ -34,7 +35,7 @@ import {
     ExternalModule,
     UsersModule,
   ],
-  controllers: [CachingController, CscJobsController],
+  controllers: [CachingController, CscJobsController, BasesController],
   providers: [CachingService, CscJobsService, ShopRepository, BaseRepository, SyncLogRepository],
 })
 export class CachingModule {}

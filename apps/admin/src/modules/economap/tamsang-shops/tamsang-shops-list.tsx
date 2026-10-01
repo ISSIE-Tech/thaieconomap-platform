@@ -22,6 +22,7 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { useTable, TableHeadCustom, TablePaginationCustom } from 'src/components/table';
 
+import TamsangBasesList from './tamsang-bases-list';
 import { SyncLogCard } from '../sync-logs/sync-log-card';
 import {
   useGetTamsangShops,
@@ -177,6 +178,8 @@ export default function TamsangShopsList() {
           onRowsPerPageChange={shopTable.onChangeRowsPerPage}
         />
       </Card>
+
+      <TamsangBasesList />
     </Stack>
   );
 }

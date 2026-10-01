@@ -24,6 +24,7 @@ import {
 import Stack from '@mui/material/Stack';
 
 import { DEFAULT_COORDINATE } from './_config';
+import { TamsangPopup } from './tamsang-popup';
 import { OverlappingDrawer } from './overlapping-drawer';
 import useGetCommercial from './_hooks/use-get-commercial';
 import { CommercialDrawer } from './commercial-detail-drawer';
@@ -69,6 +70,8 @@ export default function CommercialMap({
       </MapContainer>
 
       <MapControls map={map} zoom={isDesktop} />
+
+      <TamsangPopup />
     </Stack>
   );
 }

@@ -102,6 +102,10 @@ export class CachingService {
     return this.shopRepository.findPaginated(search, page, limit);
   }
 
+  async listBases() {
+    return this.baseRepository.find({}, {}, { sort: { name: 1 } });
+  }
+
   async setShopHidden(id: string, hidden: boolean) {
     const shop = await this.shopRepository.findByIdAndUpdate(id, { hidden }, { new: true });
 

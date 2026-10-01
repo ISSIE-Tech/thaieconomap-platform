@@ -111,6 +111,8 @@ describe('CachingMapper.transformTamsangTamsongBaseShopToBase', () => {
     expect(base.sourceId).toBe('b7d4e0a1-2c95-4f38-8e6b-1d0a3c72f594');
     expect(base.name).toBeUndefined();
     expect(base.botInfo).toBeUndefined();
+    expect(base.location.coordinates).toEqual([98.883331, 18.633331]);
+    expect(base.serviceRadiusKm).toBe(10);
   });
 
   it('is the id a shop points at through baseId', () => {
@@ -137,5 +139,6 @@ describe('CachingMapper.transformTamsangTamsongBaseShopToBase', () => {
       String(CachingMapper.transformTamsangTamsongShopToShop(SHOP).base),
     );
     expect(base.botInfo.basicId).toBe('@tamsang-banklang');
+    expect(base.location).toBeNull();
   });
 });

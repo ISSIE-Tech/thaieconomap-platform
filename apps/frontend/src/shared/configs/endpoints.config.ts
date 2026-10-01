@@ -80,6 +80,10 @@ export const endpoints = {
   map: {
     get: `${MAP}/districts`,
   },
+  // the tamsang-tamsong node whose service area covers a point
+  bases: {
+    serving: `${BASE}/bases/serving`,
+  },
   jobs: {
     filter: (params: string) => `${JOBS}/map-mark/${params}`,
     details: (id: string) => `${JOBS}/${id}`,
