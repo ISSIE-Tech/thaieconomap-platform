@@ -5,7 +5,10 @@ import { getSiteContent } from 'src/modules/site-content/get-site-content';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = { title: 'ข้อกำหนดการใช้งาน | Thai Economap' };
+export const metadata: Metadata = {
+  title: 'ข้อกำหนดการใช้งาน',
+  alternates: { canonical: '/terms' },
+};
 
 export default async function TermsPage() {
   return <LegalPage content={await getSiteContent('terms')} />;

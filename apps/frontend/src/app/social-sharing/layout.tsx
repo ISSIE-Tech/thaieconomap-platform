@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
 
 import { EconomapHeader } from 'src/modules/economap-headers';
@@ -7,6 +8,12 @@ import { mobileOnly, desktopOnly, mapScreenSx } from 'src/shared/components/map-
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+
+export const metadata: Metadata = {
+  title: 'ช่วยเหลือแบ่งปันสิ่งของ',
+  description: 'แบ่งปันและรับสิ่งของฟรีจากเพื่อนบ้านในชุมชน ส่งต่อของที่ยังใช้ได้ให้คนที่ต้องการ',
+  alternates: { canonical: '/social-sharing' },
+};
 
 // ----------------------------------------------------------------------
 

@@ -4,7 +4,7 @@ import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import 'src/global.css';
 
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 
 import Script from 'next/script';
 import { Suspense, type PropsWithChildren } from 'react';
@@ -15,16 +15,61 @@ import { ReactQueryProvider } from 'src/shared/react-query';
 import { GeolocationProvider } from 'src/modules/geolocation';
 import { CookieConsent } from 'src/modules/consent/cookie-consent';
 import AuthProvider from 'src/modules/auth/_contexts/auth-provider';
+import {
+  jsonLd,
+  SITE_URL,
+  SITE_NAME,
+  OPEN_GRAPH,
+  IS_INDEXABLE,
+  SITE_NAME_TH,
+  SITE_DESCRIPTION,
+} from 'src/shared/seo';
 
 export const metadata: Metadata = {
-  title: 'Thai Economap',
-  description: 'Super map of economic data in Thailand',
+  metadataBase: new URL(SITE_URL),
+  title: { default: `${SITE_NAME} | ${SITE_NAME_TH}`, template: `%s | ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
   icons: '/favicon.svg',
+  robots: IS_INDEXABLE ? undefined : { index: false, follow: false },
+  openGraph: { ...OPEN_GRAPH, title: `${SITE_NAME} | ${SITE_NAME_TH}`, description: SITE_DESCRIPTION },
+  twitter: { card: 'summary_large_image' },
+};
+
+export const viewport: Viewport = { themeColor: '#0061a8' };
+
+// Who runs the site and what it is, for search engines and AI answer engines.
+const SITE_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+      alternateName: SITE_NAME_TH,
+      url: SITE_URL,
+      logo: `${SITE_URL}/about/logo-economap.png`,
+      parentOrganization: {
+        '@type': 'Organization',
+        name: 'สถาบันเอเชียศึกษา จุฬาลงกรณ์มหาวิทยาลัย (Institute of Asian Studies, Chulalongkorn University)',
+      },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}/#website`,
+      name: SITE_NAME,
+      alternateName: SITE_NAME_TH,
+      url: SITE_URL,
+      inLanguage: 'th',
+      description: SITE_DESCRIPTION,
+      publisher: { '@id': `${SITE_URL}/#organization` },
+    },
+  ],
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="th" suppressHydrationWarning>
       <Script
         defer
         src="https://umami.issie.dev/script.js"
@@ -33,6 +78,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
       />
       {/* Google Analytics loads from <CookieConsent /> once the visitor accepts */}
       <body>
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(SITE_JSON_LD)} />
         <Suspense>
           <ReactQueryProvider>
             <LocalizationProvider>
