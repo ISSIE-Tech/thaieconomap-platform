@@ -23,6 +23,7 @@ export type SharingTiny = {
     name: string;
   };
   approvedAt: string;
+  status?: keyof typeof SharingStatus;
   types: Array<{
     _id: string;
     name: string;

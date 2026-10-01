@@ -1,4 +1,4 @@
-import { CommercialCategory, SubmissionStatus } from '../../../enums';
+import { CommercialCategory, CommercialWorkingStatus, SubmissionStatus } from '../../../enums';
 import { IDisplayOpening, ILocation, IOpening } from '../../../models';
 
 export interface CommercialResponseDto {
@@ -37,6 +37,9 @@ export interface CommercialTinyResponseDto {
   district: string;
   types: { _id: string; name: string }[];
   isFavorite?: boolean;
+  // computed by the aggregation from `opening` / `approvedAt`
+  workingStatus?: CommercialWorkingStatus;
+  isNewlyOpened?: boolean;
   // NOTE: only present on the single-commercial detail route (`GET /:commercialId/tiny`);
   // the marker-list route projects these away.
   commercialOwner?: string;

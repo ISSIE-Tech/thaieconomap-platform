@@ -57,7 +57,9 @@ export function SharingDrawer({ controller, sharing, submissionStatus, submissio
 
         <MainInfo sharing={sharing} submissionMessage={submissionMessage} />
 
-        <SharingActionButtons sharing={sharing} submissionStatus={submissionStatus} />
+        <Stack direction="row" spacing={3} px={3}>
+          <SharingActionButtons sharing={sharing} submissionStatus={submissionStatus} />
+        </Stack>
       </Stack>
 
       <Image
@@ -156,7 +158,7 @@ type SharingProps = {
   submissionStatus?: SubmissionStatus;
 };
 
-function SharingActionButtons({ sharing, submissionStatus }: SharingProps) {
+export function SharingActionButtons({ sharing, submissionStatus }: SharingProps) {
   const geolocation = useGeolocationStore((state) => state.geolocation);
 
   // Sharing (for refetching)
@@ -175,7 +177,7 @@ function SharingActionButtons({ sharing, submissionStatus }: SharingProps) {
   }, [sharing?._id, refetch, unfavorite]);
 
   return (
-    <Stack direction="row" spacing={3} px={3}>
+    <>
       {/* TODO: implement this */}
       {/* <IconLabelButton
         icon="ic:baseline-back-hand"
@@ -203,6 +205,6 @@ function SharingActionButtons({ sharing, submissionStatus }: SharingProps) {
           unfavoriteCallback={unfavoriteCallback}
         />
       )}
-    </Stack>
+    </>
   );
 }

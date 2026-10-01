@@ -8,9 +8,9 @@ type JobsStore = {
   category: string;
   // Map
   map: LeafletMap | null;
-  // Detail drawer
-  jobId: string | null;
-  jobDetailDrawer: boolean;
+  // Selected job (detail drawer on mobile, sidebar detail on desktop) and hovered list row
+  selectedId: string;
+  hoveredId: string;
 
   // functions
   actions: {
@@ -18,10 +18,10 @@ type JobsStore = {
     setCategory: (categoryId: string) => void;
     toggleCategory: (categoryId: string) => void;
     // Map
-    setMap: (map: LeafletMap) => void;
-    // Detail drawer
-    openJobDetailDrawer: (jobId: string) => void;
-    closeJobDetailDrawer: () => void;
+    setMap: (map: LeafletMap | null) => void;
+    // Selection
+    setSelectedId: (id: string) => void;
+    setHoveredId: (id: string) => void;
   };
 };
 
@@ -31,9 +31,8 @@ export const useJobsStore = create<JobsStore>()(
     category: '',
     // Map
     map: null,
-    // Detail drawer
-    jobId: null,
-    jobDetailDrawer: false,
+    selectedId: '',
+    hoveredId: '',
 
     // functions
     actions: {
@@ -44,9 +43,9 @@ export const useJobsStore = create<JobsStore>()(
           category: state.category === categoryId ? '' : categoryId,
         })),
       // Map
-      setMap: (map: LeafletMap) => set({ map }),
-      openJobDetailDrawer: (jobId: string) => set({ jobId, jobDetailDrawer: true }),
-      closeJobDetailDrawer: () => set({ jobDetailDrawer: false }),
+      setMap: (map: LeafletMap | null) => set({ map }),
+      setSelectedId: (selectedId: string) => set({ selectedId }),
+      setHoveredId: (hoveredId: string) => set({ hoveredId }),
     },
   }))
 );

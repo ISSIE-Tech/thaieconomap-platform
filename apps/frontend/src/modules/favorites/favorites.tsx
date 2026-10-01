@@ -6,6 +6,7 @@ import type { TabValue } from 'src/modules/favorites/_constants/favourites-tabs'
 import { useMemo, useState } from 'react';
 import { FavoritesTabs } from 'src/modules/favorites';
 import { useBoolean } from 'src/shared/hooks/use-boolean';
+import { useIsDesktop } from 'src/shared/hooks/use-is-desktop';
 import { BlueRoundedHeader } from 'src/modules/economap-headers';
 import FavoritesList from 'src/modules/favorites/favorites-list';
 import { COMMERCIAL_TABS } from 'src/shared/routes/paths.config';
@@ -15,12 +16,14 @@ import useGetTinyFavorites from 'src/modules/favorites/_hooks/use-get-tiny-favor
 import Stack from '@mui/material/Stack';
 
 import DrawersController from './drawers-controller';
+import { FavoritesDesktop } from './favorites-desktop';
 
 export default function Favorite() {
   const [tab, setTab] = useState<TabValue>(FAVORITE_TABS.ECONOMAP.en); // Default to "economap"
   const { data: favorites, isLoading } = useGetTinyFavorites();
 
   const [selectedId, setSelectedId] = useState('');
+  const isDesktop = useIsDesktop();
 
   // drawers
   const commercialDrawerController = useBoolean();
@@ -38,6 +41,32 @@ export default function Favorite() {
 
     return { ...favorites.commercials, shares: favorites.shares, pumpuangs: favorites.pumpuangs };
   }, [favorites]);
+
+  const drawers = (
+    <DrawersController
+      selectedId={selectedId}
+      commercialController={commercialDrawerController}
+      sharingController={sharingDrawerController}
+      pumpuangController={pumpuangDrawerController}
+    />
+  );
+
+  if (isDesktop)
+    return (
+      <>
+        <FavoritesDesktop
+          favorites={{ restaurants, businesses, pumpuangs, shares }}
+          isLoading={isLoading}
+          onClick={(kind, id) => {
+            setSelectedId(id);
+            if (kind === 'pumpuangs') pumpuangDrawerController.onTrue();
+            else if (kind === 'shares') sharingDrawerController.onTrue();
+            else commercialDrawerController.onTrue();
+          }}
+        />
+        {drawers}
+      </>
+    );
 
   return (
     <Stack minHeight="100vh">
@@ -104,12 +133,7 @@ export default function Favorite() {
         )}
       </Stack>
 
-      <DrawersController
-        selectedId={selectedId}
-        commercialController={commercialDrawerController}
-        sharingController={sharingDrawerController}
-        pumpuangController={pumpuangDrawerController}
-      />
+      {drawers}
     </Stack>
   );
 }

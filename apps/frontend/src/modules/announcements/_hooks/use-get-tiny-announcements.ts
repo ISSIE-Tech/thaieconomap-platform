@@ -29,6 +29,8 @@ const useGetTinyAnnouncements = () => {
   return useQuery({
     queryKey: [QUERY_KEY.ANNOUNCEMENTS, queryString],
     queryFn: getTinyAnnouncements,
+    // the backend requires `date`; before the filter initialises it this would request `tiny/?` (400)
+    enabled: !!announcementsDate,
   });
 };
 

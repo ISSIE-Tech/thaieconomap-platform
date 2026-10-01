@@ -6,14 +6,17 @@ import { type Map as LeafletMap } from 'leaflet';
 import { useSaveMapSettings } from 'src/shared/hooks/map';
 
 type Props = {
-  setMap: (map: LeafletMap) => void;
+  setMap: (map: LeafletMap | null) => void;
 };
 
 export function MapSetter({ setMap }: Props) {
   const map = useMap();
 
+  // clear on unmount: leaflet destroys the map, and a stale instance in the store crashes
+  // whoever uses it next (e.g. the desktop sidebar calling getBounds on the next page)
   useEffect(() => {
     if (map) setMap(map);
+    return () => setMap(null);
   }, [map, setMap]);
 
   useSaveMapSettings();

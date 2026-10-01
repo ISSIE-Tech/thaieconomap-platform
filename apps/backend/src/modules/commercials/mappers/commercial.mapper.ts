@@ -55,6 +55,8 @@ export class CommercialMapper {
       district: toRef(obj.district),
       types: obj.types?.map?.((t: AnyDoc) => typeof t === 'object' ? { _id: t._id?.toString(), name: t.name } : t) ?? obj.types,
       isFavorite: obj.isFavorite,
+      workingStatus: obj.workingStatus,
+      isNewlyOpened: obj.isNewlyOpened,
       commercialOwner: obj.commercialOwner,
       phoneNumber: obj.phoneNumber,
       moreInfo: obj.moreInfo,

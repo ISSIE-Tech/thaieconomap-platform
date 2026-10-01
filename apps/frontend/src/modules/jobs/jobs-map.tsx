@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import { Marker } from 'react-leaflet';
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import { STORAGE_KEY } from 'src/shared/components/constants';
+import { useIsDesktop } from 'src/shared/hooks/use-is-desktop';
+import { MapControls } from 'src/shared/components/map-sidebar';
 import { jobMarker, userMarker, activeJobMarker } from 'src/shared/components/leaflet-map/map';
 import {
   MapSetter,
@@ -22,17 +23,20 @@ import { DEFAULT_COORDINATE } from '../commercials/_config';
 import { useGeolocationStore } from '../geolocation/_store/geolocation.store';
 
 export default function JobsMap() {
-  const { setMap } = useJobsStore((state) => state.actions);
+  const { setMap, setSelectedId } = useJobsStore((state) => state.actions);
+  const map = useJobsStore((state) => state.map);
+  const isDesktop = useIsDesktop();
 
   // tiny jobs
   const { data: tinyJobs, isLoading } = useGetTinyJobs();
-  // selected job
-  const [jobId, setJobId] = useState('');
+  // selected job: drawer on mobile, the desktop sidebar shows it instead
+  const jobId = useJobsStore((state) => state.selectedId);
+  const hoveredId = useJobsStore((state) => state.hoveredId);
   const detailDrawerController = useBoolean();
   const { data: job } = useGetJob({ jobId });
   const openJobDetailDrawer = (id: string) => {
-    setJobId(id);
-    detailDrawerController.onTrue();
+    setSelectedId(id);
+    if (!isDesktop) detailDrawerController.onTrue();
   };
 
   // user geolocation
@@ -51,6 +55,7 @@ export default function JobsMap() {
             onMarkerClick={openJobDetailDrawer}
             markerIcon={jobMarker}
             activeMarkerIcon={activeJobMarker}
+            activeId={hoveredId || jobId}
           />
         </DialogCluster>
 
@@ -58,6 +63,8 @@ export default function JobsMap() {
 
         <MapSetter setMap={setMap} />
       </MapContainer>
+
+      <MapControls map={map} zoom={isDesktop} />
     </Stack>
   );
 }

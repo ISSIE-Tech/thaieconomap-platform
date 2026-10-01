@@ -37,9 +37,9 @@ export default function DrawersController({
 
   return (
     <>
-      <CommercialDrawer controller={commercialController} commercial={commercial} />;
-      <PumpuangDrawer controller={pumpuangController} pumpuang={pumpuang} />;
-      <SharingDrawer controller={sharingController} sharing={sharing} />;
+      <CommercialDrawer controller={commercialController} commercial={commercial} />
+      <PumpuangDrawer controller={pumpuangController} pumpuang={pumpuang} />
+      <SharingDrawer controller={sharingController} sharing={sharing} />
     </>
   );
 }

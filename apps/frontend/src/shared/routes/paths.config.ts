@@ -52,6 +52,7 @@ export const paths = {
     businesses: `/${PATH.COMMERCIALS}/${COMMERCIAL_TABS.BUSINESSES.en}`,
     pumpuang: `/${PATH.COMMERCIALS}/${COMMERCIAL_TABS.PUMPUANG.en}`,
   },
+  shop: (id: string) => `/shops/${id}`,
   jobs: '/job-finding',
   sharings: '/social-sharing',
   create: {
@@ -61,5 +62,9 @@ export const paths = {
   },
   announcements: {
     root: '/announcements',
+  },
+  legal: {
+    terms: '/terms',
+    privacy: '/privacy',
   },
 } as const;

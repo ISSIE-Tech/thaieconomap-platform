@@ -9,14 +9,21 @@ import { Image } from 'src/shared/components/image';
 import { useMemo, useState, useEffect } from 'react';
 import { paths } from 'src/shared/routes/paths.config';
 import { useBoolean } from 'src/shared/hooks/use-boolean';
+import { useIsDesktop } from 'src/shared/hooks/use-is-desktop';
 import { BlueRoundedHeader } from 'src/modules/economap-headers';
-import { HistoryRow, HistoryRowSkeleton } from 'src/modules/form-history';
 import { SharingDrawer } from 'src/modules/sharings/sharing-detail-drawer';
 import useGetHistory from 'src/modules/form-history/_hooks/use-get-history';
 import { CommercialDrawer } from 'src/modules/commercials/commercial-detail-drawer';
 import { ENTITY_TYPE, FORM_HISTORY_TABS } from 'src/modules/form-history/_types/history.type';
+import {
+  HistoryRow,
+  HistoryTableRow,
+  HistoryRowSkeleton,
+  historyTableColumns,
+} from 'src/modules/form-history';
 
 import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
@@ -27,6 +34,7 @@ import Typography from '@mui/material/Typography';
 export default function Page() {
   const theme = useTheme();
   const tabs = useTabs(FORM_HISTORY_TABS.PENDING.en);
+  const isDesktop = useIsDesktop();
 
   // drawers
   const commercialDrawerController = useBoolean();
@@ -62,6 +70,81 @@ export default function Page() {
     const newHistory = histories?.find((history) => history._id === selectedId);
     setSelectedHistory(newHistory || null);
   }, [histories, selectedId]);
+
+  // desktop shows every status in one table, so the drawer takes the row's own status
+  const drawerStatus = (
+    isDesktop ? selectedHistory?.submissionStatus : tabs.value
+  ) as SubmissionStatus;
+
+  const drawers = (
+    <>
+      <CommercialDrawer
+        controller={commercialDrawerController}
+        commercial={selectedHistory as Commercial}
+        submissionStatus={drawerStatus}
+        submissionMessage={selectedHistory?.submissionMessage}
+      />
+
+      <SharingDrawer
+        controller={sharingDrawerController}
+        sharing={selectedHistory as Sharing}
+        submissionStatus={drawerStatus}
+        submissionMessage={selectedHistory?.submissionMessage}
+      />
+    </>
+  );
+
+  if (isDesktop)
+    return (
+      <Stack spacing={1.5}>
+        <Typography component="h1" fontSize={22} fontWeight={700}>
+          ประวัติการทำรายการ
+        </Typography>
+
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: historyTableColumns,
+            px: 1.5,
+            py: 1.25,
+            fontSize: 13,
+            color: 'grey.600',
+            borderBottom: `1px solid ${theme.palette.grey[200]}`,
+          }}
+        >
+          <span>รายการ</span>
+          <span>ประเภท</span>
+          <span>วันที่ส่ง</span>
+          <span>สถานะ</span>
+        </Box>
+
+        {isLoading &&
+          Array.from({ length: 5 }).map((_, index) => <HistoryRowSkeleton key={index} />)}
+
+        {histories?.map((history) => (
+          <HistoryTableRow key={history._id} history={history} onClick={onHistoryClick} />
+        ))}
+
+        {histories?.length === 0 && (
+          <Stack alignItems="center" spacing={1} p={5}>
+            <Image
+              src="/assets/illustrations/onboarding.svg"
+              alt="onboarding illustrations"
+              width="80"
+              height="80"
+            />
+            <Typography variant="body2" fontWeight="bold">
+              ไม่มีข้อมูลประวัติการค้นหา
+            </Typography>
+            <Link href={paths.create.restaurants} fontSize={12}>
+              เริ่มต้นสร้างประวัติในชุมชนกับเรา
+            </Link>
+          </Stack>
+        )}
+
+        {drawers}
+      </Stack>
+    );
 
   return (
     <Stack height="100vh">
@@ -133,19 +216,7 @@ export default function Page() {
         )}
       </Stack>
 
-      <CommercialDrawer
-        controller={commercialDrawerController}
-        commercial={selectedHistory as Commercial}
-        submissionStatus={tabs.value as SubmissionStatus}
-        submissionMessage={selectedHistory?.submissionMessage}
-      />
-
-      <SharingDrawer
-        controller={sharingDrawerController}
-        sharing={selectedHistory as Sharing}
-        submissionStatus={tabs.value as SubmissionStatus}
-        submissionMessage={selectedHistory?.submissionMessage}
-      />
+      {drawers}
     </Stack>
   );
 }

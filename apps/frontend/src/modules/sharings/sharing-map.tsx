@@ -5,6 +5,8 @@ import { Marker } from 'react-leaflet';
 import { useSearchParams } from 'next/navigation';
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import { STORAGE_KEY } from 'src/shared/components/constants';
+import { useIsDesktop } from 'src/shared/hooks/use-is-desktop';
+import { MapControls } from 'src/shared/components/map-sidebar';
 import { SearchInput } from 'src/shared/components/custom-inputs';
 import { FilterBtn } from 'src/shared/components/custom-buttons/filter-btn';
 import {
@@ -42,13 +44,18 @@ type Props = {
 export default function SharingMap({ tinySharings, isLoading }: Props) {
   const setMap = useSharingStore((state) => state.setMap);
 
-  // Sharing
-  const [sharingId, setSharingId] = useState('');
+  const map = useSharingStore((state) => state.map);
+  const isDesktop = useIsDesktop();
+
+  // Sharing: drawer on mobile, the desktop sidebar shows the selected sharing instead
+  const sharingId = useSharingStore((state) => state.selectedId);
+  const setSharingId = useSharingStore((state) => state.setSelectedId);
+  const hoveredId = useSharingStore((state) => state.hoveredId);
   const detailDrawerController = useBoolean();
   const { data: sharing } = useGetSharing({ sharingId });
   const openSharingDrawer = (id: string) => {
     setSharingId(id);
-    detailDrawerController.onTrue();
+    if (!isDesktop) detailDrawerController.onTrue();
   };
 
   // user geolocation
@@ -57,7 +64,7 @@ export default function SharingMap({ tinySharings, isLoading }: Props) {
 
   return (
     <Stack width="100%" height="100%" position="relative">
-      <ControlPanel />
+      {!isDesktop && <ControlPanel />}
 
       {/* TODO: bring back cluster with dialog, maybe */}
       <MapContainer center={geolocation ?? DEFAULT_LOCATION}>
@@ -68,6 +75,7 @@ export default function SharingMap({ tinySharings, isLoading }: Props) {
             onMarkerClick={openSharingDrawer}
             markerIcon={sharingMarker}
             activeMarkerIcon={activeSharingMarker}
+            activeId={hoveredId || sharingId}
           />
         </DialogCluster>
 
@@ -78,6 +86,8 @@ export default function SharingMap({ tinySharings, isLoading }: Props) {
 
         <MapSetter setMap={setMap} />
       </MapContainer>
+
+      <MapControls map={map} zoom={isDesktop} />
     </Stack>
   );
 }

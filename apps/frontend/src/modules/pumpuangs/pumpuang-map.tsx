@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { Marker } from 'react-leaflet';
 import { useMapStore } from 'src/shared/stores/map';
 import { useBoolean } from 'src/shared/hooks/use-boolean';
+import { useIsDesktop } from 'src/shared/hooks/use-is-desktop';
+import { MapControls } from 'src/shared/components/map-sidebar';
 import { userMarker } from 'src/shared/components/leaflet-map/map';
 import { MapSetter, MapContainer } from 'src/shared/components/leaflet-map';
 
@@ -19,19 +21,30 @@ import { useGeolocationStore } from '../geolocation/_store/geolocation.store';
 
 export default function PumpuangMap() {
   const setMap = useCommercialStore((state) => state.setMap);
+  const map = useCommercialStore((state) => state.map);
+  const isDesktop = useIsDesktop();
   const lastViewedCoord = useMapStore((state) => state.commercialLastViewedCoord);
   const lastZoom = useMapStore((state) => state.commercialLastZoom);
 
   // tiny pumpuangs
   const { data: tinyPumpuangs } = useGetTinyPumpuangs();
 
-  // pumpuang and drawer
-  const [pumpuangId, setPumpuangId] = useState('');
-  const detailDrawerController = useBoolean();
-  const openPumpuangDrawer = (id: string) => {
-    setPumpuangId(id);
-    detailDrawerController.onTrue();
+  // pumpuang and drawer; the desktop sidebar list selects through the same store
+  const pumpuangId = useCommercialStore((state) => state.selectedId);
+  const setPumpuangId = useCommercialStore((state) => state.setSelectedId);
+  const drawer = useBoolean();
+  const detailDrawerController = {
+    ...drawer,
+    onFalse: () => {
+      drawer.onFalse();
+      setPumpuangId('');
+    },
   };
+  const openPumpuangDrawer = setPumpuangId;
+  const openDrawer = drawer.onTrue;
+  useEffect(() => {
+    if (pumpuangId) openDrawer();
+  }, [pumpuangId, openDrawer]);
   const { data: pumpuang, isLoading } = useGetPumpuangById(pumpuangId ?? '');
 
   // user geolocation
@@ -58,6 +71,8 @@ export default function PumpuangMap() {
 
         <MapSetter setMap={setMap} />
       </MapContainer>
+
+      <MapControls map={map} zoom={isDesktop} />
     </Stack>
   );
 }

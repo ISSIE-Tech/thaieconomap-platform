@@ -113,33 +113,44 @@ input[type='number']::-webkit-inner-spin-button {
   background: hsl(212 100% 57% /0.4);
 }
 
-.leaflet-tooltip {
-  background-color: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+/* Map pin labels: a pill whose arrow matches its fill. Pins anchor at their tip and the
+   tooltip anchors beside the pin head (see pinIcon in leaflet-map/map.tsx). */
+.leaflet-container .leaflet-tooltip {
   font-weight: 700;
   font-family: 'sukhumvit';
-  text-shadow:
-    -1px -1px 0 #fff,
-    1px -1px 0 #fff,
-    -1px 1px 0 #fff,
-    1px 1px 0 #fff;
-  /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; */
-  top: -10px;
-  left: 10px;
-}
-
-.leaflet-tooltip-right::before {
-  background-color: rgba(0, 0, 0, 0);
+  font-size: 13px;
+  line-height: 20px;
+  padding: 2px 10px;
   border: none;
+  border-radius: 9999px;
+  box-shadow: 0px 1px 10px 1px #4876d333;
 }
 
-.tooltip-active {
-  color: black;
+.leaflet-container .leaflet-tooltip-right {
+  margin-left: 8px;
 }
 
-.tooltip-inactive {
-  color: #adb5bd;
+.leaflet-container .leaflet-tooltip-right::before {
+  margin-left: -10px;
+  border-width: 5px;
+}
+
+.leaflet-container .leaflet-tooltip.tooltip-inactive {
+  background-color: #ffffff;
+  color: #0061a8;
+}
+
+.leaflet-container .tooltip-inactive.leaflet-tooltip-right::before {
+  border-right-color: #ffffff;
+}
+
+.leaflet-container .leaflet-tooltip.tooltip-active {
+  background-color: #0094ff;
+  color: #ffffff;
+}
+
+.leaflet-container .tooltip-active.leaflet-tooltip-right::before {
+  border-right-color: #0094ff;
 }
 
 .user-marker-icon.leaflet-div-icon {

@@ -24,7 +24,7 @@ export default function DateCards() {
 
   return (
     <>
-      <Stack spacing={1} px={3} mt={20}>
+      <Stack spacing={1} px={3} mt={{ xs: 20, md: 3 }}>
         <Typography>วันนี้</Typography>
 
         <Stack direction="row" spacing={1} alignItems="bottom">
@@ -99,8 +99,9 @@ function DateCard({ datetime, date, dayOfWeek, timePeriod, onClick }: DateCardPr
       borderRadius={2}
       bgcolor={cardBgColor[timePeriod]}
       py={1}
-      minWidth={64}
+      minWidth={{ xs: 64, md: 0 }}
       sx={{
+        flex: { md: 1 },
         boxShadow: '0px 1px 10px 1px #4876D31A',
         cursor: 'pointer',
       }}

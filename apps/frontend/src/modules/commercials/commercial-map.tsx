@@ -7,6 +7,8 @@ import { Marker } from 'react-leaflet';
 import { useState, useCallback } from 'react';
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import { STORAGE_KEY } from 'src/shared/components/constants';
+import { useIsDesktop } from 'src/shared/hooks/use-is-desktop';
+import { MapControls } from 'src/shared/components/map-sidebar';
 import {
   userMarker,
   commercialMarker,
@@ -45,6 +47,8 @@ export default function CommercialMap({
   type,
 }: Props) {
   const setMap = useCommercialStore((state) => state.setMap);
+  const map = useCommercialStore((state) => state.map);
+  const isDesktop = useIsDesktop();
 
   // user geolocation
   const geolocation = useGeolocationStore((state) => state.geolocation);
@@ -63,6 +67,8 @@ export default function CommercialMap({
 
         <MapSetter setMap={setMap} />
       </MapContainer>
+
+      <MapControls map={map} zoom={isDesktop} />
     </Stack>
   );
 }
@@ -76,16 +82,19 @@ type MarkersGroupProps = {
 };
 
 const MarkersGroup = ({ tinyCommercials, isLoading, type }: MarkersGroupProps) => {
-  // commercial drawer
-  const [commercialId, setCommercialId] = useState('');
+  // commercial drawer (mobile); on desktop the sidebar shows the selected commercial
+  const isDesktop = useIsDesktop();
+  const commercialId = useCommercialStore((state) => state.selectedId);
+  const setCommercialId = useCommercialStore((state) => state.setSelectedId);
+  const hoveredId = useCommercialStore((state) => state.hoveredId);
   const { data: commercial } = useGetCommercial({ commercialId });
   const detailDrawerController = useBoolean();
   const onCommercialClick = useCallback(
     (id: string) => {
       setCommercialId(id);
-      detailDrawerController.onTrue();
+      if (!isDesktop) detailDrawerController.onTrue();
     },
-    [detailDrawerController]
+    [detailDrawerController, isDesktop, setCommercialId]
   );
 
   // Overlapping cluster
@@ -130,6 +139,7 @@ const MarkersGroup = ({ tinyCommercials, isLoading, type }: MarkersGroupProps) =
           onMarkerClick={onCommercialClick}
           markerIcon={commercialMarker}
           activeMarkerIcon={activeCommercialMarker}
+          activeId={hoveredId || commercialId}
         />
       </OverlappingCluster>
 
