@@ -13,6 +13,8 @@ type Props = {
   onMarkerClick: (locationId: string) => void;
   markerIcon: MarkerIcon;
   activeMarkerIcon: MarkerIcon;
+  // highlights a marker from outside (desktop list hover/selection)
+  activeId?: string;
 };
 
 export const LocationMarkers = ({
@@ -21,6 +23,7 @@ export const LocationMarkers = ({
   onMarkerClick,
   markerIcon,
   activeMarkerIcon,
+  activeId,
 }: Props) => {
   const [locationId, setLocationId] = useState('');
   const map = useMap();
@@ -40,8 +43,9 @@ export const LocationMarkers = ({
       },
     }) as LeafletEventHandlerFnMap;
 
+  const currentId = activeId || locationId;
   const getIcon = (fetchedLocation: PinLocation) =>
-    locationId === fetchedLocation._id ? activeMarkerIcon : markerIcon;
+    currentId === fetchedLocation._id ? activeMarkerIcon : markerIcon;
 
   useMapLoading(isLoading);
 
@@ -60,7 +64,7 @@ export const LocationMarkers = ({
         >
           {fetchedLocation.name && (
             <LocationTooltip
-              active={fetchedLocation._id === locationId}
+              active={fetchedLocation._id === currentId}
               name={fetchedLocation.name}
             />
           )}
@@ -82,7 +86,7 @@ const LocationTooltip = ({ active, name }: BusinessTooltipProps) => (
     {/* NOTE: something like `active ? 'tooltip-active' : 'tooltip-inactive' is not possible */}
     {/* It's seem like the className of the Tooltip is permanent and can't be changed, not sure why though */}
     {active && (
-      <Tooltip direction="right" offset={[0, 10]} opacity={1} permanent className="tooltip-active">
+      <Tooltip direction="right" offset={[0, 0]} opacity={1} permanent className="tooltip-active">
         {name}
       </Tooltip>
     )}
@@ -90,7 +94,7 @@ const LocationTooltip = ({ active, name }: BusinessTooltipProps) => (
     {!active && (
       <Tooltip
         direction="right"
-        offset={[0, 10]}
+        offset={[0, 0]}
         opacity={1}
         permanent
         className="tooltip-inactive"

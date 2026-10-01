@@ -8,12 +8,13 @@ import { maxLine } from 'src/theme/styles/mixins';
 import { Image } from 'src/shared/components/image';
 import { formatCreateDate } from 'src/shared/components/constants/date';
 
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-import { ENTITY_TYPE } from './_types/history.type';
+import { ENTITY_TYPE, SubmissionStatus } from './_types/history.type';
 import { CommercialCategory } from '../commercials/_types/commercials.type';
 
 type Props = {
@@ -95,5 +96,61 @@ export function HistoryRowSkeleton() {
       {/* Skeleton for Status */}
       <Skeleton variant="rounded" width={100} height={40} />
     </Stack>
+  );
+}
+
+// --------------------------------------------------
+
+const STATUS = {
+  [SubmissionStatus.PENDING]: { label: 'รอตรวจสอบ', tone: 'warning' },
+  [SubmissionStatus.ACCEPTED]: { label: 'อนุมัติแล้ว', tone: 'success' },
+  [SubmissionStatus.REJECTED]: { label: 'ไม่ผ่านการอนุมัติ', tone: 'error' },
+} as const;
+
+export const historyTableColumns = 'minmax(0, 2fr) 1fr 1fr 140px';
+
+/** Desktop table row: รายการ | ประเภท | วันที่ส่ง | สถานะ */
+export function HistoryTableRow({ history, onClick }: Props) {
+  const type =
+    history.entityType === ENTITY_TYPE.commercials.en
+      ? CommercialCategory[(history as Commercial).category]
+      : ENTITY_TYPE[history.entityType].th;
+  const status = STATUS[history.submissionStatus];
+
+  return (
+    <Box
+      onClick={() => onClick(history)}
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: historyTableColumns,
+        alignItems: 'center',
+        p: 1.5,
+        fontSize: 15,
+        cursor: 'pointer',
+        borderBottom: (theme) => `1px solid ${theme.palette.grey[200]}`,
+        '&:hover': { bgcolor: '#F5FBFF' },
+      }}
+    >
+      <Typography fontWeight={500} noWrap>
+        {history.name}
+      </Typography>
+      <Typography color="grey.600">{type}</Typography>
+      <Typography color="grey.600">{formatCreateDate(history.createdAt)}</Typography>
+      <Box
+        component="span"
+        sx={{
+          justifySelf: 'start',
+          fontWeight: 700,
+          fontSize: 13,
+          borderRadius: '9999px',
+          px: 1.25,
+          py: '1px',
+          bgcolor: `${status.tone}.lighter`,
+          color: status.tone === 'warning' ? 'warning.dark' : `${status.tone}.main`,
+        }}
+      >
+        {status.label}
+      </Box>
+    </Box>
   );
 }

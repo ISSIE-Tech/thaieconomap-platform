@@ -117,6 +117,9 @@ export class SharesService {
       imageUrl: 1,
       approvedAt: 1,
       condition: 1,
+      types: 1,
+      district: 1,
+      status: 1,
       createdBy: 0,
     };
 

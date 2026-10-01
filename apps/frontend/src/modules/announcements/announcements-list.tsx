@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
 import { maxLine } from 'src/theme/styles/mixins';
 import { Image } from 'src/shared/components/image';
+import { useMemo, useState, useEffect } from 'react';
 import { Iconify } from 'src/shared/components/iconify';
 import { useBoolean } from 'src/shared/hooks/use-boolean';
 import { fDateRangeShortLabel } from 'src/shared/utils/format-time';
@@ -21,8 +21,20 @@ import useGetTinyAnnouncements from './_hooks/use-get-tiny-announcements';
 import { useAnnouncementsFilter } from './_hooks/use-announcements-filter';
 import { useProvinceOptionMap } from '../commercials/_hooks/use-get-provinces';
 
-export default function AnnouncementsList() {
+type Props = {
+  // desktop: selection drives the detail pane instead of the drawer
+  selectedId?: string;
+  onSelect?: (id: string) => void;
+};
+
+export default function AnnouncementsList({ selectedId, onSelect }: Props) {
   const { data: announcements, isLoading } = useGetTinyAnnouncements();
+
+  // desktop: keep a valid selection, defaulting to the first announcement
+  useEffect(() => {
+    if (!onSelect || !announcements?.length) return;
+    if (!announcements.some((a) => a._id === selectedId)) onSelect(announcements[0]._id);
+  }, [announcements, onSelect, selectedId]);
 
   // ===== Get the right province/district to show =====
   const { announcementsLocation, locationType } = useAnnouncementsFilter();
@@ -42,6 +54,10 @@ export default function AnnouncementsList() {
   const drawer = useBoolean();
   const [selectedAnnouncementId, setSelectedAnnouncementId] = useState('');
   const createAnnouncementClickedHandler = (id: string) => () => {
+    if (onSelect) {
+      onSelect(id);
+      return;
+    }
     setSelectedAnnouncementId(id);
     drawer.onTrue();
   };
@@ -75,6 +91,7 @@ export default function AnnouncementsList() {
             startAt={announcement.startAt}
             endAt={announcement.endAt}
             onClick={createAnnouncementClickedHandler(announcement._id)}
+            selected={announcement._id === selectedId}
           />
         ))}
 
@@ -84,7 +101,7 @@ export default function AnnouncementsList() {
         {announcements && announcements.length === 0 && <NotFound />}
       </Stack>
 
-      <AnnouncementDetailDrawer controller={drawer} id={selectedAnnouncementId} />
+      {!onSelect && <AnnouncementDetailDrawer controller={drawer} id={selectedAnnouncementId} />}
     </Stack>
   );
 }
@@ -96,9 +113,10 @@ type AnnouncementProp = {
   startAt: string;
   endAt: string;
   onClick: () => void;
+  selected?: boolean;
 };
 
-function Announcement({ name, startAt, endAt, onClick }: AnnouncementProp) {
+function Announcement({ name, startAt, endAt, onClick, selected }: AnnouncementProp) {
   const theme = useTheme();
 
   return (
@@ -109,7 +127,10 @@ function Announcement({ name, startAt, endAt, onClick }: AnnouncementProp) {
       py={2}
       width="100%"
       onClick={onClick}
-      sx={{ cursor: 'pointer' }}
+      sx={{
+        cursor: 'pointer',
+        ...(selected && { bgcolor: '#F5FBFF', mx: -1.5, px: 1.5, width: 'auto', borderRadius: 1.5 }),
+      }}
     >
       <Image
         src="/assets/icons/announcements-provinces/bangkok.svg"

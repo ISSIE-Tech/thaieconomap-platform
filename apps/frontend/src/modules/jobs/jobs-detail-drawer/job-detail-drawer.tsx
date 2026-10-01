@@ -55,7 +55,9 @@ export const JobsDetailDrawer = ({
 
       <MainInfo job={job} submissionMessage={submissionMessage} />
 
-      <JobActionButtons job={job} />
+      <Stack direction="row" spacing={3} px={3}>
+        <JobActionButtons job={job} />
+      </Stack>
     </Stack>
 
     {/* this Image is from MUI not next/image */}
@@ -159,13 +161,13 @@ type JobProps = {
   job?: JobPost | null;
 };
 
-function JobActionButtons({ job }: JobProps) {
+export function JobActionButtons({ job }: JobProps) {
   const geolocation = useGeolocationStore((state) => state.geolocation);
 
   const redirectDialogController = useBoolean();
 
   return (
-    <Stack direction="row" spacing={3} px={3}>
+    <>
       <IconLabelButton
         icon="fluent:briefcase-12-filled"
         label="สมัครงาน"
@@ -198,6 +200,6 @@ function JobActionButtons({ job }: JobProps) {
       /> */}
 
       <RedirectChialShareDialog controller={redirectDialogController} />
-    </Stack>
+    </>
   );
 }

@@ -10,7 +10,8 @@ import Stack from '@mui/material/Stack';
 
 export default function Page() {
   return (
-    <Stack width="100vw" height="100vh">
+    // desktop redirects to favorites (AccountShell)
+    <Stack width="100vw" height="100vh" sx={{ display: { md: 'none' } }}>
       <EconomapHeader title="จัดการบัญชี" />
 
       <UserProfile />

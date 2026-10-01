@@ -14,6 +14,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -140,6 +141,65 @@ export function MainInfo({ announcement }: MainInfoProps) {
       </Stack>
 
       <Divider />
+    </Stack>
+  );
+}
+
+// -------------------------------------------------------------
+
+/** Desktop right pane: the drawer's content as a card. */
+export function AnnouncementArticle({ id }: { id: string }) {
+  const { data: announcement } = useGetAnnouncement({ id });
+
+  if (!announcement) return null;
+
+  return (
+    <Stack
+      component="article"
+      sx={{
+        maxWidth: 760,
+        mx: 'auto',
+        pb: 4,
+        bgcolor: 'common.white',
+        borderRadius: 2,
+        boxShadow: '0px 1px 10px 1px #4876D31A',
+      }}
+    >
+      <MainInfo announcement={announcement} />
+      <AnnouncementFullDetail announcement={announcement} />
+
+      {(announcement.pdfUrl || announcement.phoneNumber) && (
+        <Stack direction="row" spacing={1.5} px={3} pt={3}>
+          {announcement.pdfUrl && (
+            <Button
+              variant="contained"
+              href={announcement.pdfUrl}
+              target="_blank"
+              startIcon={<Iconify icon="solar:document-text-linear" width={20} />}
+              sx={{ height: 44, px: 2.5, borderRadius: '9999px' }}
+            >
+              ดูเอกสาร PDF
+            </Button>
+          )}
+          {announcement.phoneNumber && (
+            <Button
+              href={`tel:${announcement.phoneNumber}`}
+              startIcon={<Iconify icon="ic:round-phone" width={20} />}
+              sx={{
+                height: 44,
+                px: 2.5,
+                borderRadius: '9999px',
+                border: 2,
+                borderColor: 'primary.lighter',
+                color: 'primary.dark',
+                fontWeight: 700,
+              }}
+            >
+              ติดต่อผู้ประกาศ
+            </Button>
+          )}
+        </Stack>
+      )}
     </Stack>
   );
 }

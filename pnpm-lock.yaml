@@ -4,6 +4,8 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+packageExtensionsChecksum: sha256-DGFsxCDwUG0DAc0p1v2+1OirnheKMHJrfZE5+3lN0wE=
+
 importers:
 
   .:
@@ -20092,6 +20094,7 @@ snapshots:
 
   react-leaflet-cluster@2.1.0(leaflet@1.9.4)(react-dom@19.2.4(react@19.2.4))(react-leaflet@4.2.1(leaflet@1.9.4)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4):
     dependencies:
+      '@react-leaflet/core': 2.1.0(leaflet@1.9.4)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       leaflet: 1.9.4
       leaflet.markercluster: 1.5.3(leaflet@1.9.4)
       react: 19.2.4

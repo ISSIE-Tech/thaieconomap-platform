@@ -6,6 +6,12 @@ export type CommercialTiny = {
     type: string;
     coordinates: [number, number];
   };
+  // list-only extras for the desktop sidebar
+  imageUrl?: string;
+  district?: District;
+  types?: { _id: string; name: string }[];
+  workingStatus?: keyof typeof CommercialWorkingStatus;
+  isNewlyOpened?: boolean;
 };
 
 export type Commercial = {

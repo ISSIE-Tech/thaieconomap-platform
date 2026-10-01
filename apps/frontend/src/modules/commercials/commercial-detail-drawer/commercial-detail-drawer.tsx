@@ -2,9 +2,12 @@
 
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
+import Link from 'next/link';
 import { useCallback } from 'react';
 import { maxLine } from 'src/theme/styles/mixins';
 import { Image } from 'src/shared/components/image';
+import { paths } from 'src/shared/routes/paths.config';
+import { Iconify } from 'src/shared/components/iconify';
 import { BlueRoundedHeader } from 'src/modules/economap-headers';
 import { SubmissionStatus } from 'src/modules/form-history/_types/history.type';
 import { IconLabelButton } from 'src/shared/components/custom-buttons/icon-label-btn';
@@ -18,6 +21,7 @@ import {
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
@@ -68,7 +72,32 @@ export function CommercialDrawer({
 
         <MainInfo commercial={commercial} submissionMessage={submissionMessage} />
 
-        <CommercialActionButtons commercial={commercial} submissionStatus={submissionStatus} />
+        <Stack direction="row" spacing={3} px={3}>
+          <CommercialActionButtons commercial={commercial} submissionStatus={submissionStatus} />
+        </Stack>
+
+        {/* submissions (form history) may not be public shops yet */}
+        {commercial && !submissionStatus && (
+          <Box px={3}>
+            <Button
+              fullWidth
+              component={Link}
+              href={paths.shop(commercial._id)}
+              endIcon={<Iconify icon="eva:arrow-forward-fill" width={20} />}
+              sx={{
+                height: 48,
+                borderRadius: '9999px',
+                border: 2,
+                borderColor: 'primary.lighter',
+                color: 'primary.dark',
+                fontSize: 15,
+                fontWeight: 700,
+              }}
+            >
+              ดูหน้าร้านแบบเต็ม
+            </Button>
+          </Box>
+        )}
       </Stack>
       <Image
         src={commercial?.imageUrl}
@@ -172,7 +201,7 @@ type CommercialProps = {
   submissionStatus?: SubmissionStatus;
 };
 
-function CommercialActionButtons({ commercial, submissionStatus }: CommercialProps) {
+export function CommercialActionButtons({ commercial, submissionStatus }: CommercialProps) {
   const geolocation = useGeolocationStore((state) => state.geolocation);
 
   const { mutateAsync: favorite } = useFavoriteCommercial();
@@ -192,7 +221,7 @@ function CommercialActionButtons({ commercial, submissionStatus }: CommercialPro
   }, [commercial?._id, refetch, unfavorite]);
 
   return (
-    <Stack direction="row" spacing={3} px={3}>
+    <>
       {commercial?.phoneNumber && <CallButton phoneNumber={commercial.phoneNumber} highlight />}
 
       {commercial && (
@@ -219,6 +248,6 @@ function CommercialActionButtons({ commercial, submissionStatus }: CommercialPro
           }
         />
       )}
-    </Stack>
+    </>
   );
 }

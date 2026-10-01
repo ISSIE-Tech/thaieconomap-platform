@@ -13,6 +13,7 @@ import { Snackbar } from 'src/shared/components/snackbar';
 import { LocalizationProvider } from 'src/shared/locales';
 import { ReactQueryProvider } from 'src/shared/react-query';
 import { GeolocationProvider } from 'src/modules/geolocation';
+import { CookieConsent } from 'src/modules/consent/cookie-consent';
 import AuthProvider from 'src/modules/auth/_contexts/auth-provider';
 
 export const metadata: Metadata = {
@@ -30,19 +31,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
         data-website-id="87551f9f-c32e-41eb-b2dd-fcfd6ddfc392"
         strategy="afterInteractive"
       />
-      <Script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-C31NKXJM4M"
-        strategy="afterInteractive"
-      />
-      <Script id="gtag-init" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-C31NKXJM4M');
-        `}
-      </Script>
+      {/* Google Analytics loads from <CookieConsent /> once the visitor accepts */}
       <body>
         <Suspense>
           <ReactQueryProvider>
@@ -51,6 +40,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
                 <ThemeProvider>
                   <GeolocationProvider>
                     <Snackbar />
+                    <CookieConsent />
                     {children}
                   </GeolocationProvider>
                 </ThemeProvider>

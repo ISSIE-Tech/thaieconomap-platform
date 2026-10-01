@@ -1,3 +1,10 @@
 packages:
   - "apps/*"
   - "packages/*"
+
+# react-leaflet-cluster imports @react-leaflet/core without declaring it, so it picked up the
+# hoisted v3 (from csc-liff's react-leaflet 5) and lost the map context of react-leaflet 4.
+packageExtensions:
+  react-leaflet-cluster@2:
+    dependencies:
+      "@react-leaflet/core": "^2.1.0"

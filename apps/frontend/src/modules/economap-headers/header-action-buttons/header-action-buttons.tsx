@@ -12,45 +12,42 @@ import Button from '@mui/material/Button';
 
 // ----------------------------------------------------------------------
 
-const generateUrl = (pathName: string) => {
-  switch (pathName) {
-    case paths.commercials.restaurants:
-      return paths.create.restaurants;
-    case paths.commercials.businesses:
-      return paths.create.businesses;
-    case paths.sharings:
-      return paths.create.shares;
-    case paths.jobs:
-      return 'https://www.issie-chula.org/';
-    default:
-      return '';
-  }
+const ACTIONS: Record<string, { url: string; icon: string; label: string }> = {
+  [paths.commercials.restaurants]: {
+    url: paths.create.restaurants,
+    icon: '/assets/icons/marker-plus.svg',
+    label: 'เพิ่มร้านค้า',
+  },
+  [paths.commercials.businesses]: {
+    url: paths.create.businesses,
+    icon: '/assets/icons/marker-plus.svg',
+    label: 'เพิ่มร้านค้า',
+  },
+  [paths.sharings]: {
+    url: paths.create.shares,
+    icon: '/assets/icons/sharing-plus.svg',
+    label: 'แบ่งปันสิ่งของ',
+  },
+  [paths.jobs]: {
+    url: 'https://www.issie-chula.org/',
+    icon: '/assets/icons/job-plus.svg',
+    label: 'ลงประกาศงาน',
+  },
 };
 
-export function HeaderActionButtons() {
+/**
+ * The "create" action for the current page, or null when the page has none.
+ * Guests get `onClick` (a login toast) instead of `href`.
+ */
+export function useCreateAction() {
   const pathName = usePathname();
-
   const router = useRouter();
-
   const { authenticated } = useAuthContext();
 
-  const url = generateUrl(pathName);
+  const action = ACTIONS[pathName];
+  if (!action) return null;
 
-  const getIcon = () => {
-    switch (pathName) {
-      case paths.commercials.restaurants:
-      case paths.commercials.businesses:
-        return '/assets/icons/marker-plus.svg';
-      case paths.sharings:
-        return '/assets/icons/sharing-plus.svg';
-      case paths.jobs:
-        return '/assets/icons/job-plus.svg';
-      default:
-        return '';
-    }
-  };
-
-  const handleGuestClick = () =>
+  const onGuestClick = () =>
     toast.warning('กรุณาเข้าสู่ระบบ', {
       id: 'header-action-button',
       description: 'กดเพื่อไปหน้าลงทะเบียน',
@@ -69,11 +66,22 @@ export function HeaderActionButtons() {
       ),
     });
 
-  const icon = <Image src={getIcon()} alt="marker plus icon" width="24" height="24" />;
+  return {
+    icon: action.icon,
+    label: action.label,
+    href: authenticated ? action.url : undefined,
+    onClick: authenticated ? undefined : onGuestClick,
+  };
+}
 
-  if (!url) return <Box />;
+export function HeaderActionButtons() {
+  const create = useCreateAction();
 
-  if (!authenticated) return <Box onClick={handleGuestClick}>{icon}</Box>;
+  if (!create) return <Box />;
 
-  return <Link href={url}>{icon}</Link>;
+  const icon = <Image src={create.icon} alt="marker plus icon" width="24" height="24" />;
+
+  if (!create.href) return <Box onClick={create.onClick}>{icon}</Box>;
+
+  return <Link href={create.href}>{icon}</Link>;
 }

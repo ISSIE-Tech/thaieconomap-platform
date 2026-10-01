@@ -92,6 +92,19 @@ export function MenuDrawer({ menuController }: Props) {
           <Divider />
 
           <Stack spacing={2}>{userSection}</Stack>
+
+          <Divider />
+
+          <Stack spacing={2}>
+            <NavigateLink
+              text="ข้อกำหนดการใช้งาน"
+              onClick={closeDrawerAndNavigate(paths.legal.terms)}
+            />
+            <NavigateLink
+              text="นโยบายความเป็นส่วนตัว"
+              onClick={closeDrawerAndNavigate(paths.legal.privacy)}
+            />
+          </Stack>
         </Stack>
 
         <Stack

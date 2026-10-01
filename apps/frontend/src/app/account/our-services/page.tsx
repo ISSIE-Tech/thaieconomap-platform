@@ -11,6 +11,7 @@ import NavigateLink from 'src/modules/account/navigate-link';
 import { BlueRoundedHeader } from 'src/modules/economap-headers';
 import { SERVICE_LINKS, OUR_CONTACT_NUMBER } from 'src/modules/account/_constants';
 
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -34,8 +35,21 @@ export default function OurServices() {
   };
 
   return (
-    <Stack minHeight="100vh">
-      <BlueRoundedHeader title="บริการอื่นๆของเรา" />
+    <Stack minHeight={{ xs: '100vh', md: 'auto' }}>
+      <Box sx={{ display: { md: 'none' } }}>
+        <BlueRoundedHeader title="บริการอื่นๆของเรา" />
+      </Box>
+
+      {/* desktop: rendered inside AccountShell's content card */}
+      <Typography
+        component="h1"
+        fontSize={22}
+        fontWeight={700}
+        px={3}
+        sx={{ display: { xs: 'none', md: 'block' } }}
+      >
+        บริการอื่นๆของเรา
+      </Typography>
 
       <Stack spacing={1.25} mt={1.25} px={3}>
         <Typography variant="body1" fontWeight="bold">

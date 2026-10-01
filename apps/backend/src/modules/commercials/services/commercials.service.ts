@@ -141,10 +141,16 @@ export class CommercialsService {
       })}`,
     );
 
+    // list fields feed the desktop sidebar; detail-only fields stay on `/:id/tiny`
     return this.commercialsRepository.findShopsAndCommercials(query, {
       name: 1,
       category: 1,
       location: 1,
+      imageUrl: 1,
+      types: 1,
+      district: 1,
+      workingStatus: 1,
+      isNewlyOpened: 1,
     });
   }
 

@@ -13,7 +13,6 @@ import activeSharing from '/public/assets/icons/active-sharing-node.svg';
 import activeCommercial from '/public/assets/icons/active-commercial-node.svg';
 import pumpuangLeft from '/public/assets/icons/pumpuang/Handoff_Icon-Red-Left.png';
 import pumpuangRight from '/public/assets/icons/pumpuang/Handoff_Icon-Red-Right.png';
-import pumpuangCar from '/public/assets/icons/pumpuang/Handoff_Car.png';
 import overlappingCommercial from '/public/assets/icons/overlapping-commercial-node.svg';
 
 export const areChildrenMarkersClose = (cluster: MarkerCluster) => {
@@ -102,53 +101,39 @@ export const userMarker = new L.DivIcon({
   iconAnchor: new L.Point(CLUSTER_CONSTANTS.USER_MARKER_WIDTH / 2, CLUSTER_CONSTANTS.USER_MARKER_HEIGHT / 2),
 });
 
-export const commercialMarker = new L.Icon({
-  iconUrl: commercial.src,
-  iconSize: new L.Point(CLUSTER_CONSTANTS.MARKER_WIDTH, CLUSTER_CONSTANTS.MARKER_HEIGHT),
-});
+// Pin SVGs are 30x35 with the tip at y≈32.7 and the head centred at y=15. Keep that
+// aspect ratio (a 32x48 box letterboxed them) and anchor at the tip, not the centre.
+const pinIcon = (iconUrl: string, active = false) => {
+  const [w, h] = active ? [44, 51] : [32, 37];
+  const tipY = Math.round((h * 32.7) / 35);
+  return new L.Icon({
+    iconUrl,
+    iconSize: [w, h],
+    iconAnchor: [w / 2, tipY],
+    // labels sit to the right of the pin head
+    tooltipAnchor: [w / 2, Math.round((h * 15) / 35) - tipY],
+  });
+};
 
-export const pumpuangLeftMarker = new L.Icon({
-  iconUrl: pumpuangLeft.src,
-  iconSize: new L.Point(80, 80),
-});
+export const commercialMarker = pinIcon(commercial.src);
 
-export const pumpuangRightMarker = new L.Icon({
-  iconUrl: pumpuangRight.src,
-  iconSize: new L.Point(80, 80),
-});
+// Truck PNGs are cropped to the truck (1:2, 2x for retina). They rotate with the heading
+// around their centre (rotationOrigin="center"), so they anchor at the centre, not a tip.
+const truckIcon = (iconUrl: string) =>
+  new L.Icon({ iconUrl, iconSize: [24, 48], iconAnchor: [12, 24] });
 
-export const pumpuangCarMarker = new L.Icon({
-  iconUrl: pumpuangCar.src,
-  iconSize: new L.Point(80, 80),
-  iconAnchor: new L.Point(40, 40),
-});
+export const pumpuangLeftMarker = truckIcon(pumpuangLeft.src);
 
-export const activeCommercialMarker = new L.Icon({
-  iconUrl: activeCommercial.src,
-  iconSize: new L.Point(32, 48),
-});
+export const pumpuangRightMarker = truckIcon(pumpuangRight.src);
 
-export const overlappingCommercialMarker = new L.Icon({
-  iconUrl: overlappingCommercial.src,
-  iconSize: new L.Point(32, 48),
-});
+export const activeCommercialMarker = pinIcon(activeCommercial.src, true);
 
-export const jobMarker = new L.Icon({
-  iconUrl: job.src,
-  iconSize: new L.Point(CLUSTER_CONSTANTS.MARKER_WIDTH, CLUSTER_CONSTANTS.MARKER_HEIGHT),
-});
+export const overlappingCommercialMarker = pinIcon(overlappingCommercial.src);
 
-export const activeJobMarker = new L.Icon({
-  iconUrl: activeJob.src,
-  iconSize: new L.Point(32, 48),
-});
+export const jobMarker = pinIcon(job.src);
 
-export const sharingMarker = new L.Icon({
-  iconUrl: sharing.src,
-  iconSize: new L.Point(CLUSTER_CONSTANTS.MARKER_WIDTH, CLUSTER_CONSTANTS.MARKER_HEIGHT),
-});
+export const activeJobMarker = pinIcon(activeJob.src, true);
 
-export const activeSharingMarker = new L.Icon({
-  iconUrl: activeSharing.src,
-  iconSize: new L.Point(32, 48),
-});
+export const sharingMarker = pinIcon(sharing.src);
+
+export const activeSharingMarker = pinIcon(activeSharing.src, true);

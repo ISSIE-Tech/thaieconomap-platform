@@ -127,7 +127,8 @@ export function CommercialFilterDrawer({ controller }: Props) {
       anchor="bottom"
       hideBackdrop
       PaperProps={{
-        sx: { width: { xs: '100vw', md: 480 }, ml: 'auto', overflowX: 'hidden', pb: 8 },
+        // desktop: a sheet over the 420px sidebar
+        sx: { width: { xs: '100vw', md: 420 }, ml: { xs: 'auto', md: 0 }, overflowX: 'hidden', pb: 8 },
       }}
     >
       <FilterHeader controller={controller} />

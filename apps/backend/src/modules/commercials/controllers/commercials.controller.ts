@@ -102,7 +102,8 @@ export class CommercialsController {
     `workingHour=${CommercialWorkingHour.ANYTIME}`,
     `location=${SearchLocation.ANYWHERE}`,
   )
-  @UseInterceptors(ResponseCacheInterceptor)
+  // presign imageUrl like the detail route: the list now feeds sidebar/related-shop thumbnails
+  @UseInterceptors(ResponseCacheInterceptor, TransformFileInterceptor)
   async getCommercialsTiny(
     @Query() getCommercialsTinyQueryDto: GetCommercialsTinyQueryDto,
   ): Promise<CommercialTinyResponseDto[]> {
