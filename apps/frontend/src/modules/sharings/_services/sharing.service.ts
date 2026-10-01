@@ -48,14 +48,18 @@ export const getTinyFilteredSharings = async ({ queryKey }: Params) => {
     district: 6612345
   }
   */
-  const params = propKeys.split(',').reduce(
-    (acc, keyValue) => {
-      const [key, value] = keyValue.split(':');
-      acc[key] = value;
-      return acc;
-    },
-    {} as Record<string, string>
-  );
+  // no filters gives '', which would otherwise become `?=undefined` and match nothing
+  const params = propKeys
+    .split(',')
+    .filter(Boolean)
+    .reduce(
+      (acc, keyValue) => {
+        const [key, value] = keyValue.split(':');
+        acc[key] = value;
+        return acc;
+      },
+      {} as Record<string, string>
+    );
 
   const { data } = await axios.get<ApiResponse<SharingTiny[]>>(endpoints.shares.filter(params));
 
