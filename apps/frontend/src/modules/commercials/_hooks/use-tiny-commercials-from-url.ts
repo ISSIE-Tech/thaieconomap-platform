@@ -3,6 +3,7 @@ import { useSearchParams } from 'next/navigation';
 import { useGeolocationStore } from 'src/modules/geolocation/_store/geolocation.store';
 
 import { QUERY_KEY } from '../_config';
+import { isOrderable } from '../_types/commercials.type';
 import { getTinyFilteredCommercials } from '../_services/commercial.service';
 
 /**
@@ -14,6 +15,7 @@ export function useTinyCommercialsFromUrl(category: keyof typeof QUERY_KEY.CATEG
   const workingHour = searchParams.get('workingHour');
   const location = searchParams.get('location');
   const types = searchParams.get('types');
+  const orderable = searchParams.get('orderable');
 
   const geolocation = useGeolocationStore((state) => state.geolocation);
 
@@ -33,5 +35,7 @@ export function useTinyCommercialsFromUrl(category: keyof typeof QUERY_KEY.CATEG
   return useQuery({
     queryKey: [QUERY_KEY.COMMERCIALS, QUERY_KEY.CATEGORY[category], propKeys],
     queryFn: getTinyFilteredCommercials,
+    // client-side: the API has no such filter, and this keeps one cache entry per server query
+    select: orderable ? (data) => data?.filter(isOrderable) : undefined,
   });
 }

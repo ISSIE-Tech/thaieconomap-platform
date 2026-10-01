@@ -1,16 +1,24 @@
-import { Body, Controller, Post, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Body, Controller, Patch, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 import { UserRole } from '@thaieconomap/contracts';
 
-import { CacheClearKeys, CurrentUser, Roles } from '../../common/decorators';
+import { CacheClearKeys, CurrentUser, ObjectId, Roles } from '../../common/decorators';
 import { AuthGuard, RolesGuard } from '../../common/guards';
 import { CacheClearInterceptor } from '../../common/interceptors';
 import { CACHE_KEY, DOC_DESCRIPTION } from '../../shared/constants';
 import { IUser } from '../../shared/interfaces';
 
 import { CachingService } from './caching.service';
-import { ListShopsDto, ListSyncLogsDto } from './dto';
+import { ListShopsDto, ListSyncLogsDto, SetShopHiddenDto } from './dto';
 import { SyncTrigger } from './schemas';
 
 @ApiBearerAuth()
@@ -50,6 +58,21 @@ export class CachingController {
   @UseGuards(AuthGuard, RolesGuard)
   async listShops(@Body() dto: ListShopsDto) {
     return this.cachingService.listShops(dto.search, Number(dto.page ?? 1), Number(dto.limit ?? 20));
+  }
+
+  // Hides a tamsang shop from the public map without touching tamsang itself.
+  @ApiOkResponse({ description: 'Shop visibility updated.' })
+  @ApiBadRequestResponse({ description: DOC_DESCRIPTION.MUST_BE_MONGOID('shopId') })
+  @ApiNotFoundResponse({ description: DOC_DESCRIPTION.ENTITY_NOT_FOUND('Shop') })
+  @ApiForbiddenResponse({ description: DOC_DESCRIPTION.INCLUDE_ROLES(UserRole.ADMIN) })
+  @ApiParam({ name: 'shopId' })
+  @Patch('shops/:shopId/hidden')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @CacheClearKeys(CACHE_KEY.commercials.all)
+  @UseInterceptors(CacheClearInterceptor)
+  async setShopHidden(@ObjectId('shopId') shopId: string, @Body() dto: SetShopHiddenDto) {
+    return this.cachingService.setShopHidden(shopId, dto.hidden);
   }
 
   @ApiOkResponse({ description: 'History of shop and base cache syncs, newest first.' })

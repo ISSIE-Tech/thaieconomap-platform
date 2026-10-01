@@ -33,13 +33,15 @@ export default function CommercialSearchFilterBar() {
   const workingHour = searchParams.get('workingHour');
   const location = searchParams.get('location');
   const types = searchParams.get('types');
+  const orderable = searchParams.get('orderable');
 
   // check if filter default
   const isFilterDefault = useMemo(() => {
     const isDefault = getIsDefault(
       (workingHour as WorkingHourFilter) ?? commercialFilterDefault.workingHour,
       (location as LocationFilter) ?? commercialFilterDefault.location,
-      types ?? ''
+      types ?? '',
+      orderable
     );
 
     switch (pathname) {
@@ -51,7 +53,7 @@ export default function CommercialSearchFilterBar() {
         isPumpuang.onTrue();
         return isDefault;
     }
-  }, [isPumpuang, location, pathname, types, workingHour]);
+  }, [isPumpuang, location, orderable, pathname, types, workingHour]);
 
   // TODO: when changing tabs after filter, user HAVE to wait for fetch from filter to complete before the tabs change
   // maybe use cancel signal to cancel fetch or something
@@ -60,7 +62,7 @@ export default function CommercialSearchFilterBar() {
   // saving filter
   const filterUrls = useCommercialStore((state) => state.filterUrls);
   const setFilterUrls = useCommercialStore((state) => state.setFilterUrls);
-  const hasNoParams = !workingHour && !location && !types;
+  const hasNoParams = !workingHour && !location && !types && !orderable;
   const router = useRouter();
 
   // ========== USED FOR: if there's no query params, set it to whatever is in zustand state ==========
@@ -76,6 +78,8 @@ export default function CommercialSearchFilterBar() {
       newSearchParams.set('location', filterUrls[commercialPath].location);
     if (filterUrls[commercialPath].types !== '')
       newSearchParams.set('types', filterUrls[commercialPath].types);
+    if (filterUrls[commercialPath].orderable)
+      newSearchParams.set('orderable', filterUrls[commercialPath].orderable);
 
     // Create a new URL with updated search parameters using pathname
     const newUrl = `${pathname}?${newSearchParams.toString()}`;
@@ -91,7 +95,8 @@ export default function CommercialSearchFilterBar() {
     if (workingHour) setFilterUrls(commercialPath, 'workingHour', workingHour);
     if (location) setFilterUrls(commercialPath, 'location', location);
     if (types) setFilterUrls(commercialPath, 'types', types);
-  }, [setFilterUrls, workingHour, location, types, hasNoParams, pathname]);
+    setFilterUrls(commercialPath, 'orderable', orderable ?? '');
+  }, [setFilterUrls, workingHour, location, types, orderable, hasNoParams, pathname]);
 
   return (
     <>

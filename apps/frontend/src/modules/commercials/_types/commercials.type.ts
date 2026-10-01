@@ -12,6 +12,8 @@ export type CommercialTiny = {
   types?: { _id: string; name: string }[];
   workingStatus?: keyof typeof CommercialWorkingStatus;
   isNewlyOpened?: boolean;
+  // shops only; set when the shop can be ordered through tamsang-tamsong's LINE OA
+  base?: { botInfo?: { basicId?: string } };
 };
 
 export type Commercial = {
@@ -129,8 +131,13 @@ export type LocationFilter = keyof typeof commercialFilter.location;
 export const getIsDefault = (
   workingHour: WorkingHourFilter,
   location: LocationFilter,
-  types?: string
+  types?: string,
+  orderable?: string | null
 ) =>
   workingHour === commercialFilterDefault.workingHour &&
   location === commercialFilterDefault.location &&
-  (types === '' || !types);
+  (types === '' || !types) &&
+  !orderable;
+
+// `orderable=1` in the URL keeps only shops orderable through tamsang-tamsong's LINE OA
+export const isOrderable = (c: CommercialTiny) => !!c.base?.botInfo?.basicId;

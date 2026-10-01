@@ -138,6 +138,7 @@ export const endpoints = {
   caching: {
     sync: '/services/thai-economap/caching/sync',
     shops: '/services/thai-economap/caching/shops',
+    shopHidden: (id: string) => `/services/thai-economap/caching/shops/${id}/hidden`,
     syncLogs: '/services/thai-economap/caching/sync-logs',
   },
   notifications: {

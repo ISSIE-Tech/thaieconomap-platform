@@ -151,6 +151,8 @@ export class CommercialsService {
       district: 1,
       workingStatus: 1,
       isNewlyOpened: 1,
+      // lets the sidebar mark/filter shops orderable through tamsang-tamsong
+      'base.botInfo.basicId': 1,
     });
   }
 

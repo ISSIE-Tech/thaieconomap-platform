@@ -102,6 +102,16 @@ export class CachingService {
     return this.shopRepository.findPaginated(search, page, limit);
   }
 
+  async setShopHidden(id: string, hidden: boolean) {
+    const shop = await this.shopRepository.findByIdAndUpdate(id, { hidden }, { new: true });
+
+    if (!shop) {
+      throw new ErrorException(CODES.TEC_006);
+    }
+
+    return shop;
+  }
+
   async listSyncLogs(page: number, limit: number) {
     return this.syncLogRepository.findPaginated(page, limit);
   }

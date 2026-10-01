@@ -1,6 +1,6 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { IsNumberString, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumberString, IsOptional, IsString } from 'class-validator';
 
 export class ListSyncLogsDto {
   @ApiPropertyOptional({ example: '1' })
@@ -19,4 +19,10 @@ export class ListShopsDto extends ListSyncLogsDto {
   @IsOptional()
   @IsString()
   search?: string;
+}
+
+export class SetShopHiddenDto {
+  @ApiProperty({ example: true })
+  @IsBoolean()
+  hidden: boolean;
 }

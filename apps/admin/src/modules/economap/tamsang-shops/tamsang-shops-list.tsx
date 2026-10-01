@@ -7,6 +7,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import Avatar from '@mui/material/Avatar';
+import Switch from '@mui/material/Switch';
 import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -23,7 +24,12 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { useTable, TableHeadCustom, TablePaginationCustom } from 'src/components/table';
 
-import { useGetSyncLogs, useGetTamsangShops, useSyncTamsangShops } from './tamsang-shops.service';
+import {
+  useGetSyncLogs,
+  useGetTamsangShops,
+  useSyncTamsangShops,
+  useSetTamsangShopHidden,
+} from './tamsang-shops.service';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +44,7 @@ const SYNC_HEAD = [
 ];
 
 const SHOP_HEAD = [
+  { id: 'visible', label: 'แสดงบนแผนที่', width: 120 },
   { id: 'name', label: 'ชื่อร้าน' },
   { id: 'category', label: 'หมวด', width: 120 },
   { id: 'type', label: 'ประเภท', width: 160 },
@@ -69,6 +76,16 @@ export default function TamsangShopsList() {
   });
 
   const sync = useSyncTamsangShops();
+  const setHidden = useSetTamsangShopHidden();
+
+  const handleToggleHidden = (id: string, hidden: boolean) =>
+    setHidden.mutate(
+      { id, hidden },
+      {
+        onSuccess: () => toast.success(hidden ? 'ซ่อนร้านค้าแล้ว' : 'แสดงร้านค้าแล้ว'),
+        onError: () => toast.error('บันทึกไม่สำเร็จ'),
+      }
+    );
 
   const handleSync = () =>
     sync.mutate(undefined, {
@@ -188,12 +205,21 @@ export default function TamsangShopsList() {
         </Stack>
 
         <Scrollbar>
-          <Table size="medium" sx={{ minWidth: 1100 }}>
+          <Table size="medium" sx={{ minWidth: 1220 }}>
             <TableHeadCustom headLabel={SHOP_HEAD} />
 
             <TableBody>
               {shops.data?.data.map((row) => (
-                <TableRow key={row._id}>
+                <TableRow key={row._id} sx={{ opacity: row.hidden ? 0.5 : 1 }}>
+                  <TableCell>
+                    <Switch
+                      checked={!row.hidden}
+                      disabled={setHidden.isPending && setHidden.variables?.id === row._id}
+                      onChange={(event) => handleToggleHidden(row._id, !event.target.checked)}
+                      inputProps={{ 'aria-label': `แสดง ${row.name} บนแผนที่` }}
+                    />
+                  </TableCell>
+
                   <TableCell>
                     <Stack direction="row" spacing={2} alignItems="center">
                       <Avatar alt={row.name} src={row.imageUrl || undefined} variant="rounded" />
