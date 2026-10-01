@@ -11,17 +11,16 @@ import DialogActions from '@mui/material/DialogActions';
 
 type RedirectChialShareDialogProps = {
   controller: UseBooleanReturn;
+  // csc's LIFF link that opens this job, sent by csc-backend with the job
+  liffUrl?: string;
 };
 
-export function RedirectChialShareDialog({ controller }: RedirectChialShareDialogProps) {
-  // send to chial share
+export function RedirectChialShareDialog({ controller, liffUrl }: RedirectChialShareDialogProps) {
   const redirectToChialShare = useCallback(() => {
     controller.onFalse();
 
-    // TODO: change this link
-    // We don't have the link yet, do we?
-    window.open('https://www.issie-chula.org/', '_blank');
-  }, [controller]);
+    if (liffUrl) window.open(liffUrl, '_blank');
+  }, [controller, liffUrl]);
 
   return (
     <Dialog fullWidth maxWidth="xs" open={controller.value} onClose={controller.onFalse}>

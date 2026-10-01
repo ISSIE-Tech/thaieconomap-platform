@@ -27,3 +27,5 @@ export * from './cache.interface';
 export * from './token.interface';
 
 export * from './files.interface';
+
+export * from './chial-share.interface';

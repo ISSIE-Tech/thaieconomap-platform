@@ -13,6 +13,7 @@ const ROOTS = {
   OTP_LOGS: '/otp-logs',
   CSC: '/csc',
   TAMSANG_SHOPS: '/tamsang-shops',
+  CSC_JOBS: '/csc-jobs',
   SITE_CONTENTS: '/site-contents',
 };
 
@@ -111,6 +112,11 @@ export const paths = {
   'tamsang-shops': {
     dashboard: {
       root: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.TAMSANG_SHOPS}`,
+    },
+  },
+  'csc-jobs': {
+    dashboard: {
+      root: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.CSC_JOBS}`,
     },
   },
   'otp-logs': {

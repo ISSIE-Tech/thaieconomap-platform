@@ -489,4 +489,16 @@ export const CODES: ICodeObj = {
     display: 'ระบบแจ้งเตือนยังไม่ได้ตั้งค่า',
     statusCode: HttpStatus.SERVICE_UNAVAILABLE,
   },
+  TEC_082: {
+    code: 'TEC-082',
+    message: 'Chial Share Service Error',
+    display: 'ไม่สามารถดึงข้อมูลงานจากเชี่ยวแชร์',
+    statusCode: HttpStatus.SERVICE_UNAVAILABLE,
+  },
+  TEC_083: {
+    code: 'TEC-083',
+    message: 'Job post not found',
+    display: 'ไม่พบประกาศงาน',
+    statusCode: HttpStatus.NOT_FOUND,
+  },
 };

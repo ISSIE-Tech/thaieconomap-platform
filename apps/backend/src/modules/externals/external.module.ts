@@ -1,7 +1,12 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 
-import { GateWayService, TamsangTamsongService, ThaiBulkSmsService } from './services';
+import {
+  ChialShareService,
+  GateWayService,
+  TamsangTamsongService,
+  ThaiBulkSmsService,
+} from './services';
 
 @Module({
   imports: [
@@ -13,7 +18,7 @@ import { GateWayService, TamsangTamsongService, ThaiBulkSmsService } from './ser
     }),
   ],
   controllers: [],
-  providers: [TamsangTamsongService, GateWayService, ThaiBulkSmsService],
-  exports: [TamsangTamsongService, GateWayService, ThaiBulkSmsService],
+  providers: [ChialShareService, TamsangTamsongService, GateWayService, ThaiBulkSmsService],
+  exports: [ChialShareService, TamsangTamsongService, GateWayService, ThaiBulkSmsService],
 })
 export class ExternalModule {}

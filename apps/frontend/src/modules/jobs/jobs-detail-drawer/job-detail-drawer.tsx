@@ -61,10 +61,10 @@ export const JobsDetailDrawer = ({
     </Stack>
 
     {/* this Image is from MUI not next/image */}
-    {job?.imageUrls && (
+    {job?.imageUrls?.[0] && (
       <Image
-        // https:// + storage.thaieconomap.com/chial-share-dev/something.jpeg
-        src={`https://${job.imageUrls[0]}`}
+        // csc-backend sends full urls (presigned, or https:// added to legacy ones)
+        src={job.imageUrls[0]}
         alt="job location"
         ratio="4/3"
         py={4}
@@ -168,12 +168,14 @@ export function JobActionButtons({ job }: JobProps) {
 
   return (
     <>
-      <IconLabelButton
-        icon="fluent:briefcase-12-filled"
-        label="สมัครงาน"
-        highlight
-        onClick={redirectDialogController.onTrue}
-      />
+      {job?.liffUrl && (
+        <IconLabelButton
+          icon="fluent:briefcase-12-filled"
+          label="สมัครงาน"
+          highlight
+          onClick={redirectDialogController.onTrue}
+        />
+      )}
 
       {job?.createdBy.phoneNumber && <CallButton phoneNumber={job.createdBy.phoneNumber} />}
 
@@ -199,7 +201,7 @@ export function JobActionButtons({ job }: JobProps) {
         onClick={() => {}}
       /> */}
 
-      <RedirectChialShareDialog controller={redirectDialogController} />
+      <RedirectChialShareDialog controller={redirectDialogController} liffUrl={job?.liffUrl} />
     </>
   );
 }

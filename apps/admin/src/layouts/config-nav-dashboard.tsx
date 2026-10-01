@@ -121,6 +121,12 @@ export const economapNavData = [
         roles: ['ADMIN'],
       },
       {
+        title: 'งานจากเชี่ยวแชร์',
+        path: paths['csc-jobs'].dashboard.root,
+        icon: ICONS.job,
+        roles: ['ADMIN'],
+      },
+      {
         title: 'ประกาศ',
         path: paths.announcements.dashboard.root,
         icon: ICONS.blog,

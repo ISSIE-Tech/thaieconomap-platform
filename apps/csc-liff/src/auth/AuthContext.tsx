@@ -23,6 +23,7 @@ import {
   LIFF_ID,
 } from '@/config-global';
 import axios from '@/utils/axios';
+import { rememberPendingJob, takePendingJobPath } from '@/utils/pending-job';
 
 interface IAuthState {
   isAuthenticated: boolean;
@@ -134,6 +135,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // init liff
       const liff = (await import('@line/liff')).default;
       await liff.init({ liffId: LIFF_ID });
+      // after init, so LIFF has already turned liff.state back into ?jobId=
+      rememberPendingJob(window.location.search);
 
       // LIFF hands back its cached ID token even after it expires, and the
       // backend rejects that; log in again to get a fresh one
@@ -160,18 +163,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const { credentials } = data;
 
       if (!credentials) {
+        // A reload that lands on /auth/register (LIFF re-opening, or login redirecting
+        // back) must still finish initializing, or the loading screen never goes away.
         if (router.pathname !== '/auth/register') {
-          router.push('/auth/register').then(() => {
-            dispatch({
-              type: Types.INITIAL,
-              payload: {
-                isAuthenticated: false,
-                user: null,
-                tokenId,
-              },
-            });
-          });
+          await router.push('/auth/register');
         }
+
+        dispatch({
+          type: Types.INITIAL,
+          payload: {
+            isAuthenticated: false,
+            user: null,
+            tokenId,
+          },
+        });
       } else {
         setSession(credentials.accessToken);
         dispatch({
@@ -182,6 +187,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
             tokenId,
           },
         });
+
+        const next = takePendingJobPath();
+        if (next !== '/') router.replace(next);
       }
     } catch (error) {
       console.error(error);

@@ -1,5 +1,5 @@
+import type { ApiResponse } from 'src/shared/types/api.type';
 import type { JobPost, JobTiny, JobType } from '../_types/jobs.type';
-import type { ApiResponse, ChialShareApiResponse } from 'src/shared/types/api.type';
 
 import axios from 'src/shared/utils/axios';
 import { endpoints } from 'src/shared/configs/endpoints.config';
@@ -45,19 +45,15 @@ export const getJobById = async ({ queryKey }: Params) => {
   // query data cannot be undefined
   if (commercialId === '') return null;
 
-  const { data } = await axios.get<ChialShareApiResponse<{ jobPost: JobPost }>>(
-    endpoints.jobs.details(commercialId)
-  );
+  const { data } = await axios.get<ApiResponse<JobPost>>(endpoints.jobs.details(commercialId));
 
-  return data.jobPost;
+  return data.data;
 };
 
 // ----------------------------------------------------------------------
 
 export const getJobTypes = async () => {
-  const { data } = await axios.get<ChialShareApiResponse<{ jobCategories: JobType[] }>>(
-    endpoints.jobs['job-types']
-  );
+  const { data } = await axios.get<ApiResponse<JobType[]>>(endpoints.jobs['job-types']);
 
-  return data.jobCategories;
+  return data.data;
 };

@@ -4,10 +4,9 @@ const ROOTS = {
   AUTH: '/auth',
   SERVICES: '/services',
   THAI_ECONOMAP: '/thai-economap',
-  CHIAL_SHARE: '/chial-share',
   COMMERCIALS: '/commercials',
   PUMPUANGS: '/pumpuangs',
-  JOBS: '/job-posts',
+  JOBS: '/csc-jobs',
   SHARES: '/shares',
   MAP: '/map',
   USERS: '/users',
@@ -20,7 +19,8 @@ const ROOTS = {
 const BASE = `${ROOTS.SERVICES}${ROOTS.THAI_ECONOMAP}` as const;
 const COMMERCIALS = `${BASE}${ROOTS.COMMERCIALS}`;
 const PUMPUANGS = `${BASE}${ROOTS.PUMPUANGS}`;
-const JOBS = `${ROOTS.SERVICES}${ROOTS.CHIAL_SHARE}${ROOTS.JOBS}`;
+// served from the backend's copy of csc jobs, refreshed hourly
+const JOBS = `${BASE}${ROOTS.JOBS}`;
 const SHARES = `${BASE}${ROOTS.SHARES}`;
 const MAP = `${BASE}${ROOTS.MAP}`;
 const USERS = `${BASE}${ROOTS.USERS}`;
