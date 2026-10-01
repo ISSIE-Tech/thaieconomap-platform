@@ -1,6 +1,8 @@
 stages:
   - build-dev
   - deploy-dev
+  - build-prod
+  - deploy-prod
 
 variables:
   REGISTRY: registry.issie.dev
@@ -50,3 +52,48 @@ deploy-dev:
   rules:
     - when: on_success
 
+build-push-prod:
+  stage: build-prod
+  tags:
+    - k8s-dev
+  image:
+    name: moby/buildkit:rootless
+    entrypoint: [""]
+  variables:
+    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
+  before_script:
+    - rm -rf apps/csc-liff/.env
+    - cp apps/csc-liff/.env.prod apps/csc-liff/.env
+    - mkdir -p ~/.docker
+    - echo "{\"auths\":{\"$REGISTRY\":{\"username\":\"$CI_DEPLOY_USER\",\"password\":\"$CI_DEPLOY_PASSWORD\"}}}" > ~/.docker/config.json
+  script:
+    - |
+      buildctl-daemonless.sh build \
+        --frontend=dockerfile.v0 \
+        --local context=. \
+        --local dockerfile=apps/csc-liff \
+        --opt filename=Dockerfile \
+        --output type=image,\"name=$REGISTRY/$IMAGE_PATH:$CI_COMMIT_SHORT_SHA,$REGISTRY/$IMAGE_PATH:latest\",push=true
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+deploy-prod:
+  stage: deploy-prod
+  image: alpine:latest
+  script:
+    - apk add --no-cache git yq
+    - git clone https://gitlab-ci-token:${CI_DEPLOY_TOKEN}@gitlab.issie.dev/thaieconomap/thaieconomap-k8s-deployment.git
+    - cd thaieconomap-k8s-deployment
+    - yq eval ".spec.template.spec.containers[0].image = \"$REGISTRY/$IMAGE_PATH:$CI_COMMIT_SHORT_SHA\"" -i ./prod/csc-liff/deployment.yaml
+    - git config user.name "GitLab CI"
+    - git config user.email "ci@gitlab.com"
+    - git add .
+    - git commit -m "Deploy $CI_COMMIT_SHORT_SHA to PROD"
+    # several app pipelines deploy at once; rebase on whatever landed in between and retry
+    - for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push origin main && break; sleep $((RANDOM % 5 + 1)); done
+  needs:
+    - build-push-prod
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
