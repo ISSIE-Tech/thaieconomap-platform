@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
 
 import { JobsSidebar } from 'src/modules/jobs/jobs-sidebar';
@@ -7,6 +8,12 @@ import { mobileOnly, desktopOnly, mapScreenSx } from 'src/shared/components/map-
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+
+export const metadata: Metadata = {
+  title: 'งานและอาชีพในชุมชน',
+  description: 'หางานใกล้บ้าน ประกาศรับสมัครงานและอาชีพในชุมชน ทั้งงานประจำ งานพาร์ทไทม์ และงานรายวัน',
+  alternates: { canonical: '/job-finding' },
+};
 
 // ----------------------------------------------------------------------
 

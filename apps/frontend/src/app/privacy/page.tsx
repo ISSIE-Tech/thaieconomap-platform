@@ -5,7 +5,10 @@ import { getSiteContent } from 'src/modules/site-content/get-site-content';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = { title: 'นโยบายความเป็นส่วนตัว | Thai Economap' };
+export const metadata: Metadata = {
+  title: 'นโยบายความเป็นส่วนตัว',
+  alternates: { canonical: '/privacy' },
+};
 
 export default async function PrivacyPage() {
   return <LegalPage content={await getSiteContent('privacy')} />;
