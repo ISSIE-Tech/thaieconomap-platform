@@ -42,10 +42,7 @@ export const endpoints = {
         'v2/auth/thai-economap/line-login/login'
       ),
     },
-    refresh: getValueBasedOnEnv(
-      'vDev/auth/refresh',
-      'v2/auth/refresh'
-    ),
+    refresh: 'auth/refresh', // gateway route is version-neutral
     profile: { get: '/users/profile', update: '/users/profile' },
   },
   commercials: {

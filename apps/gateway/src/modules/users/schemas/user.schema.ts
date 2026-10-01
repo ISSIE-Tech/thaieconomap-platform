@@ -47,8 +47,9 @@ export class User {
   })
   roles: RolesDocument;
 
-  @Prop()
-  refreshToken?: string;
+  // sha256 hashes, one per signed-in device
+  @Prop({ type: [String], default: undefined })
+  refreshToken?: string[];
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: Oauth.name })
   oauth: OauthDocument;

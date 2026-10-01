@@ -28,6 +28,36 @@ const processQueue = (error: unknown, token: string | null = null) => {
 
 // ----------------------------------------------------------------------
 
+// Trade the stored refresh token for new credentials. The gateway rotates the
+// refresh token on every call, so the new one must be stored too.
+export async function refreshAccessToken(): Promise<string> {
+  const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+
+  if (!refreshToken) {
+    throw new Error('No refresh token');
+  }
+
+  // plain axios so a failed refresh doesn't loop back through the interceptor
+  const { data } = await axios.post(
+    endpoints.auth.refresh,
+    { refreshToken },
+    { baseURL: CONFIG.site.serverUrl }
+  );
+
+  const newAccessToken: string = data.data?.accessToken ?? data.accessToken;
+  const newRefreshToken: string | undefined = data.data?.refreshToken ?? data.refreshToken;
+
+  localStorage.setItem(STORAGE_KEY, newAccessToken);
+  if (newRefreshToken) {
+    localStorage.setItem(REFRESH_TOKEN_KEY, newRefreshToken);
+  }
+  axiosInstance.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+
+  return newAccessToken;
+}
+
+// ----------------------------------------------------------------------
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -57,22 +87,22 @@ axiosInstance.interceptors.response.use(
       }
 
       originalRequest._retry = true;
+
+      // Another tab may have rotated the tokens already, which also invalidates
+      // our refresh token; reuse its access token instead of refreshing again
+      const storedAccessToken = localStorage.getItem(STORAGE_KEY);
+      if (
+        storedAccessToken &&
+        originalRequest.headers.Authorization !== `Bearer ${storedAccessToken}`
+      ) {
+        originalRequest.headers.Authorization = `Bearer ${storedAccessToken}`;
+        return axiosInstance(originalRequest);
+      }
+
       isRefreshing = true;
 
       try {
-        // Call refresh endpoint — use a plain axios call to avoid interceptor loop
-        const { data } = await axios.post(`${CONFIG.site.serverUrl}/${endpoints.auth.refresh}`, {
-          refreshToken,
-        });
-
-        const newAccessToken = data.data?.accessToken ?? data.accessToken;
-        const newRefreshToken = data.data?.refreshToken ?? data.refreshToken;
-
-        localStorage.setItem(STORAGE_KEY, newAccessToken);
-        if (newRefreshToken) {
-          localStorage.setItem(REFRESH_TOKEN_KEY, newRefreshToken);
-        }
-        axiosInstance.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+        const newAccessToken = await refreshAccessToken();
 
         processQueue(null, newAccessToken);
 
