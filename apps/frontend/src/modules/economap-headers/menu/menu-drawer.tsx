@@ -96,6 +96,7 @@ export function MenuDrawer({ menuController }: Props) {
           <Divider />
 
           <Stack spacing={2}>
+            <NavigateLink text="เกี่ยวกับเรา" onClick={closeDrawerAndNavigate(paths.about)} />
             <NavigateLink
               text="ข้อกำหนดการใช้งาน"
               onClick={closeDrawerAndNavigate(paths.legal.terms)}

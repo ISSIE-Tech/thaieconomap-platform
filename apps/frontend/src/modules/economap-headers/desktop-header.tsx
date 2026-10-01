@@ -19,6 +19,7 @@ const NAV = [
   { label: 'งานและอาชีพ', href: paths.jobs, match: [paths.jobs] },
   { label: 'ช่วยเหลือแบ่งปัน', href: paths.sharings, match: [paths.sharings] },
   { label: 'ประกาศ', href: paths.announcements.root, match: [paths.announcements.root] },
+  { label: 'เกี่ยวกับเรา', href: paths.about, match: [paths.about] },
 ];
 
 export function DesktopHeader() {

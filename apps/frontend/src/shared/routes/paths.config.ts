@@ -63,6 +63,7 @@ export const paths = {
   announcements: {
     root: '/announcements',
   },
+  about: '/about',
   legal: {
     terms: '/terms',
     privacy: '/privacy',

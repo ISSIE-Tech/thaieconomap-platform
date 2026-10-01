@@ -26,4 +26,5 @@ export const COLLECTION_NAME = {
   fcmNotificationLogs: 'fcm_notification_logs',
   otpLogs: 'otp_logs',
   syncLogs: 'sync_logs',
+  siteContents: 'site_contents',
 };

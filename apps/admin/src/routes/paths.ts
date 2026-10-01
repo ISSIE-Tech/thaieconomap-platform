@@ -13,6 +13,7 @@ const ROOTS = {
   OTP_LOGS: '/otp-logs',
   CSC: '/csc',
   TAMSANG_SHOPS: '/tamsang-shops',
+  SITE_CONTENTS: '/site-contents',
 };
 
 // ----------------------------------------------------------------------
@@ -97,6 +98,14 @@ export const paths = {
     dashboard: {
       root: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.FCM_LOGS}`,
       list: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.FCM_LOGS}/list`,
+    },
+  },
+  'site-contents': {
+    dashboard: {
+      root: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.SITE_CONTENTS}`,
+      about: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.SITE_CONTENTS}/about`,
+      terms: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.SITE_CONTENTS}/terms`,
+      privacy: `${ROOTS.DASHBOARD}${ROOTS.ECONOMAP}${ROOTS.SITE_CONTENTS}/privacy`,
     },
   },
   'tamsang-shops': {

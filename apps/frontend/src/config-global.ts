@@ -19,3 +19,10 @@ export const CONFIG: ConfigValue = {
     routingUrl: process.env.NEXT_PUBLIC_ROUTING_MAP_URL ?? '',
   },
 };
+
+/**
+ * Absolute API URL for server-side fetch(). serverUrl ends with "/" and endpoint paths start
+ * with "/"; axios joins them itself, but a raw "//services/..." is a 404 at the gateway.
+ */
+export const serverApiUrl = (path: string) =>
+  `${CONFIG.site.serverUrl.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;

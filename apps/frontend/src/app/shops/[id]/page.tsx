@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { CONFIG } from 'src/config-global';
+import { serverApiUrl } from 'src/config-global';
 import { ShopPage } from 'src/modules/shop-page/shop-page';
 import { endpoints } from 'src/shared/configs/endpoints.config';
 
@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
 
   try {
-    const res = await fetch(`${CONFIG.site.serverUrl}${endpoints.commercials.details(id)}`, {
+    const res = await fetch(serverApiUrl(endpoints.commercials.details(id)), {
       next: { revalidate: 3600 },
     });
     const { data } = await res.json();
