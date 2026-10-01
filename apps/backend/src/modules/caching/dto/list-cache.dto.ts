@@ -1,6 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { IsBoolean, IsNumberString, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumberString, IsOptional, IsString } from 'class-validator';
+
+import { SyncSource } from '../schemas';
 
 export class ListSyncLogsDto {
   @ApiPropertyOptional({ example: '1' })
@@ -12,6 +14,13 @@ export class ListSyncLogsDto {
   @IsOptional()
   @IsNumberString()
   limit?: string;
+}
+
+export class ListSourceSyncLogsDto extends ListSyncLogsDto {
+  @ApiPropertyOptional({ enum: SyncSource, default: SyncSource.TAMSANG })
+  @IsOptional()
+  @IsEnum(SyncSource)
+  source?: SyncSource;
 }
 
 export class ListShopsDto extends ListSyncLogsDto {

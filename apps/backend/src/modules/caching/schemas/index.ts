@@ -13,3 +13,5 @@ export * from './shop-display-opening-time.schema';
 export * from './shop-opening-time.schema';
 
 export * from './sync-log.schema';
+
+export * from './csc-job.schema';

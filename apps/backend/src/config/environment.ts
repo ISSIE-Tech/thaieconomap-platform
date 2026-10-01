@@ -6,6 +6,8 @@ export const configuration = Joi.object({
   MONGO_URI: Joi.string().required(),
   TAMSANG_TAMSONG_API: Joi.string().required(),
   TAMSANG_TAMSONG_SECRET: Joi.string().required(),
+  // k8s sets the in-cluster csc-backend; the default keeps local runs working
+  CHIAL_SHARE_API: Joi.string().default('https://csc-backend.dev.issie.dev'),
   PORT: Joi.number().required(),
   NODE_ENV: Joi.string()
     .valid(...Object.values(Environment))

@@ -17,7 +17,7 @@ import { FavoriteService } from '../users/services';
 
 import { CachingMapper } from './mapper';
 import { BaseRepository, ShopRepository, SyncLogRepository } from './repositories';
-import { ShopDocument, SyncStatus, SyncTrigger } from './schemas';
+import { ShopDocument, SyncSource, SyncStatus, SyncTrigger } from './schemas';
 
 @Injectable()
 export class CachingService {
@@ -112,8 +112,8 @@ export class CachingService {
     return shop;
   }
 
-  async listSyncLogs(page: number, limit: number) {
-    return this.syncLogRepository.findPaginated(page, limit);
+  async listSyncLogs(page: number, limit: number, source?: SyncSource) {
+    return this.syncLogRepository.findPaginated(page, limit, source);
   }
 
   // A failed history write must not mask the sync result, so it is only logged.

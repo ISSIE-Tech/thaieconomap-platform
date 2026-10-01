@@ -11,7 +11,6 @@ import RHFDatePicker from '@/components/hook-form/RHFDatePicker';
 import { useAuth } from '@/auth/useAuth';
 import axios from '@/utils/axios';
 import { useSnackbar } from 'notistack';
-import { useRouter } from 'next/router';
 
 const defaultValues = {
   name: '',
@@ -37,7 +36,6 @@ export const RegisterValidationSchema = yup.object().shape({
 
 export default function RegisterDrawer() {
   const { tokenId } = useAuth();
-  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
   // ----------------------------------------------------------------------
@@ -69,9 +67,10 @@ export default function RegisterDrawer() {
     try {
       await axios.post('/auth/register', { ...data, tokenId });
 
-      router.push('/').then(() => {
-        enqueueSnackbar('เข้าสู่ระบบสำเร็จ', { variant: 'success' });
-      });
+      // A full load, so AuthProvider authenticates the new account and sets its session;
+      // a client-side push would leave the app signed out until it is reopened. A job
+      // asked for from thaieconomap is still in sessionStorage and opens after that.
+      window.location.replace('/');
     } catch (error) {
       enqueueSnackbar('ระบบมีปัญหา กรูณาลองใหม่อีกครั้ง', { variant: 'error' });
     }

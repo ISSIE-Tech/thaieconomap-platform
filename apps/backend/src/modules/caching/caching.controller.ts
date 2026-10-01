@@ -18,14 +18,18 @@ import { CACHE_KEY, DOC_DESCRIPTION } from '../../shared/constants';
 import { IUser } from '../../shared/interfaces';
 
 import { CachingService } from './caching.service';
-import { ListShopsDto, ListSyncLogsDto, SetShopHiddenDto } from './dto';
+import { CscJobsService } from './csc-jobs.service';
+import { ListShopsDto, ListSourceSyncLogsDto, SetShopHiddenDto } from './dto';
 import { SyncTrigger } from './schemas';
 
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: DOC_DESCRIPTION.INVALID_TOKEN })
 @Controller('caching')
 export class CachingController {
-  constructor(private readonly cachingService: CachingService) {}
+  constructor(
+    private readonly cachingService: CachingService,
+    private readonly cscJobsService: CscJobsService,
+  ) {}
 
   /**
    * The shop/base cache is otherwise only filled by the 1AM cron, so a fresh deployment
@@ -49,6 +53,21 @@ export class CachingController {
     );
 
     return { message: 'Shop and base cache updated' };
+  }
+
+  // Same idea as the shop sync, for the csc job cache the job map reads (normally hourly).
+  @ApiOkResponse({ description: 'Job cache refreshed from csc-backend.' })
+  @ApiForbiddenResponse({ description: DOC_DESCRIPTION.INCLUDE_ROLES(UserRole.ADMIN) })
+  @Post('csc-jobs/sync')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  async syncCscJobs(@CurrentUser() user: IUser): Promise<{ message: string }> {
+    await this.cscJobsService.syncJobs(
+      SyncTrigger.MANUAL,
+      user.displayName || user.name || user.email || null,
+    );
+
+    return { message: 'Job cache updated' };
   }
 
   @ApiOkResponse({ description: 'Shops cached from tamsang-tamsong.' })
@@ -75,12 +94,16 @@ export class CachingController {
     return this.cachingService.setShopHidden(shopId, dto.hidden);
   }
 
-  @ApiOkResponse({ description: 'History of shop and base cache syncs, newest first.' })
+  @ApiOkResponse({ description: 'History of cache syncs for one source, newest first.' })
   @ApiForbiddenResponse({ description: DOC_DESCRIPTION.INCLUDE_ROLES(UserRole.ADMIN) })
   @Post('sync-logs')
   @Roles(UserRole.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
-  async listSyncLogs(@Body() dto: ListSyncLogsDto) {
-    return this.cachingService.listSyncLogs(Number(dto.page ?? 1), Number(dto.limit ?? 20));
+  async listSyncLogs(@Body() dto: ListSourceSyncLogsDto) {
+    return this.cachingService.listSyncLogs(
+      Number(dto.page ?? 1),
+      Number(dto.limit ?? 20),
+      dto.source,
+    );
   }
 }

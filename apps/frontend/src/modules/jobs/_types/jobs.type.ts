@@ -50,6 +50,8 @@ export type JobPost = {
   // NOTE: this imageUrl might not exist straight up!
   imageUrl?: string;
   imageUrls: string[];
+  // csc's LIFF link that opens this job
+  liffUrl: string;
   location: {
     address: {
       name: string;

@@ -21,61 +21,22 @@ export type TamsangShop = {
   hidden?: boolean;
 };
 
-export type SyncLogEntry = {
-  _id: string;
-  trigger: 'cron' | 'manual';
-  triggeredBy: string | null;
-  status: 'success' | 'failure';
-  shopsReceived: number;
-  shopsSaved: number;
-  basesSaved: number;
-  durationMs: number;
-  errorMessage: string | null;
-  createdAt: string;
-};
-
 type Paginated<T> = { data: T[]; total: number };
 
 type ListParams = { page: string; limit: string; search?: string };
 
-const QUERY_KEYS = {
-  SHOPS: 'tamsang-shops',
-  SYNC_LOGS: 'tamsang-sync-logs',
-};
+export const TAMSANG_SHOPS_QUERY_KEY = 'tamsang-shops';
 
 // ----------------------------------------------------------------------
 
 export const useGetTamsangShops = (params: ListParams) =>
   useQuery({
-    queryKey: [QUERY_KEYS.SHOPS, params],
+    queryKey: [TAMSANG_SHOPS_QUERY_KEY, params],
     queryFn: async () =>
       (await axios.post<ApiResponse<Paginated<TamsangShop>>>(endpoints.caching.shops, params)).data
         .data,
     placeholderData: keepPreviousData,
   });
-
-export const useGetSyncLogs = (params: ListParams) =>
-  useQuery({
-    queryKey: [QUERY_KEYS.SYNC_LOGS, params],
-    queryFn: async () =>
-      (await axios.post<ApiResponse<Paginated<SyncLogEntry>>>(endpoints.caching.syncLogs, params))
-        .data.data,
-    placeholderData: keepPreviousData,
-  });
-
-// Refresh both lists whether the sync worked or not - a failure still adds a history row.
-export const useSyncTamsangShops = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: () => axios.post(endpoints.caching.sync),
-    onSettled: () =>
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SHOPS] }),
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SYNC_LOGS] }),
-      ]),
-  });
-};
 
 export const useSetTamsangShopHidden = () => {
   const queryClient = useQueryClient();
@@ -83,6 +44,6 @@ export const useSetTamsangShopHidden = () => {
   return useMutation({
     mutationFn: ({ id, hidden }: { id: string; hidden: boolean }) =>
       axios.patch(endpoints.caching.shopHidden(id), { hidden }),
-    onSettled: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SHOPS] }),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: [TAMSANG_SHOPS_QUERY_KEY] }),
   });
 };

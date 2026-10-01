@@ -11,6 +11,11 @@ export enum SyncTrigger {
   MANUAL = 'manual',
 }
 
+export enum SyncSource {
+  TAMSANG = 'tamsang',
+  CSC = 'csc',
+}
+
 export enum SyncStatus {
   SUCCESS = 'success',
   FAILURE = 'failure',
@@ -22,6 +27,10 @@ export enum SyncStatus {
   timestamps: true,
 })
 export class SyncLog {
+  // rows written before csc jobs were cached have no source and are tamsang syncs
+  @Prop({ enum: SyncSource, default: SyncSource.TAMSANG })
+  source: SyncSource;
+
   @Prop({ required: true, enum: SyncTrigger })
   trigger: SyncTrigger;
 
@@ -41,6 +50,16 @@ export class SyncLog {
 
   @Prop({ default: 0 })
   basesSaved: number;
+
+  // csc job syncs: posts listed on the map vs posts whose detail was fetched
+  @Prop({ default: 0 })
+  jobsReceived: number;
+
+  @Prop({ default: 0 })
+  jobsSaved: number;
+
+  @Prop({ default: 0 })
+  jobCategoriesSaved: number;
 
   @Prop({ required: true })
   durationMs: number;

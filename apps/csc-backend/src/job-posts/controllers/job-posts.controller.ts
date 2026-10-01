@@ -90,7 +90,8 @@ export class JobPostsController {
       message: 'get job post successfully',
       jobPost: {
         ...(jobPost.toObject()),
-        liffUrl: `${this.jobPostUrl}/job/${jobPostId}`
+        // csc-liff opens the job from ?jobId=, which survives LINE login and registration
+        liffUrl: `${this.jobPostUrl}?jobId=${jobPostId}`
       },
     };
   }
