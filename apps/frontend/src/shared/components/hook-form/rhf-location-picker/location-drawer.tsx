@@ -3,8 +3,8 @@
 import type { Dispatch, SetStateAction } from 'react';
 import type { UseBooleanReturn } from 'src/shared/hooks/use-boolean';
 
+import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { useMemo, useEffect } from 'react';
 import { DEFAULT_COORDINATE } from 'src/modules/commercials/_config';
 import FormButton from 'src/shared/components/custom-buttons/form-button';
 import { CommercialLoading } from 'src/modules/commercials/commercial-loading';
@@ -30,6 +30,19 @@ type Props = {
   currentValue: { latitude: number; longitude: number };
 };
 
+// module-level so the map isn't re-created on every render
+export const LocationMap = dynamic(
+  () => import('src/shared/components/hook-form/rhf-location-picker/location-map'),
+  { loading: () => <CommercialLoading />, ssr: false }
+);
+
+/** Where the picker opens: the saved value, else the user's position, else the default. */
+export const startLocation = (current: LatLng, geolocation?: number[] | null): LatLng => {
+  if (current.latitude !== 0 || current.longitude !== 0) return current;
+  const [latitude, longitude] = geolocation ?? DEFAULT_COORDINATE;
+  return { latitude, longitude };
+};
+
 export function LocationDrawer({
   locationDrawerController,
   setLocation,
@@ -37,25 +50,10 @@ export function LocationDrawer({
   handleClickOnMap,
   currentValue,
 }: Props) {
-  const Map = useMemo(
-    () =>
-      dynamic(() => import('src/shared/components/hook-form/rhf-location-picker/location-map'), {
-        loading: () => <CommercialLoading />,
-        ssr: false,
-      }),
-    []
-  );
-
   const geolocation = useGeolocationStore((state) => state.geolocation);
 
   useEffect(() => {
-    if (currentValue.latitude === 0 && geolocation) {
-      setLocation({ latitude: geolocation[0], longitude: geolocation[1] });
-    } else if (currentValue.latitude === 0 && currentValue.longitude === 0 && !geolocation) {
-      setLocation({ latitude: DEFAULT_COORDINATE[0], longitude: DEFAULT_COORDINATE[1] });
-    } else {
-      setLocation({ latitude: currentValue.latitude, longitude: currentValue.longitude });
-    }
+    setLocation(startLocation(currentValue, geolocation));
   }, [locationDrawerController.value, currentValue, setLocation, geolocation]);
 
   return (
@@ -78,7 +76,7 @@ export function LocationDrawer({
             sx={{ position: 'absolute', top: 56, left: 16, zIndex: 1000 }}
           />
 
-          <Map setLocation={setLocation} center={[location.latitude, location.longitude]} />
+          <LocationMap setLocation={setLocation} center={[location.latitude, location.longitude]} />
         </Stack>
 
         <Stack sx={{ padding: '20px' }}>

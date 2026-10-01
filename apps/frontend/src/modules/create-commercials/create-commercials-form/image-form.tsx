@@ -9,7 +9,12 @@ type Props = {
 };
 
 const ImageForm = ({ commercialType }: Props) => (
-  <Stack sx={{ width: '100%', height: 'auto' }} spacing={5}>
+  <Stack
+    useFlexGap
+    direction={{ xs: 'column', md: 'row' }}
+    gap={5}
+    sx={{ width: '100%', height: 'auto', '& > *': { flex: 1, minWidth: 0 } }}
+  >
     <ImageFormContainer
       name="image"
       multiple

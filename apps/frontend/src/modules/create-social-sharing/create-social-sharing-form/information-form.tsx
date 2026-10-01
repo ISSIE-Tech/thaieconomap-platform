@@ -2,7 +2,9 @@ import type { ShareOptions } from '../_types/create-social-sharing.type';
 
 import { useFormContext } from 'react-hook-form';
 import { RHFTextField, RHFAutocomplete } from 'src/shared/components/hook-form';
+import { fullRowSx, fieldGridSx, mobileHeadingSx } from 'src/modules/form-wizard';
 
+import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -20,15 +22,16 @@ const InformationForm = ({ types, conditions }: Props) => {
   const selectedConditionId = watch('condition');
 
   return (
-    <Stack spacing={2}>
-      <Typography variant="body1" fontWeight="bold">
+    <Box sx={fieldGridSx}>
+      <Typography variant="body1" fontWeight="bold" sx={mobileHeadingSx}>
         กรอกข้อมูลสิ่งของ
       </Typography>
-      <RHFTextField name="name" label="ชื่อสิ่งของ" />
+      <RHFTextField name="name" label="ชื่อสิ่งของ" sx={fullRowSx} />
 
       <RHFAutocomplete
         name="types"
         label="ประเภทสิ่งของ"
+        sx={fullRowSx}
         multiple
         freeSolo
         options={types}
@@ -82,9 +85,15 @@ const InformationForm = ({ types, conditions }: Props) => {
         <RHFTextField name="amount" label="จำนวน" type="number" />
         <RHFTextField name="unit" label="หน่วย" />
       </Stack>
-      <RHFTextField name="detail" multiline rows={4} label="ข้อมูลเพิ่มเติม เช่น เซรามิกสีขาว" />
-      <RHFTextField name="moreDetail" multiline rows={4} label="เพิ่มเติม" />
-    </Stack>
+      <RHFTextField
+        name="detail"
+        multiline
+        rows={4}
+        label="ข้อมูลเพิ่มเติม เช่น เซรามิกสีขาว"
+        sx={fullRowSx}
+      />
+      <RHFTextField name="moreDetail" multiline rows={4} label="เพิ่มเติม" sx={fullRowSx} />
+    </Box>
   );
 };
 

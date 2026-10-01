@@ -9,6 +9,14 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+/** Short step names for the desktop stepper. */
+export const commercialStepTitles = (commercialType: CommercialType) => [
+  `ข้อมูล${commercialType}`,
+  'วันและเวลาทำการ',
+  `ตำแหน่ง${commercialType}`,
+  `รูปภาพ${commercialType}`,
+];
+
 type Props = {
   progressPercentage: number;
   commercialType: CommercialType;
