@@ -130,6 +130,17 @@ export const economapNavData = [
         ],
       },
       {
+        title: 'เนื้อหาเว็บไซต์',
+        path: paths['site-contents'].dashboard.root,
+        icon: ICONS.file,
+        roles: ['ADMIN'],
+        children: [
+          { title: 'เกี่ยวกับเรา', path: paths['site-contents'].dashboard.about },
+          { title: 'ข้อกำหนดการใช้งาน', path: paths['site-contents'].dashboard.terms },
+          { title: 'นโยบายความเป็นส่วนตัว', path: paths['site-contents'].dashboard.privacy },
+        ],
+      },
+      {
         title: 'รถพุ่มพวง',
         path: paths.pumpuang.dashboard.root,
         icon: ICONS.tour,

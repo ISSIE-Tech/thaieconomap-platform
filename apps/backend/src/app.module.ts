@@ -15,9 +15,9 @@ import {
   MapModule,
   MinioClientModule,
   NotificationsModule,
-  OtpLogsModule,
   PumpuangsModule,
   SharesModule,
+  SiteContentsModule,
   UsersModule,
 } from './modules';
 import { AdditionalImageModule } from './modules/additional-image';
@@ -64,6 +64,7 @@ import { RedisModule } from './shared/redis';
     AdditionalImageModule,
     PumpuangsModule,
     NotificationsModule,
+    SiteContentsModule,
   ],
   controllers: [AppController],
 })

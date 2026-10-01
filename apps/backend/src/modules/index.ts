@@ -21,3 +21,5 @@ export * from './pumpuangs/pumpuangs.module';
 export * from './notifications/notifications.module';
 
 export * from './otp-logs/otp-logs.module';
+
+export * from './site-contents/site-contents.module';
