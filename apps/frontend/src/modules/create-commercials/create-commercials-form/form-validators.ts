@@ -78,7 +78,7 @@ export const formSchema = z.object({
     }),
   address: z.string(),
   moreInfo: z.string().max(250, 'ความยาวไม่เกิน 250 ตัวอักษร'),
-  opening: z.array(dateSchema),
+  opening: z.array(dateSchema).min(1, 'กรุณาเปิดอย่างน้อย 1 วัน'),
   location: latlngSchema,
   image: z
     .array(z.instanceof(File))
@@ -125,7 +125,7 @@ export const defaultValue = {
   district: null,
   address: 'test',
   moreInfo: '',
-  opening: [{ day: [], openTime: '', closeTime: '' }],
+  opening: [],
   location: { latitude: 0, longitude: 0 },
   image: [],
   additionalImageUrl: [],

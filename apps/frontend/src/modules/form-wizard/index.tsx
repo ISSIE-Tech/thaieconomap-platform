@@ -46,7 +46,7 @@ type ShellProps = {
   children: ReactNode;
 };
 
-/** Multi-step form page. Mobile: unchanged full-screen flow. Desktop: site nav, stepper | form card, footer. */
+/** Multi-step form page. Mobile: unchanged full-screen flow. Desktop: site nav, stepper | form card filling the screen, footer below the fold. */
 export function FormWizardShell({
   title,
   illustration,
@@ -73,26 +73,29 @@ export function FormWizardShell({
       <DesktopHeader />
 
       <Stack sx={{ flex: 1, minHeight: 0, overflowY: 'auto', bgcolor: '#F5FBFF' }}>
+        {/* both branches fill at least one screen, so the footer only shows once you scroll */}
         {success ? (
-          <Box sx={{ ...card, width: 560, mx: 'auto', my: 6, p: 5 }}>{success}</Box>
+          <Box sx={{ flex: '1 0 100%', display: 'grid', placeItems: 'center', p: 4 }}>
+            <Box sx={{ ...card, width: 560, maxWidth: '100%', p: 5 }}>{success}</Box>
+          </Box>
         ) : (
           <Box
             sx={{
+              flex: '1 0 100%',
               width: '100%',
-              maxWidth: 1120,
+              maxWidth: 1600,
               mx: 'auto',
-              px: 5,
-              py: 4,
+              px: { md: 3, lg: 5 },
+              py: 3,
               display: 'grid',
-              gridTemplateColumns: '300px minmax(0, 1fr)',
+              gridTemplateColumns: { md: '280px minmax(0, 1fr)', lg: '300px minmax(0, 1fr)' },
               gap: 3,
-              alignItems: 'start',
             }}
           >
             <Stack
               component="aside"
               spacing={3}
-              sx={{ ...card, p: 3, position: 'sticky', top: 24 }}
+              sx={{ ...card, p: 3, position: 'sticky', top: 24, alignSelf: 'start' }}
             >
               <Box
                 sx={{
@@ -126,7 +129,10 @@ export function FormWizardShell({
               </Stepper>
             </Stack>
 
-            <Stack component="section" sx={{ ...card, minWidth: 0, overflow: 'hidden' }}>
+            <Stack
+              component="section"
+              sx={{ ...card, minWidth: 0, overflow: 'hidden', alignSelf: 'start' }}
+            >
               <LinearProgress
                 variant="determinate"
                 value={((step + 1) / steps.length) * 100}

@@ -62,20 +62,25 @@ export function AccountShell({ children }: { children: ReactNode }) {
       <EconomapHeader title="จัดการบัญชี" />
 
       <Stack sx={{ flex: 1, minHeight: 0, overflowY: 'auto', bgcolor: '#F5FBFF' }}>
+        {/* fills at least one screen, so the footer only shows once you scroll */}
         <Box
           sx={{
+            flex: '1 0 100%',
             width: '100%',
-            maxWidth: 1120,
+            maxWidth: 1600,
             mx: 'auto',
-            px: 5,
-            py: 4,
+            px: { md: 3, lg: 5 },
+            py: 3,
             display: 'grid',
-            gridTemplateColumns: '280px minmax(0, 1fr)',
+            gridTemplateColumns: { md: '260px minmax(0, 1fr)', lg: '280px minmax(0, 1fr)' },
             gap: 3,
-            alignItems: 'start',
           }}
         >
-          <Stack component="aside" spacing={2.5} sx={{ ...card, p: 3, position: 'sticky', top: 0 }}>
+          <Stack
+            component="aside"
+            spacing={2.5}
+            sx={{ ...card, p: 3, position: 'sticky', top: 24, alignSelf: 'start' }}
+          >
             <Stack direction="row" alignItems="center" spacing={1.5}>
               <Box
                 component="img"
@@ -144,7 +149,7 @@ export function AccountShell({ children }: { children: ReactNode }) {
             </ButtonBase>
           </Stack>
 
-          <Stack component="section" spacing={2} sx={{ ...card, px: 3.5, py: 3, minHeight: 480 }}>
+          <Stack component="section" spacing={2} sx={{ ...card, px: 3.5, py: 3, minWidth: 0 }}>
             {children}
           </Stack>
         </Box>

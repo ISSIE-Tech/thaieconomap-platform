@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { thaiMonths, dayOfWeekThai } from 'src/shared/components/constants/date';
 
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { Typography } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
@@ -16,11 +17,8 @@ export default function DateCards() {
   const thaiYear = today.getFullYear() + 543;
 
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const getTimePeriod = (index: number) => {
-    if (index < selectedIndex) return 'past';
-    if (index === selectedIndex) return 'present';
-    return 'future';
-  };
+  // only the selected day is highlighted; earlier days used to stay tinted, which read as a stale selection
+  const getTimePeriod = (index: number) => (index === selectedIndex ? 'present' : 'future');
 
   return (
     <>
@@ -36,7 +34,17 @@ export default function DateCards() {
         </Stack>
       </Stack>
 
-      <Stack direction="row" px={3} py={2} spacing={1} sx={{ overflowY: 'scroll' }}>
+      {/* mobile: scrolling row; desktop sidebar: 7 columns that always fit */}
+      <Box
+        sx={{
+          display: { xs: 'flex', md: 'grid' },
+          gridTemplateColumns: { md: 'repeat(7, minmax(0, 1fr))' },
+          gap: { xs: 1.5, md: 0.75 },
+          px: 3,
+          py: 2,
+          overflowX: { xs: 'auto', md: 'visible' },
+        }}
+      >
         {[...Array(7)].map((_, i) => {
           const currentDate = new Date(today); // Copy today's date
           currentDate.setDate(today.getDate() + i); // Increment date by i days
@@ -54,7 +62,7 @@ export default function DateCards() {
             />
           );
         })}
-      </Stack>
+      </Box>
     </>
   );
 }
@@ -68,25 +76,22 @@ type DateCardProps = {
   datetime: Date;
   date: string;
   dayOfWeek: string;
-  timePeriod: 'past' | 'present' | 'future';
+  timePeriod: 'present' | 'future';
   onClick: () => void;
 };
 
 function DateCard({ datetime, date, dayOfWeek, timePeriod, onClick }: DateCardProps) {
   const cardBgColor = {
-    past: (theme: Theme) => theme.palette.primary.lighter,
     present: (theme: Theme) => theme.palette.primary.main,
     future: 'white',
   };
 
   const dateColor = {
-    past: 'black',
     present: 'white',
     future: 'black',
   };
 
   const dayOfWeekColor = {
-    past: (theme: Theme) => theme.palette.grey['600'],
     present: 'white',
     future: (theme: Theme) => theme.palette.grey['500'],
   };
@@ -98,10 +103,13 @@ function DateCard({ datetime, date, dayOfWeek, timePeriod, onClick }: DateCardPr
       alignItems="center"
       borderRadius={2}
       bgcolor={cardBgColor[timePeriod]}
-      py={1}
-      minWidth={{ xs: 64, md: 0 }}
+      spacing={0.25}
       sx={{
-        flex: { md: 1 },
+        flexShrink: 0,
+        minWidth: { xs: 76, md: 0 },
+        px: { xs: 1.5, md: 0.5 },
+        py: { xs: 1.5, md: 1.25 },
+        whiteSpace: 'nowrap',
         boxShadow: '0px 1px 10px 1px #4876D31A',
         cursor: 'pointer',
       }}
@@ -113,7 +121,13 @@ function DateCard({ datetime, date, dayOfWeek, timePeriod, onClick }: DateCardPr
       <Typography fontWeight="bold" sx={{ color: dateColor[timePeriod] }}>
         {date}
       </Typography>
-      <Typography sx={{ color: dayOfWeekColor[timePeriod] }}>{dayOfWeek}</Typography>
+      <Typography
+        fontSize={{ xs: 14, md: 12 }}
+        lineHeight={1.6}
+        sx={{ color: dayOfWeekColor[timePeriod] }}
+      >
+        {dayOfWeek}
+      </Typography>
     </Stack>
   );
 }

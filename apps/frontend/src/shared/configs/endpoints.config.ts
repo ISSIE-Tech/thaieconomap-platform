@@ -65,6 +65,7 @@ export const endpoints = {
     // NOTE: favorite without the u (favourite UK, favorite US)
     favorite: (id: string) => `${COMMERCIALS}/${id}/favorite`,
     unfavorite: (id: string) => `${COMMERCIALS}/${id}/unfavorite`,
+    delete: (id: string) => `${COMMERCIALS}/${id}`,
   },
   // TODO: this district doesn't have s
   district: `${MAP}/districts`,
@@ -76,6 +77,7 @@ export const endpoints = {
   pendingCommercials: {
     create: `${PENDING_COMMERCIALS}`,
     update: (id: string) => `${PENDING_COMMERCIALS}/${id}/edit`,
+    delete: (id: string) => `${PENDING_COMMERCIALS}/${id}`,
   },
   map: {
     get: `${MAP}/districts`,

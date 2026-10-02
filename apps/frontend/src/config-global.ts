@@ -6,6 +6,8 @@ export type ConfigValue = {
     basePath: string;
     serverUrl: string;
     routingUrl: string;
+    /** csc's LINE LIFF app, where jobs are posted */
+    cscLiffUrl: string;
   };
 };
 
@@ -17,6 +19,7 @@ export const CONFIG: ConfigValue = {
     basePath: process.env.NEXT_PUBLIC_BASE_PATH ?? '',
     serverUrl: process.env.NEXT_PUBLIC_SERVER_URL ?? '',
     routingUrl: process.env.NEXT_PUBLIC_ROUTING_MAP_URL ?? '',
+    cscLiffUrl: process.env.NEXT_PUBLIC_CSC_LIFF_URL ?? '',
   },
 };
 

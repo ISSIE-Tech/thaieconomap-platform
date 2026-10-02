@@ -118,6 +118,25 @@ export class PendingCommercialsController {
     return CommercialMapper.toPendingResponseDto(result);
   }
 
+  @ApiOkResponse({ description: 'Delete pending commercial and its images.' })
+  @ApiBadRequestResponse({ description: DOC_DESCRIPTION.MUST_BE_MONGOID('pendingCommercialId') })
+  @ApiForbiddenResponse({
+    description: buildMultiLineDocDescription(
+      DOC_DESCRIPTION.INCLUDE_ROLES(UserRole.ADMIN, UserRole.MANAGER, 'OWNER'),
+      DOC_DESCRIPTION.TEC_008,
+    ),
+  })
+  @ApiParam({ name: 'pendingCommercialId' })
+  @Delete(':pendingCommercialId')
+  @CacheClearKeys(CACHE_KEY.pendingCommercials.all, CACHE_KEY.allCommercials.all)
+  @UseInterceptors(CacheClearInterceptor)
+  async deletePendingCommercial(
+    @CurrentUser() user: IUser,
+    @ObjectId('pendingCommercialId') pendingCommercialId: string,
+  ): Promise<void> {
+    await this.pendingCommercialsService.deletePendingCommercial(user, pendingCommercialId);
+  }
+
   @ApiCreatedResponse({ description: 'Pending commercial created and return.' })
   @ApiBadRequestResponse({
     description: buildMultiLineDocDescription(
@@ -319,7 +338,10 @@ export class PendingCommercialsController {
     @CurrentUser() user: IUser,
     @ObjectId('pendingCommercialId') pendingCommercialId: string,
   ): Promise<CommercialResponseDto> {
-    const result = await this.pendingCommercialsService.approvePendingCommercial(user, pendingCommercialId);
+    const result = await this.pendingCommercialsService.approvePendingCommercial(
+      user,
+      pendingCommercialId,
+    );
 
     return CommercialMapper.toResponseDto(result);
   }

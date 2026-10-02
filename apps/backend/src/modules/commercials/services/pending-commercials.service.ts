@@ -584,6 +584,22 @@ export class PendingCommercialsService {
     );
   }
 
+  @Span('Delete Pending Commercial')
+  async deletePendingCommercial(user: IUser, pendingCommercialId: string): Promise<boolean> {
+    this.logger.debug(
+      `{${PendingCommercialsService.name}-[${getSpanName()}]} (called)\
+      \n[param] ${prettyObjectString({
+        userId: user._id,
+        pendingCommercialId,
+      })}`,
+    );
+
+    // throws unless owner, admin, or manager of the district
+    await this.getPrivatePendingCommercialById(user, pendingCommercialId);
+
+    return this.deleteMany({ _id: pendingCommercialId });
+  }
+
   @Span('Delete Many')
   async deleteMany(filterQuery: FilterQuery<PendingCommercialDocument>): Promise<boolean> {
     this.logger.debug(

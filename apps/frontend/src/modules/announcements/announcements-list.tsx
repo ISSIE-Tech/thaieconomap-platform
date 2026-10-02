@@ -66,23 +66,27 @@ export default function AnnouncementsList({ selectedId, onSelect }: Props) {
     <Stack
       spacing={1}
       flexGrow={1}
+      minHeight={0}
       overflow="hidden"
       bgcolor="white"
       sx={{
-        boxShadow: '0px 1px 10px 1px #4876D31A',
+        // desktop sits inside the sidebar, which has its own frame
+        boxShadow: onSelect ? 'none' : '0px 1px 10px 1px #4876D31A',
+        borderTop: onSelect ? '1px solid #EFF1F3' : 'none',
       }}
-      px={3}
     >
-      <Typography variant="body1" fontWeight="bold" mt={4}>
+      <Typography variant="body1" fontWeight="bold" mt={onSelect ? 2.5 : 4} px={3}>
         ประกาศ{locationTitle}
       </Typography>
 
+      {/* padding lives inside the scroller so its scrollbar hugs the sidebar edge */}
       <Stack
         divider={<Divider />}
         flexGrow={1}
-        sx={{
-          overflowY: 'scroll',
-        }}
+        minHeight={0}
+        px={3}
+        pb={2}
+        sx={{ overflowY: 'auto', overflowX: 'hidden' }}
       >
         {announcements?.map((announcement) => (
           <Announcement
@@ -129,7 +133,13 @@ function Announcement({ name, startAt, endAt, onClick, selected }: AnnouncementP
       onClick={onClick}
       sx={{
         cursor: 'pointer',
-        ...(selected && { bgcolor: '#F5FBFF', mx: -1.5, px: 1.5, width: 'auto', borderRadius: 1.5 }),
+        ...(selected && {
+          bgcolor: '#F5FBFF',
+          mx: -1.5,
+          px: 1.5,
+          width: 'auto',
+          borderRadius: 1.5,
+        }),
       }}
     >
       <Image
