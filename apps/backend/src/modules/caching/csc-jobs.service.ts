@@ -22,6 +22,8 @@ import {
   SyncTrigger,
 } from './schemas';
 
+type CscJobPostRow = Pick<CscJobPost, '_id' | 'mark' | 'hidden'>;
+
 // csc-backend answers one post per request; this caps how many run at once.
 const DETAIL_CONCURRENCY = 5;
 
@@ -90,7 +92,7 @@ export class CscJobsService implements OnApplicationBootstrap {
 
   async listMarks(category?: string) {
     const posts = await this.jobPostModel
-      .find(category ? { categoryId: category } : {}, { mark: 1 })
+      .find({ hidden: { $ne: true }, ...(category && { categoryId: category }) }, { mark: 1 })
       .lean();
 
     return posts.map(post => post.mark);
@@ -100,6 +102,41 @@ export class CscJobsService implements OnApplicationBootstrap {
     const categories = await this.jobCategoryModel.find({}, { data: 1 }).sort({ order: 1 }).lean();
 
     return categories.map(category => category.data);
+  }
+
+  async listJobPosts(
+    search: string | undefined,
+    page: number,
+    limit: number,
+  ): Promise<{ data: CscJobPostRow[]; total: number }> {
+    const query = search
+      ? { 'mark.title': { $regex: search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' } }
+      : {};
+
+    const [data, total] = await Promise.all([
+      this.jobPostModel
+        .find(query, { mark: 1, hidden: 1 })
+        .sort({ 'mark.title': 1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean<CscJobPostRow[]>(),
+      this.jobPostModel.countDocuments(query),
+    ]);
+
+    return { data, total };
+  }
+
+  // Hides a job from the public map without touching csc itself.
+  async setJobPostHidden(id: string, hidden: boolean): Promise<CscJobPostRow> {
+    const post = await this.jobPostModel
+      .findByIdAndUpdate(id, { hidden }, { new: true, projection: { mark: 1, hidden: 1 } })
+      .lean<CscJobPostRow>();
+
+    if (!post) {
+      throw new ErrorException(CODES.TEC_083);
+    }
+
+    return post;
   }
 
   async getJobPost(id: string) {
@@ -140,13 +177,15 @@ export class CscJobsService implements OnApplicationBootstrap {
   }
 
   // Upsert what csc returned, then drop the rest; an empty list really means no open jobs.
+  // $set rather than replace, so admin-only fields like `hidden` survive the sync.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async replaceAll<T extends { _id: string }>(model: Model<any>, docs: T[]): Promise<void> {
     if (docs.length > 0) {
       await model.bulkWrite(
-        docs.map(doc => ({
-          replaceOne: { filter: { _id: doc._id }, replacement: doc, upsert: true },
-        })),
+        docs.map(({ _id, ...fields }) => ({
+          updateOne: { filter: { _id }, update: { $set: fields }, upsert: true },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        })) as any,
       );
     }
 

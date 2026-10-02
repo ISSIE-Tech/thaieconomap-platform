@@ -22,6 +22,11 @@ import { CscJobsService } from './csc-jobs.service';
 import { ListShopsDto, ListSourceSyncLogsDto, SetShopHiddenDto } from './dto';
 import { SyncTrigger } from './schemas';
 
+// Every response-cache namespace; CACHE_KEY entries without a prefix (pumpuang) are app state.
+const RESPONSE_CACHE_KEYS = Object.values(CACHE_KEY).flatMap(key =>
+  'prefix' in key ? [`${key.prefix}*`] : [],
+);
+
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: DOC_DESCRIPTION.INVALID_TOKEN })
 @Controller('caching')
@@ -102,6 +107,63 @@ export class CachingController {
   @UseInterceptors(CacheClearInterceptor)
   async setShopHidden(@ObjectId('shopId') shopId: string, @Body() dto: SetShopHiddenDto) {
     return this.cachingService.setShopHidden(shopId, dto.hidden);
+  }
+
+  // Takes a whole tamsang node (and every shop under it) off the public map.
+  @ApiOkResponse({ description: 'Base visibility updated.' })
+  @ApiBadRequestResponse({ description: DOC_DESCRIPTION.MUST_BE_MONGOID('baseId') })
+  @ApiNotFoundResponse({ description: DOC_DESCRIPTION.ENTITY_NOT_FOUND('Base') })
+  @ApiForbiddenResponse({ description: DOC_DESCRIPTION.INCLUDE_ROLES(UserRole.ADMIN) })
+  @ApiParam({ name: 'baseId' })
+  @Patch('bases/:baseId/hidden')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @CacheClearKeys(CACHE_KEY.commercials.all)
+  @UseInterceptors(CacheClearInterceptor)
+  async setBaseHidden(@ObjectId('baseId') baseId: string, @Body() dto: SetShopHiddenDto) {
+    return this.cachingService.setBaseHidden(baseId, dto.hidden);
+  }
+
+  @ApiOkResponse({ description: 'Jobs cached from csc-backend.' })
+  @ApiForbiddenResponse({ description: DOC_DESCRIPTION.INCLUDE_ROLES(UserRole.ADMIN) })
+  @Post('csc-jobs')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  async listCscJobs(@Body() dto: ListShopsDto) {
+    return this.cscJobsService.listJobPosts(
+      dto.search,
+      Number(dto.page ?? 1),
+      Number(dto.limit ?? 20),
+    );
+  }
+
+  // Hides a csc job from the public job map without touching csc itself.
+  @ApiOkResponse({ description: 'Job visibility updated.' })
+  @ApiBadRequestResponse({ description: DOC_DESCRIPTION.MUST_BE_MONGOID('jobPostId') })
+  @ApiNotFoundResponse({ description: DOC_DESCRIPTION.ENTITY_NOT_FOUND('Job post') })
+  @ApiForbiddenResponse({ description: DOC_DESCRIPTION.INCLUDE_ROLES(UserRole.ADMIN) })
+  @ApiParam({ name: 'jobPostId' })
+  @Patch('csc-jobs/:jobPostId/hidden')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  async setCscJobHidden(@ObjectId('jobPostId') jobPostId: string, @Body() dto: SetShopHiddenDto) {
+    return this.cscJobsService.setJobPostHidden(jobPostId, dto.hidden);
+  }
+
+  /**
+   * Drops every cached API response (map markers, lists, option lists) so the next request
+   * reads the database. Only response-cache namespaces are cleared - pumpuang sessions, OTPs
+   * and locations live in the same redis and must survive.
+   */
+  @ApiOkResponse({ description: 'Response cache cleared.' })
+  @ApiForbiddenResponse({ description: DOC_DESCRIPTION.INCLUDE_ROLES(UserRole.ADMIN) })
+  @Post('clear-response-cache')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @CacheClearKeys(...RESPONSE_CACHE_KEYS)
+  @UseInterceptors(CacheClearInterceptor)
+  async clearResponseCache(): Promise<{ message: string }> {
+    return { message: 'Response cache cleared' };
   }
 
   @ApiOkResponse({ description: 'History of cache syncs for one source, newest first.' })
