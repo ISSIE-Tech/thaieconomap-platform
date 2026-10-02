@@ -7,9 +7,12 @@ import { CLUSTER_CONSTANTS } from './constant';
 
 import job from '/public/assets/icons/job-node.svg';
 import sharing from '/public/assets/icons/sharing-node.svg';
+import business from '/public/assets/icons/business-node.svg';
 import activeJob from '/public/assets/icons/active-job-node.svg';
-import commercial from '/public/assets/icons/commercial-node.svg';
+import restaurant from '/public/assets/icons/restaurant-node.svg';
 import activeSharing from '/public/assets/icons/active-sharing-node.svg';
+import activeBusiness from '/public/assets/icons/active-business-node.svg';
+import activeRestaurant from '/public/assets/icons/active-restaurant-node.svg';
 import activeCommercial from '/public/assets/icons/active-commercial-node.svg';
 import pumpuangLeft from '/public/assets/icons/pumpuang/Handoff_Icon-Red-Left.png';
 import pumpuangRight from '/public/assets/icons/pumpuang/Handoff_Icon-Red-Right.png';
@@ -115,7 +118,13 @@ const pinIcon = (iconUrl: string, active = false) => {
   });
 };
 
-export const commercialMarker = pinIcon(commercial.src);
+export const restaurantMarker = pinIcon(restaurant.src);
+
+export const activeRestaurantMarker = pinIcon(activeRestaurant.src, true);
+
+export const businessMarker = pinIcon(business.src);
+
+export const activeBusinessMarker = pinIcon(activeBusiness.src, true);
 
 // Truck PNGs are cropped to the truck (1:2, 2x for retina). They rotate with the heading
 // around their centre (rotationOrigin="center"), so they anchor at the centre, not a tip.

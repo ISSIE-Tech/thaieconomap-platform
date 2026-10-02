@@ -9,17 +9,20 @@ import { useBoolean } from 'src/shared/hooks/use-boolean';
 import { STORAGE_KEY } from 'src/shared/components/constants';
 import { useIsDesktop } from 'src/shared/hooks/use-is-desktop';
 import { MapControls } from 'src/shared/components/map-sidebar';
-import {
-  userMarker,
-  commercialMarker,
-  activeCommercialMarker,
-} from 'src/shared/components/leaflet-map/map';
+import { DATA_NAME_THAI } from 'src/shared/components/constants';
 import {
   MapSetter,
   MapContainer,
   LocationMarkers,
   OverlappingCluster,
 } from 'src/shared/components/leaflet-map';
+import {
+  userMarker,
+  businessMarker,
+  restaurantMarker,
+  activeBusinessMarker,
+  activeRestaurantMarker,
+} from 'src/shared/components/leaflet-map/map';
 
 import Stack from '@mui/material/Stack';
 
@@ -87,6 +90,7 @@ type MarkersGroupProps = {
 const MarkersGroup = ({ tinyCommercials, isLoading, type }: MarkersGroupProps) => {
   // commercial drawer (mobile); on desktop the sidebar shows the selected commercial
   const isDesktop = useIsDesktop();
+  const isRestaurant = type === DATA_NAME_THAI.RESTAURANT;
   const commercialId = useCommercialStore((state) => state.selectedId);
   const setCommercialId = useCommercialStore((state) => state.setSelectedId);
   const hoveredId = useCommercialStore((state) => state.hoveredId);
@@ -140,8 +144,8 @@ const MarkersGroup = ({ tinyCommercials, isLoading, type }: MarkersGroupProps) =
           isLoading={isLoading}
           locations={tinyCommercials}
           onMarkerClick={onCommercialClick}
-          markerIcon={commercialMarker}
-          activeMarkerIcon={activeCommercialMarker}
+          markerIcon={isRestaurant ? restaurantMarker : businessMarker}
+          activeMarkerIcon={isRestaurant ? activeRestaurantMarker : activeBusinessMarker}
           activeId={hoveredId || commercialId}
         />
       </OverlappingCluster>
