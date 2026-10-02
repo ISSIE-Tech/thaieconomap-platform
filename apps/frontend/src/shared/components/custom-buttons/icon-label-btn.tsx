@@ -31,10 +31,12 @@ export function IconLabelButton({ icon, label, onClick, highlight = false, iconS
         startIcon={<Iconify width={20} icon={icon} />}
         sx={{
           height: 44,
+          px: 2.5,
           borderRadius: '9999px',
           border: 2,
           fontWeight: 700,
           whiteSpace: 'nowrap',
+          '& .MuiButton-startIcon': { mr: 1 },
           ...(highlight
             ? {
                 bgcolor: 'primary.main',

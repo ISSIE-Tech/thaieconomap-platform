@@ -160,8 +160,8 @@ export function MainInfo({ commercial, submissionMessage }: Partial<Props>) {
           <Box
             sx={{
               borderRadius: '9999px',
-              px: 1,
-              py: 0.25,
+              px: 1.5,
+              py: 0.5,
               bgcolor: workingStatusStyle[commercial.workingStatus].background,
             }}
           >

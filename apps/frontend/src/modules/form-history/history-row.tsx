@@ -1,28 +1,43 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import type { FormHistory } from './_types/history.type';
 import type { Commercial } from '../commercials/_types/commercials.type';
 
+import { toast } from 'sonner';
 import { useMemo } from 'react';
 import { maxLine } from 'src/theme/styles/mixins';
 import { Image } from 'src/shared/components/image';
+import { paths } from 'src/shared/routes/paths.config';
+import { Iconify } from 'src/shared/components/iconify';
+import { useBoolean } from 'src/shared/hooks/use-boolean';
 import { formatCreateDate } from 'src/shared/components/constants/date';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Dialog from '@mui/material/Dialog';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import Skeleton from '@mui/material/Skeleton';
 import { useTheme } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 
+import useDeleteMyShop from './_hooks/use-delete-my-shop';
 import { ENTITY_TYPE, SubmissionStatus } from './_types/history.type';
 import { CommercialCategory } from '../commercials/_types/commercials.type';
 
 type Props = {
   history: FormHistory;
   onClick: (history: FormHistory) => void;
+  /** replaces the trailing arrow (mobile) / fills the last column (desktop) */
+  actions?: ReactNode;
 };
 
-export function HistoryRow({ history, onClick }: Props) {
+export function HistoryRow({ history, onClick, actions }: Props) {
   const theme = useTheme();
 
   const entityTypeThai = ENTITY_TYPE[history.entityType].th;
@@ -52,11 +67,7 @@ export function HistoryRow({ history, onClick }: Props) {
         />
 
         <Stack>
-          <Typography
-            variant="body2"
-            color={theme.palette.primary.main}
-            sx={maxLine({ line: 1 })}
-          >
+          <Typography variant="body2" color={theme.palette.primary.main} sx={maxLine({ line: 1 })}>
             {entityTypeThai} {categoryThai && ` - ${categoryThai}`}
           </Typography>
           <Typography fontWeight="bold" sx={maxLine({ line: 1 })}>
@@ -68,9 +79,11 @@ export function HistoryRow({ history, onClick }: Props) {
         </Stack>
       </Stack>
 
-      <Stack>
-        <Image src="/assets/icons/right-arrow.svg" alt="right-arrow" sx={{ width: '24px' }} />
-      </Stack>
+      {actions ?? (
+        <Stack>
+          <Image src="/assets/icons/right-arrow.svg" alt="right-arrow" sx={{ width: '24px' }} />
+        </Stack>
+      )}
     </Stack>
   );
 }
@@ -108,9 +121,10 @@ const STATUS = {
 } as const;
 
 export const historyTableColumns = 'minmax(0, 2fr) 1fr 1fr 140px';
+export const historyTableColumnsWithActions = `${historyTableColumns} 96px`;
 
 /** Desktop table row: รายการ | ประเภท | วันที่ส่ง | สถานะ */
-export function HistoryTableRow({ history, onClick }: Props) {
+export function HistoryTableRow({ history, onClick, actions }: Props) {
   const type =
     history.entityType === ENTITY_TYPE.commercials.en
       ? CommercialCategory[(history as Commercial).category]
@@ -122,7 +136,7 @@ export function HistoryTableRow({ history, onClick }: Props) {
       onClick={() => onClick(history)}
       sx={{
         display: 'grid',
-        gridTemplateColumns: historyTableColumns,
+        gridTemplateColumns: actions ? historyTableColumnsWithActions : historyTableColumns,
         alignItems: 'center',
         p: 1.5,
         fontSize: 15,
@@ -143,14 +157,79 @@ export function HistoryTableRow({ history, onClick }: Props) {
           fontWeight: 700,
           fontSize: 13,
           borderRadius: '9999px',
-          px: 1.25,
-          py: '1px',
+          px: 1.5,
+          py: 0.5,
           bgcolor: `${status.tone}.lighter`,
           color: status.tone === 'warning' ? 'warning.dark' : `${status.tone}.main`,
         }}
       >
         {status.label}
       </Box>
+      {actions}
     </Box>
+  );
+}
+
+// --------------------------------------------------
+
+/** Open the public page (approved shops only) and delete, for "ร้านค้าของฉัน". */
+export function ShopActions({ history }: { history: FormHistory }) {
+  const confirm = useBoolean();
+  const { mutate: deleteShop, isPending } = useDeleteMyShop();
+  const isLive = history.submissionStatus === SubmissionStatus.ACCEPTED;
+
+  const onDelete = () =>
+    deleteShop(history, {
+      onSuccess: () => {
+        toast.success(`ลบ "${history.name}" แล้ว`);
+        confirm.onFalse();
+      },
+      onError: (error: any) => toast.error(error?.display ?? 'ลบร้านไม่สำเร็จ'),
+    });
+
+  return (
+    // keep clicks here from opening the row's drawer
+    <Stack direction="row" justifySelf="end" onClick={(e) => e.stopPropagation()}>
+      {isLive && (
+        <Tooltip title="เปิดหน้าร้าน">
+          <IconButton
+            component="a"
+            href={paths.shop(history._id)}
+            target="_blank"
+            rel="noopener"
+            aria-label={`เปิดหน้าร้าน ${history.name}`}
+          >
+            <Iconify icon="solar:square-arrow-right-up-linear" width={22} />
+          </IconButton>
+        </Tooltip>
+      )}
+      <Tooltip title="ลบร้าน">
+        <IconButton color="error" onClick={confirm.onTrue} aria-label={`ลบร้าน ${history.name}`}>
+          <Iconify icon="solar:trash-bin-trash-linear" width={22} />
+        </IconButton>
+      </Tooltip>
+
+      <Dialog
+        fullWidth
+        maxWidth="xs"
+        open={confirm.value}
+        onClose={isPending ? undefined : confirm.onFalse}
+      >
+        <DialogTitle sx={{ pb: 1 }}>ลบ &quot;{history.name}&quot; ?</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary">
+            {isLive ? 'ร้านจะหายจากแผนที่และหน้าค้นหาทันที' : 'คำขอลงทะเบียนนี้จะถูกยกเลิก'}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={confirm.onFalse} disabled={isPending}>
+            ยกเลิก
+          </Button>
+          <Button variant="contained" color="error" onClick={onDelete} disabled={isPending}>
+            {isPending ? 'กำลังลบ...' : 'ลบร้าน'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Stack>
   );
 }

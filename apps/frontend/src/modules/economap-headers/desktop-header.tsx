@@ -10,7 +10,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import ButtonBase from '@mui/material/ButtonBase';
 
-import { useCreateAction } from './header-action-buttons';
+import { CreateMenuButton } from './header-action-buttons';
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +25,6 @@ const NAV = [
 export function DesktopHeader() {
   const pathname = usePathname();
   const { authenticated, user } = useAuthContext();
-  const create = useCreateAction();
 
   return (
     <Stack
@@ -81,24 +80,7 @@ export function DesktopHeader() {
       </Stack>
 
       <Stack direction="row" alignItems="center" spacing={1.5} ml="auto !important" flexShrink={0}>
-        {create && (
-          <Button
-            {...(create.href ? { component: Link, href: create.href } : { onClick: create.onClick })}
-            startIcon={<Box component="img" src={create.icon} alt="" width={22} height={22} />}
-            sx={{
-              height: 40,
-              px: 2.25,
-              borderRadius: '9999px',
-              border: 2,
-              borderColor: 'primary.lighter',
-              color: 'primary.dark',
-              fontWeight: 700,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {create.label}
-          </Button>
-        )}
+        <CreateMenuButton />
 
         {authenticated ? (
           <ButtonBase component={Link} href={paths.account.root} sx={{ borderRadius: '50%' }}>

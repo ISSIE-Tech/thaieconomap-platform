@@ -24,6 +24,7 @@ import {
   checkDistrictPermission,
   createGeoNearQuery,
   getSpanName,
+  isCustomerUser,
   isManagerUser,
   prettyObjectString,
   transformLatitudeAndLongitudeToGeoJson,
@@ -368,6 +369,14 @@ export class CommercialsService {
     );
 
     const commercial = await this.getCommercialById(user, commercialId);
+    const isOwner =
+      String(commercial.createdBy?._id ?? commercial.createdBy) === user._id.toString();
+
+    // customers may only delete their own shop
+    if (isCustomerUser(user) && !isOwner) {
+      throw new ErrorException(CODES.TEC_033);
+    }
+
     const imageUrl = await this.minioClientService.moveFile(
       commercial.imageUrl,
       `${MINIO_FOLDER.bin}/${MINIO_FOLDER.commercials}`,

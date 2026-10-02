@@ -38,7 +38,8 @@ export function StatusPill({ label, tone }: { label: string; tone: StatusTone })
       sx={{
         fontWeight: 700,
         borderRadius: '9999px',
-        px: 1,
+        px: 1.5,
+        py: 0.25,
         whiteSpace: 'nowrap',
         bgcolor: `${tone}.lighter`,
         color: tone === 'warning' ? 'warning.dark' : `${tone}.main`,
@@ -60,8 +61,8 @@ export function NewBadge({ label = 'ใหม่' }: { label?: string }) {
         color: 'common.white',
         bgcolor: 'primary.main',
         borderRadius: '9999px',
-        px: 1,
-        py: '1px',
+        px: 1.25,
+        py: 0.25,
       }}
     >
       {label}

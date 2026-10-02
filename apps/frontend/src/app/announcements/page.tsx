@@ -41,11 +41,17 @@ export default function AnnouncementPage() {
         <Stack
           component="aside"
           minHeight={0}
-          sx={{ borderRight: '1px solid #EFF1F3', boxShadow: '0px 1px 10px 1px #4876D31A' }}
+          minWidth={0}
+          bgcolor="common.white"
+          sx={{
+            borderRight: '1px solid #EFF1F3',
+            boxShadow: '0px 1px 10px 1px #4876D31A',
+            zIndex: 1,
+          }}
         >
           <DateCards />
 
-          <Box px={3} pb={1}>
+          <Box px={3} pb={2.5}>
             <DistrictsAutocomplete />
           </Box>
 

@@ -42,11 +42,11 @@ const RegisterSuccessful = ({ commercialType, handleFormSuccessful }: Props) => 
         height={200}
         alt="register-successful"
       />
-      <Stack direction="column" alignItems="center" justifyContent="center">
-        <Typography variant="h2" fontWeight="bold">
+      <Stack direction="column" alignItems="center" spacing={1} sx={{ textAlign: 'center', px: 2 }}>
+        <Typography variant="h4" fontWeight="bold" sx={{ lineHeight: 1.6 }}>
           {RegisterSuccessfulTitle()}
         </Typography>
-        <Typography variant="h2" fontWeight="bold">
+        <Typography variant="body1" color="text.secondary">
           โปรดรอการยืนยัน
         </Typography>
       </Stack>

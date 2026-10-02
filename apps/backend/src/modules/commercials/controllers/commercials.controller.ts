@@ -123,7 +123,10 @@ export class CommercialsController {
   @UseInterceptors(TransformFileInterceptor)
   @ExcludeRoles(UserRole.CUSTOMER)
   @UseGuards(AuthGuard, RolesGuard)
-  async getCommercial(@CurrentUser() user: IUser, @ObjectId('commercialId') commercialId: string): Promise<CommercialResponseDto> {
+  async getCommercial(
+    @CurrentUser() user: IUser,
+    @ObjectId('commercialId') commercialId: string,
+  ): Promise<CommercialResponseDto> {
     const result = await this.commercialsService.getCommercialById(user, commercialId);
 
     return CommercialMapper.toResponseDto(result);
@@ -223,7 +226,11 @@ export class CommercialsController {
     @ObjectId('commercialId') commercialId: string,
     @Query('fileName') fileName: string,
   ): Promise<CommercialResponseDto> {
-    const result = await this.commercialsService.deleteAdditionalImageUrl(user, commercialId, fileName);
+    const result = await this.commercialsService.deleteAdditionalImageUrl(
+      user,
+      commercialId,
+      fileName,
+    );
 
     return CommercialMapper.toResponseDto(result);
   }
@@ -281,7 +288,12 @@ export class CommercialsController {
     )
     image: Express.Multer.File,
   ): Promise<CommercialResponseDto> {
-    const result = await this.commercialsService.updateCommercial(user, commercialId, updateCommercialDto, image);
+    const result = await this.commercialsService.updateCommercial(
+      user,
+      commercialId,
+      updateCommercialDto,
+      image,
+    );
 
     return CommercialMapper.toResponseDto(result);
   }
@@ -290,7 +302,7 @@ export class CommercialsController {
   @ApiBadRequestResponse({ description: DOC_DESCRIPTION.MUST_BE_MONGOID('commercialId') })
   @ApiForbiddenResponse({
     description: buildMultiLineDocDescription(
-      DOC_DESCRIPTION.EXCLUDE_ROLES(UserRole.CUSTOMER),
+      DOC_DESCRIPTION.INCLUDE_ROLES(UserRole.ADMIN, UserRole.MANAGER, 'OWNER'),
       DOC_DESCRIPTION.TEC_008,
     ),
   })
@@ -298,8 +310,7 @@ export class CommercialsController {
   @ApiServiceUnavailableResponse({ description: DOC_DESCRIPTION.FAILED_TO_MANIPULATE_FILE })
   @ApiParam({ name: 'commercialId' })
   @Delete(':commercialId')
-  @ExcludeRoles(UserRole.CUSTOMER)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard)
   @CacheClearKeys(CACHE_KEY.commercials.all, CACHE_KEY.allCommercials.all)
   @UseInterceptors(CacheClearInterceptor)
   async deleteCommercial(

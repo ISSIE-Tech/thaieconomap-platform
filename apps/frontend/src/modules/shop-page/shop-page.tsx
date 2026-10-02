@@ -36,10 +36,21 @@ import { ShopLightbox } from './shop-lightbox';
 const ShopMiniMap = dynamic(() => import('./shop-mini-map'), { ssr: false });
 
 const border = '1px solid #EFF1F3';
-const TINTS = ['#B9E1FF', '#DFE3E8', '#CBD1D7', '#60BCFF'];
+// desktop mosaic per photo count (index = count, capped at 5); mobile always shows the first photo
+const MOSAIC = [
+  { cols: '1fr', rows: '280px', spans: [] },
+  { cols: '1fr', rows: '420px', spans: [] },
+  { cols: '1fr 1fr', rows: '420px', spans: [] },
+  { cols: '2fr 1fr', rows: '210px 210px', spans: [0] },
+  { cols: '2fr 1fr 1fr', rows: '210px 210px', spans: [0, 1] },
+  { cols: '2fr 1fr 1fr', rows: '200px 200px', spans: [0] },
+];
+const MOSAIC_MAX = MOSAIC.length - 1;
 
 const outlinedPill = {
   height: 44,
+  px: 2.5,
+  '& .MuiButton-startIcon': { mr: 1 },
   borderRadius: '9999px',
   border: 2,
   borderColor: 'primary.lighter',
@@ -71,7 +82,9 @@ export function ShopPage({ id }: { id: string }) {
   const coord = formatCoord(shop.location.coordinates);
   const category = CommercialCategory[shop.category];
   const district = shop.district?.districtName;
-  const images = [shop.imageUrl, ...(shop.additionalImageUrl ?? [])].filter(Boolean);
+  const images = [shop.imageUrl, ...(shop.additionalImageUrl ?? [])].filter(Boolean) as string[];
+  const mosaic = MOSAIC[Math.min(images.length, MOSAIC_MAX)];
+  const mosaicImages = images.slice(0, MOSAIC_MAX);
   const types = shop.types?.map((t) => t.name).join(' · ');
   const status = shop.workingStatus && {
     label: CommercialWorkingStatus[shop.workingStatus],
@@ -138,7 +151,7 @@ export function ShopPage({ id }: { id: string }) {
             </Button>
           </Stack>
 
-          {/* photo mosaic */}
+          {/* photo mosaic: as many tiles as there are photos */}
           <Box
             sx={{
               position: 'relative',
@@ -146,33 +159,55 @@ export function ShopPage({ id }: { id: string }) {
               gap: 1,
               borderRadius: 2,
               overflow: 'hidden',
-              gridTemplateColumns: { xs: '1fr', md: '2fr 1fr 1fr' },
-              gridTemplateRows: { xs: '240px', md: '200px 200px' },
+              gridTemplateColumns: { xs: '1fr', md: mosaic.cols },
+              gridTemplateRows: { xs: images.length ? '260px' : '200px', md: mosaic.rows },
             }}
           >
-            {[0, 1, 2, 3, 4].map((i) => (
-              <Box
-                key={i}
-                sx={{
-                  bgcolor: i === 0 ? 'primary.light' : TINTS[i - 1],
-                  display: i === 0 ? 'grid' : { xs: 'none', md: 'grid' },
-                  placeItems: 'center',
-                  ...(i === 0 && { gridRow: { md: 'span 2' } }),
-                }}
-              >
-                {images[i] ? (
+            {images.length === 0 && (
+              <Box sx={{ bgcolor: 'primary.light', display: 'grid', placeItems: 'center' }}>
+                <Iconify icon={commercialIcon(shop.category)} width={72} sx={{ color: 'common.white', opacity: 0.9 }} />
+              </Box>
+            )}
+            {mosaicImages.map((src, i) => {
+              const more = i === MOSAIC_MAX - 1 ? images.length - MOSAIC_MAX : 0;
+              return (
+                <Box
+                  key={src}
+                  onClick={() => setLightbox(i)}
+                  sx={{
+                    position: 'relative',
+                    cursor: 'zoom-in',
+                    bgcolor: 'grey.200',
+                    display: i === 0 ? 'block' : { xs: 'none', md: 'block' },
+                    ...(mosaic.spans.includes(i) && { gridRow: { md: 'span 2' } }),
+                  }}
+                >
                   <Box
                     component="img"
-                    src={images[i]}
+                    src={src}
                     alt=""
-                    onClick={() => setLightbox(i)}
-                    sx={{ width: 1, height: 1, objectFit: 'cover', cursor: 'zoom-in' }}
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    sx={{ width: 1, height: 1, objectFit: 'cover', display: 'block' }}
                   />
-                ) : (
-                  i === 0 && <Iconify icon={commercialIcon(shop.category)} width={72} sx={{ color: 'common.white', opacity: 0.9 }} />
-                )}
-              </Box>
-            ))}
+                  {more > 0 && (
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        display: { xs: 'none', md: 'grid' },
+                        placeItems: 'center',
+                        bgcolor: 'rgba(0,0,0,0.45)',
+                        color: 'common.white',
+                        fontSize: 28,
+                        fontWeight: 700,
+                      }}
+                    >
+                      +{more}
+                    </Box>
+                  )}
+                </Box>
+              );
+            })}
             {images.length > 1 && (
               <Button
                 onClick={() => setLightbox(0)}
@@ -247,9 +282,9 @@ export function ShopPage({ id }: { id: string }) {
             </Stack>
 
             <PillButtonsContext.Provider value>
-              <Stack direction="row" gap={1} flexWrap="wrap" justifyContent={{ md: 'flex-end' }}>
+              <Stack direction="row" gap={1.5} flexWrap="wrap" justifyContent={{ md: 'flex-end' }}>
                 <CommercialActionButtons commercial={shop} />
-                <Button onClick={share} startIcon={<Iconify icon="solar:share-linear" width={20} />} sx={{ ...outlinedPill, px: 2.25 }}>
+                <Button onClick={share} startIcon={<Iconify icon="solar:share-linear" width={20} />} sx={outlinedPill}>
                   แชร์
                 </Button>
               </Stack>
@@ -306,22 +341,25 @@ export function ShopPage({ id }: { id: string }) {
                 )}
               </Section>
 
+              {/* only when the mosaic can't show every photo: mobile shows 1, desktop up to MOSAIC_MAX */}
               {images.length > 1 && (
-                <Section title={`รูปภาพ${category}`} id="gallery">
-                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, minmax(0,1fr))', md: 'repeat(4, minmax(0,1fr))' }, gap: 1 }}>
-                    {images.map((src, i) => (
-                      <Box
-                        key={src}
-                        component="img"
-                        src={src}
-                        alt=""
-                        loading="lazy"
-                        onClick={() => setLightbox(i)}
-                        sx={{ width: 1, aspectRatio: '4/3', objectFit: 'cover', borderRadius: 1, display: 'block', cursor: 'zoom-in' }}
-                      />
-                    ))}
-                  </Box>
-                </Section>
+                <Box sx={{ display: { md: images.length > MOSAIC_MAX ? 'block' : 'none' } }}>
+                  <Section title={`รูปภาพ${category}`} id="gallery">
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, minmax(0,1fr))', md: 'repeat(4, minmax(0,1fr))' }, gap: 1 }}>
+                      {images.map((src, i) => (
+                        <Box
+                          key={src}
+                          component="img"
+                          src={src}
+                          alt=""
+                          loading="lazy"
+                          onClick={() => setLightbox(i)}
+                          sx={{ width: 1, aspectRatio: '4/3', objectFit: 'cover', borderRadius: 1, display: 'block', cursor: 'zoom-in' }}
+                        />
+                      ))}
+                    </Box>
+                  </Section>
+                </Box>
               )}
             </Stack>
 

@@ -27,9 +27,11 @@ import Typography from '@mui/material/Typography';
 
 import {
   HistoryRow,
+  ShopActions,
   HistoryTableRow,
   HistoryRowSkeleton,
   historyTableColumns,
+  historyTableColumnsWithActions,
 } from './history-row';
 
 type Props = {
@@ -59,6 +61,10 @@ export function HistoryView({ title, entityType }: Props) {
     [allHistories, entityType]
   );
   const createLink = CREATE_LINK[entityType ?? 'commercials'];
+  // "my shops" can open and delete each shop; the mixed history list stays read-only
+  const manageable = entityType === ENTITY_TYPE.commercials.en;
+  const actionsFor = (history: FormHistory) =>
+    manageable ? <ShopActions history={history} /> : undefined;
 
   const displayedHistory = useMemo(
     () => histories?.filter((history) => history.submissionStatus === tabs.value),
@@ -122,7 +128,7 @@ export function HistoryView({ title, entityType }: Props) {
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: historyTableColumns,
+            gridTemplateColumns: manageable ? historyTableColumnsWithActions : historyTableColumns,
             px: 1.5,
             py: 1.25,
             fontSize: 13,
@@ -134,13 +140,19 @@ export function HistoryView({ title, entityType }: Props) {
           <span>ประเภท</span>
           <span>วันที่ส่ง</span>
           <span>สถานะ</span>
+          {manageable && <span />}
         </Box>
 
         {isLoading &&
           Array.from({ length: 5 }).map((_, index) => <HistoryRowSkeleton key={index} />)}
 
         {histories?.map((history) => (
-          <HistoryTableRow key={history._id} history={history} onClick={onHistoryClick} />
+          <HistoryTableRow
+            key={history._id}
+            history={history}
+            onClick={onHistoryClick}
+            actions={actionsFor(history)}
+          />
         ))}
 
         {histories?.length === 0 && (
@@ -209,7 +221,12 @@ export function HistoryView({ title, entityType }: Props) {
           Array.from({ length: 5 }).map((_, index) => <HistoryRowSkeleton key={index} />)}
 
         {displayedHistory?.map((history) => (
-          <HistoryRow key={history._id} history={history} onClick={onHistoryClick} />
+          <HistoryRow
+            key={history._id}
+            history={history}
+            onClick={onHistoryClick}
+            actions={actionsFor(history)}
+          />
         ))}
 
         {displayedHistory?.length === 0 && (
