@@ -1,6 +1,6 @@
-import type { commercialMarker } from './map';
+import type { jobMarker } from './map';
 
-export type MarkerIcon = typeof commercialMarker;
+export type MarkerIcon = typeof jobMarker;
 
 export type PinLocation = {
   _id: string;

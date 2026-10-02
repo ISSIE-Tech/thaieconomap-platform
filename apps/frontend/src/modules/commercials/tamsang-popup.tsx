@@ -4,38 +4,72 @@ import type { ApiResponse } from 'src/shared/types/api.type';
 
 import { useState } from 'react';
 import axios from 'src/shared/utils/axios';
-import { useQuery } from '@tanstack/react-query';
 import { endpoints } from 'src/shared/configs/endpoints.config';
+import { useMapBounds } from 'src/shared/components/map-sidebar';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
+import { alpha, darken } from '@mui/material/styles';
 
-import { useGeolocationStore } from '../geolocation/_store/geolocation.store';
+import { useCommercialStore } from './_store/commercials.store';
 
 type ServingBase = { base: { name: string | null; basicId: string } | null };
 
-// Bottom-centre card over the map when the user stands inside a tamsang-tamsong service area.
+const LOGO = '/assets/images/logo-tamsang-tamsong.png';
+// tamsang-tamsong CI orange, sampled from the logo
+const ORANGE = '#F15B22';
+
+// Bottom-centre card over the map when the map's centre is inside a tamsang-tamsong service area.
+// Dismissing it collapses it to a logo button bottom-left that reopens it.
 export function TamsangPopup() {
-  const geolocation = useGeolocationStore((state) => state.geolocation);
+  const map = useCommercialStore((state) => state.map);
+  const center = useMapBounds(map)?.getCenter();
+  // ~100 m grid so tiny pans reuse the cached answer
+  const coord = center && [+center.lat.toFixed(3), +center.lng.toFixed(3)];
   const [dismissed, setDismissed] = useState(false);
 
   const { data: base } = useQuery({
-    queryKey: ['serving-base', geolocation],
+    queryKey: ['serving-base', coord],
     queryFn: async () => {
-      const [latitude, longitude] = geolocation!;
+      const [latitude, longitude] = coord!;
       const { data } = await axios.get<ApiResponse<ServingBase>>(endpoints.bases.serving, {
         params: { latitude, longitude },
       });
       return data.data.base;
     },
-    enabled: !!geolocation,
+    enabled: !!coord,
     staleTime: Infinity,
+    placeholderData: keepPreviousData,
   });
 
-  if (!base || dismissed) return null;
+  if (!base) return null;
+
+  if (dismissed)
+    return (
+      <ButtonBase
+        aria-label="ตามสั่งตามส่ง"
+        onClick={() => setDismissed(false)}
+        sx={{
+          position: 'absolute',
+          zIndex: 1000,
+          left: 16,
+          bottom: 32,
+          width: 56,
+          height: 56,
+          borderRadius: '50%',
+          bgcolor: 'common.white',
+          boxShadow: 8,
+          overflow: 'hidden',
+        }}
+      >
+        <Box component="img" src={LOGO} alt="" sx={{ width: 44, height: 'auto' }} />
+      </ButtonBase>
+    );
 
   return (
     <Paper
@@ -56,18 +90,24 @@ export function TamsangPopup() {
       <Stack direction="row" spacing={2} alignItems="center">
         <Box
           component="img"
-          src="/assets/images/logo-tamsang-tamsong.png"
+          src={LOGO}
           alt="ตามสั่งตามส่ง"
           sx={{ width: { xs: 56, sm: 80 }, height: 'auto', flexShrink: 0 }}
         />
         <Stack spacing={1.5} flex={1} minWidth={0}>
-          <Typography variant="subtitle1">สั่งอาหารเรียกไรเดอร์</Typography>
+          <Box>
+            <Typography variant="subtitle1">สั่งอาหารเรียกไรเดอร์</Typography>
+            {base.name && (
+              <Typography variant="body2" color="text.secondary" noWrap>
+                {base.name}
+              </Typography>
+            )}
+          </Box>
           <Stack direction="row" spacing={1}>
             <Button
               fullWidth
               size="large"
-              color="primary"
-              sx={{ borderRadius: '9999px', bgcolor: 'primary.lighter' }}
+              sx={{ borderRadius: '9999px', color: ORANGE, bgcolor: alpha(ORANGE, 0.12) }}
               onClick={() => setDismissed(true)}
             >
               ยกเลิก
@@ -76,11 +116,15 @@ export function TamsangPopup() {
               fullWidth
               size="large"
               variant="contained"
-              color="primary"
-              sx={{ borderRadius: '9999px' }}
+              sx={{
+                borderRadius: '9999px',
+                color: 'common.white',
+                bgcolor: ORANGE,
+                '&:hover': { bgcolor: darken(ORANGE, 0.12) },
+              }}
               onClick={() => window.open(`https://line.me/R/ti/p/${base.basicId}`, '_blank')}
             >
-              ดูเลย
+              สั่งเลย
             </Button>
           </Stack>
         </Stack>
