@@ -40,8 +40,10 @@ describe('CscJobsService sync', () => {
 
     const writes = jobPostModel.bulkWrite.mock.calls[0][0];
 
-    expect(writes.map(w => w.replaceOne.replacement._id)).toEqual(['a', 'b']);
-    expect(writes[0].replaceOne.replacement).toMatchObject({
+    expect(writes.map(w => w.updateOne.filter._id)).toEqual(['a', 'b']);
+    // $set, not replace: an admin's `hidden` flag must survive the sync
+    expect(writes[0].updateOne.update.$set).not.toHaveProperty('hidden');
+    expect(writes[0].updateOne.update.$set).toMatchObject({
       categoryId: 'c1',
       mark: { title: 'a' },
       detail: { title: 'a' },

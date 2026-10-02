@@ -24,6 +24,10 @@ export class CscJobPost {
   // what GET /job-posts/:id returned; image urls inside are presigned for 7 days
   @Prop({ type: SchemaTypes.Mixed, required: true })
   detail: Record<string, unknown>;
+
+  // Set by an admin, never by the sync - the sync only $sets the fields above, so this survives it.
+  @Prop({ default: false })
+  hidden?: boolean;
 }
 
 export const CscJobPostSchema = SchemaFactory.createForClass(CscJobPost);

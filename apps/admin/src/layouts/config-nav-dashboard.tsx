@@ -69,6 +69,12 @@ export const economapNavData = [
         path: paths.user.dashboard.root,
         icon: ICONS.user,
       },
+      {
+        title: 'ล้างแคช',
+        path: paths.cache.dashboard.root,
+        icon: ICONS.parameter,
+        roles: ['ADMIN'],
+      },
     ],
   },
   {
@@ -115,18 +121,6 @@ export const economapNavData = [
         ],
       },
       {
-        title: 'ร้านค้าจากตามสั่งตามส่ง',
-        path: paths['tamsang-shops'].dashboard.root,
-        icon: ICONS.order,
-        roles: ['ADMIN'],
-      },
-      {
-        title: 'งานจากเชี่ยวแชร์',
-        path: paths['csc-jobs'].dashboard.root,
-        icon: ICONS.job,
-        roles: ['ADMIN'],
-      },
-      {
         title: 'ประกาศ',
         path: paths.announcements.dashboard.root,
         icon: ICONS.blog,
@@ -155,6 +149,24 @@ export const economapNavData = [
           { title: 'สร้างรายการใหม่', path: paths.pumpuang.dashboard.new },
           { title: 'ประเภท', path: paths.pumpuang.dashboard.types },
         ],
+      },
+    ],
+  },
+  {
+    subheader: 'บริการภายนอก',
+    roles: ['ADMIN'],
+    items: [
+      {
+        title: 'ร้านค้าจากตามสั่งตามส่ง',
+        path: paths['tamsang-shops'].dashboard.root,
+        icon: ICONS.order,
+        roles: ['ADMIN'],
+      },
+      {
+        title: 'งานจากเชี่ยวแชร์',
+        path: paths['csc-jobs'].dashboard.root,
+        icon: ICONS.job,
+        roles: ['ADMIN'],
       },
     ],
   },

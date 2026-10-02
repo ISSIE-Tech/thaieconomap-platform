@@ -5,6 +5,7 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import Avatar from '@mui/material/Avatar';
+import Switch from '@mui/material/Switch';
 import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,14 +13,16 @@ import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 
 import { Label } from 'src/components/label';
+import { toast } from 'src/components/snackbar';
 import { Scrollbar } from 'src/components/scrollbar';
 import { useTable, TableHeadCustom, TablePaginationCustom } from 'src/components/table';
 
-import { useGetTamsangBases } from './tamsang-shops.service';
+import { useGetTamsangBases, useSetTamsangBaseHidden } from './tamsang-shops.service';
 
 // ----------------------------------------------------------------------
 
 const BASE_HEAD = [
+  { id: 'visible', label: 'แสดงบนแผนที่', width: 120 },
   { id: 'name', label: 'ชื่อฐาน' },
   { id: 'botInfo', label: 'LINE OA', width: 260 },
   { id: 'location', label: 'จุดศูนย์กลาง', width: 220 },
@@ -33,6 +36,17 @@ export default function TamsangBasesList() {
 
   const { data: bases = [] } = useGetTamsangBases();
 
+  const setHidden = useSetTamsangBaseHidden();
+
+  const handleToggleHidden = (id: string, hidden: boolean) =>
+    setHidden.mutate(
+      { id, hidden },
+      {
+        onSuccess: () => toast.success(hidden ? 'ปิดทั้งฐานแล้ว' : 'เปิดทั้งฐานแล้ว'),
+        onError: () => toast.error('บันทึกไม่สำเร็จ'),
+      }
+    );
+
   const rows = bases.slice(
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
@@ -40,10 +54,13 @@ export default function TamsangBasesList() {
 
   return (
     <Card>
-      <CardHeader title="ฐานตามสั่งตามส่ง" subheader={`ทั้งหมด ${bases.length} ฐาน`} />
+      <CardHeader
+        title="ฐานตามสั่งตามส่ง"
+        subheader={`ทั้งหมด ${bases.length} ฐาน · ปิดฐานจะซ่อนทุกร้านในฐานนั้นจากแผนที่`}
+      />
 
       <Scrollbar>
-        <Table size="medium" sx={{ minWidth: 900 }}>
+        <Table size="medium" sx={{ minWidth: 1020 }}>
           <TableHeadCustom headLabel={BASE_HEAD} />
 
           <TableBody>
@@ -52,7 +69,16 @@ export default function TamsangBasesList() {
               const [lng, lat] = row.location?.coordinates ?? [];
 
               return (
-                <TableRow key={row._id}>
+                <TableRow key={row._id} sx={{ opacity: row.hidden ? 0.5 : 1 }}>
+                  <TableCell>
+                    <Switch
+                      checked={!row.hidden}
+                      disabled={setHidden.isPending && setHidden.variables?.id === row._id}
+                      onChange={(event) => handleToggleHidden(row._id, !event.target.checked)}
+                      inputProps={{ 'aria-label': `แสดงฐาน ${row.name ?? ''} บนแผนที่` }}
+                    />
+                  </TableCell>
+
                   <TableCell>{row.name || '-'}</TableCell>
 
                   <TableCell>

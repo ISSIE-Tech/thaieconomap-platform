@@ -22,7 +22,11 @@ export class BaseRepository extends EntityRepository<BaseDocument> {
           near: { type: 'Point', coordinates: [longitude, latitude] },
           distanceField: 'distance',
           spherical: true,
-          query: { 'botInfo.basicId': { $exists: true }, serviceRadiusKm: { $gt: 0 } },
+          query: {
+            'botInfo.basicId': { $exists: true },
+            serviceRadiusKm: { $gt: 0 },
+            hidden: { $ne: true },
+          },
         },
       },
       { $match: { $expr: { $lte: ['$distance', { $multiply: ['$serviceRadiusKm', 1000] }] } } },

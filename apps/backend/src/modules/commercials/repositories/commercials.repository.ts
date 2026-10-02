@@ -188,6 +188,7 @@ export class CommercialsRepository extends EntityRepository<CommercialDocument> 
     this.appendMatchStage(unionPipeline, { hidden: { $ne: true } });
     this.appendLookupStage(unionPipeline, COLLECTION_NAME.bases, 'base', '_id', 'base');
     this.appendUnwindStage(unionPipeline, '$base');
+    this.appendMatchStage(unionPipeline, { 'base.hidden': { $ne: true } });
 
     pipeline.push({
       $unionWith: {

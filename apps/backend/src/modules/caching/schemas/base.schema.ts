@@ -32,6 +32,10 @@ export class Base {
   // 0 = service disabled
   @Prop()
   serviceRadiusKm: number;
+
+  // Admin switch that takes the whole node off the map; the sync never $sets it.
+  @Prop({ default: false })
+  hidden: boolean;
 }
 
 export const BaseSchema = SchemaFactory.createForClass(Base);

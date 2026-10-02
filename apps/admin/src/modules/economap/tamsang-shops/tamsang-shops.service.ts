@@ -28,6 +28,7 @@ export type TamsangBase = {
   botInfo?: { basicId: string; displayName: string; lineImageUrl: string };
   location?: { coordinates: [number, number] } | null;
   serviceRadiusKm?: number;
+  hidden?: boolean;
 };
 
 type Paginated<T> = { data: T[]; total: number };
@@ -60,6 +61,17 @@ export const useSetTamsangShopHidden = () => {
   return useMutation({
     mutationFn: ({ id, hidden }: { id: string; hidden: boolean }) =>
       axios.patch(endpoints.caching.shopHidden(id), { hidden }),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: [TAMSANG_SHOPS_QUERY_KEY] }),
+  });
+};
+
+// Hides the whole node: every shop under it and its service-area popup.
+export const useSetTamsangBaseHidden = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, hidden }: { id: string; hidden: boolean }) =>
+      axios.patch(endpoints.caching.baseHidden(id), { hidden }),
     onSettled: () => queryClient.invalidateQueries({ queryKey: [TAMSANG_SHOPS_QUERY_KEY] }),
   });
 };

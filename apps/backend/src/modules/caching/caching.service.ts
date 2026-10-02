@@ -116,6 +116,16 @@ export class CachingService {
     return shop;
   }
 
+  async setBaseHidden(id: string, hidden: boolean) {
+    const base = await this.baseRepository.findByIdAndUpdate(id, { hidden }, { new: true });
+
+    if (!base) {
+      throw new ErrorException(CODES.TEC_007);
+    }
+
+    return base;
+  }
+
   async listSyncLogs(page: number, limit: number, source?: SyncSource) {
     return this.syncLogRepository.findPaginated(page, limit, source);
   }

@@ -142,6 +142,10 @@ export const endpoints = {
     shopHidden: (id: string) => `/services/thai-economap/caching/shops/${id}/hidden`,
     syncLogs: '/services/thai-economap/caching/sync-logs',
     cscJobsSync: '/services/thai-economap/caching/csc-jobs/sync',
+    baseHidden: (id: string) => `/services/thai-economap/caching/bases/${id}/hidden`,
+    cscJobs: '/services/thai-economap/caching/csc-jobs',
+    cscJobHidden: (id: string) => `/services/thai-economap/caching/csc-jobs/${id}/hidden`,
+    clearResponseCache: '/services/thai-economap/caching/clear-response-cache',
   },
   notifications: {
     logs: '/services/thai-economap/notifications/logs',
