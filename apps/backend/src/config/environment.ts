@@ -7,7 +7,7 @@ export const configuration = Joi.object({
   TAMSANG_TAMSONG_API: Joi.string().required(),
   TAMSANG_TAMSONG_SECRET: Joi.string().required(),
   // k8s sets the in-cluster csc-backend; the default keeps local runs working
-  CHIAL_SHARE_API: Joi.string().default('https://csc-backend.dev.issie.dev'),
+  CHIAL_SHARE_API: Joi.string().default('http://localhost:3001'),
   PORT: Joi.number().required(),
   NODE_ENV: Joi.string()
     .valid(...Object.values(Environment))
@@ -49,7 +49,9 @@ export const configuration = Joi.object({
   BYPASS_PUMPUANG_OTP: Joi.string(),
   ANALYTICS_WEBHOOK_URL: Joi.string(),
   ANALYTICS_WEBHOOK_API_KEY: Joi.string(),
-  FCM_PROJECT_ID: Joi.string().required(),
-  FCM_CLIENT_EMAIL: Joi.string().required(),
-  FCM_PRIVATE_KEY: Joi.string().required(),
+  // Optional: FcmService logs a warning and disables push when these are unset,
+  // so a local stack comes up without a Firebase service account.
+  FCM_PROJECT_ID: Joi.string(),
+  FCM_CLIENT_EMAIL: Joi.string(),
+  FCM_PRIVATE_KEY: Joi.string(),
 });

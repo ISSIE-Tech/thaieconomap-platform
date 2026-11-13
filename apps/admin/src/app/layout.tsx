@@ -43,12 +43,15 @@ export default async function RootLayout({ children }: Props) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <Script
-        defer
-        src="https://umami.issie.dev/script.js"
-        data-website-id="5b84da94-380d-439d-a8ea-541e0e8c559a"
-        strategy="afterInteractive"
-      />
+      {/* Self-hosted Umami. Unset either variable and no analytics script loads. */}
+      {process.env.NEXT_PUBLIC_UMAMI_SRC && process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
+        <Script
+          defer
+          src={process.env.NEXT_PUBLIC_UMAMI_SRC}
+          data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+          strategy="afterInteractive"
+        />
+      )}
       <body>
         <InitColorSchemeScript modeStorageKey={schemeConfig.modeStorageKey} defaultMode={schemeConfig.defaultMode} />
 

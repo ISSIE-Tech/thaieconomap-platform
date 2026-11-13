@@ -70,12 +70,15 @@ const SITE_JSON_LD = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="th" suppressHydrationWarning>
-      <Script
-        defer
-        src="https://umami.issie.dev/script.js"
-        data-website-id="87551f9f-c32e-41eb-b2dd-fcfd6ddfc392"
-        strategy="afterInteractive"
-      />
+      {/* Self-hosted Umami. Unset either variable and no analytics script loads. */}
+      {process.env.NEXT_PUBLIC_UMAMI_SRC && process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
+        <Script
+          defer
+          src={process.env.NEXT_PUBLIC_UMAMI_SRC}
+          data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+          strategy="afterInteractive"
+        />
+      )}
       {/* Google Analytics loads from <CookieConsent /> once the visitor accepts */}
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(SITE_JSON_LD)} />

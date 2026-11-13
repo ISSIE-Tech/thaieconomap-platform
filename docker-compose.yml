@@ -1,27 +1,108 @@
+name: thaieconomap
+
+# Local development stack: MongoDB, Redis, MinIO (S3), and a one-shot seeder that
+# loads Thailand's provinces and districts so the map has something to draw.
+#
+#   cp .env.example .env     # optional: only needed to change the defaults below
+#   docker compose up -d
+#
+# Every credential here is a throwaway local default. Override any of them by
+# putting the matching variable in a .env file next to this one. Never reuse
+# these values anywhere that is reachable from the internet.
+
 volumes:
   mongo-data:
   redis-data:
+  minio-data:
 
 services:
   mongodb:
     image: mongo:7
-    restart: always
+    restart: unless-stopped
     ports:
-      - 27017:27017
+      - ${MONGO_PORT:-27017}:27017
     volumes:
       - mongo-data:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-thaieconomap}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-thaieconomap}
-      TZ: Asia/Bangkok
+      TZ: ${TZ:-Asia/Bangkok}
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
 
   redis:
     image: redis/redis-stack-server:latest
-    restart: always
+    restart: unless-stopped
     ports:
-      - 6380:6379
+      - ${REDIS_PORT:-6380}:6379
     volumes:
       - redis-data:/data
     environment:
       REDIS_ARGS: --requirepass ${REDIS_PASSWORD:-thaieconomap}
-      TZ: Asia/Bangkok
+      TZ: ${TZ:-Asia/Bangkok}
+    healthcheck:
+      test:
+        ['CMD-SHELL', 'redis-cli -a "${REDIS_PASSWORD:-thaieconomap}" ping | grep -q PONG']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    ports:
+      - ${MINIO_PORT:-9000}:9000
+      - ${MINIO_CONSOLE_PORT:-9001}:9001
+    volumes:
+      - minio-data:/data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-thaieconomap}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-thaieconomap}
+    healthcheck:
+      test: ['CMD', 'mc', 'ready', 'local']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+
+  # Creates the bucket the backend expects and makes it publicly readable,
+  # so uploaded business photos resolve in the browser without signed URLs.
+  minio-setup:
+    image: minio/mc:latest
+    restart: 'no'
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      sh -c "
+      mc alias set local http://minio:9000 ${MINIO_ROOT_USER:-thaieconomap} ${MINIO_ROOT_PASSWORD:-thaieconomap} &&
+      mc mb --ignore-existing local/${MINIO_BUCKET:-thaieconomap} &&
+      mc anonymous set download local/${MINIO_BUCKET:-thaieconomap} &&
+      echo 'minio bucket ready: ${MINIO_BUCKET:-thaieconomap}'
+      "
+
+  # Loads Thailand's 77 provinces and their districts into the districts
+  # collection. Idempotent: --drop replaces the collection on every run.
+  seed:
+    image: mongo:7
+    restart: 'no'
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    volumes:
+      - ./apps/backend/skeletons:/seed:ro
+    entrypoint: >
+      sh -c "
+      mongoimport
+      --uri 'mongodb://${MONGO_ROOT_USERNAME:-thaieconomap}:${MONGO_ROOT_PASSWORD:-thaieconomap}@mongodb:27017/${MONGO_DB_NAME:-thaieconomap}?authSource=admin'
+      --collection districts
+      --jsonArray
+      --drop
+      --file /seed/districts-position.json
+      "
